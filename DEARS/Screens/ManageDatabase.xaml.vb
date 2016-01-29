@@ -43,7 +43,8 @@ Public Class ManageDatabase
     End Sub
 
     Private Sub BasicDataButton_Click(sender As Object, e As RoutedEventArgs)
-        DBContext.Database.ExecuteSqlCommand(My.Resources.BasicDataQuery)
+        Dim BasicDataQuery As String = System.IO.File.ReadAllText("NiceStateDB.sql")
+        DBContext.Database.ExecuteSqlCommand(BasicDataQuery)
         DirectCast(My.Application.MainWindow, MainWindow).ReloadData()
     End Sub
 
@@ -56,6 +57,10 @@ Public Class ManageDatabase
         Return sb.ToString()
     End Function
 
+    Private Sub BulkImportButton_Click(sender As Object, e As RoutedEventArgs)
+        Dim importerDialog As New ImporterDialog()
+        importerDialog.ShowDialog()
+    End Sub
 End Class
 
 

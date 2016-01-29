@@ -59,34 +59,5 @@ Namespace My.Resources
                 resourceCulture = value
             End Set
         End Property
-        
-        '''<summary>
-        '''  Looks up a localized string similar to USE [AcademicResultsDB]
-        '''
-        '''
-        '''INSERT INTO dbo.TuitionTypes(Id, NameEnglish, NameArabic)
-        '''VALUES
-        '''(1, N&apos;Lecture&apos;, N&apos;محاضرة&apos;),
-        '''(2, N&apos;Lab&apos;,N&apos;معمل&apos;),
-        '''(3, N&apos;Tutorial&apos;, N&apos;تمرين&apos;)
-        '''
-        '''INSERT [dbo].TimeYears (Id, NameEnglish, NameArabic)
-        '''VALUES
-        '''(2010, N&apos;2010/2011&apos;, N&apos;2010/2011&apos;),
-        '''(2011, N&apos;2011/2012&apos;, N&apos;2011/2012&apos;),
-        '''(2012, N&apos;2012/2013&apos;, N&apos;2012/2013&apos;),
-        '''(2013, N&apos;2013/2014&apos;, N&apos;2013/2014&apos;),
-        '''(2014, N&apos;2014/2015&apos;, N&apos;2014/2015&apos;)
-        '''
-        '''
-        '''INSERT dbo.Semesters(Id, NameEnglish, NameArabic)
-        '''VALUES 
-        '''(1, N&apos;First&apos;, N&apos;الأول&apos;),        ''' [rest of string was truncated]&quot;;.
-        '''</summary>
-        Friend ReadOnly Property BasicDataQuery() As String
-            Get
-                Return ResourceManager.GetString("BasicDataQuery", resourceCulture)
-            End Get
-        End Property
     End Module
 End Namespace

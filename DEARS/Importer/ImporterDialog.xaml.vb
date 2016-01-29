@@ -83,6 +83,9 @@ Public Class ImporterDialog
 
     Sub bgndWorker_Completed(sender As Object, e As ComponentModel.RunWorkerCompletedEventArgs) Handles bgndWorker.RunWorkerCompleted
         Trace.Listeners.Clear()
+        If e.Error IsNot Nothing Then
+            MessageBox.Show("IMPORT Failure:" + vbCr + e.Error.Message)
+        End If
     End Sub
 
     Sub ImportExcelFilebackground(sender As Object, e As ComponentModel.DoWorkEventArgs) Handles bgndWorker.DoWork
@@ -106,18 +109,8 @@ Public Class ImporterDialog
                 Dim extractor As CResultsDataExtractor = New CResultsDataExtractor(ws, segmenter, SharedState.GetSingleInstance.YearID, SharedState.GetSingleInstance.GradeID, 1)
 
                 If CResultsDataExtractor.Recomms.Keys.Any(Function(s) Not SharedState.DBContext.RecommTranslations.Local.Any(Function(q) q.ResText = s)) Then
-                    ' There are unknown translations
+                    Dim NoTransList = GetTranslationFromUser()
 
-                    SharedState.DBContext.RecommTranslations.ToList()
-                    Dim NoTransList = CResultsDataExtractor.Recomms.Keys.Where(Function(s) Not SharedState.DBContext.RecommTranslations.Local.Any(Function(q) q.ResText = s))
-
-                    For Each x In NoTransList
-                        SharedState.DBContext.RecommTranslations.Add(New RecommTranslation() With {.ResText = x})
-                    Next
-                    Me.Dispatcher.Invoke(New Action(Of Integer)(Sub(s)
-                                                                    Dim transDialog As New TranslatorDialog()
-                                                                    transDialog.ShowDialog()
-                                                                End Sub), 0)
                     SharedState.DBContext.SaveChanges()
 
                     For Each sumry In extractor.SummaryData.Where(Function(s) NoTransList.Contains(s.Recomm))
@@ -127,8 +120,9 @@ Public Class ImporterDialog
                         End If
                     Next
                 End If
+
                 If CResultsDataExtractor.Recomms.Keys.Any(Function(s) Not SharedState.DBContext.RecommTranslations.Local.Any(Function(q) q.ResText = s)) Then
-                    Throw New Exception()
+                    Throw New Exception("Still some remaining recommendations untranslated!")
                 End If
 
                 If Not SuppressFeeder Then
@@ -143,6 +137,24 @@ Public Class ImporterDialog
 
         MsgBox((te - ts).TotalSeconds.ToString)
     End Sub
+
+    Function GetTranslationFromUser() As List(Of String)
+        SharedState.DBContext.RecommTranslations.ToList()
+        Dim NoTransList = CResultsDataExtractor.Recomms.Keys.Where(Function(s) Not SharedState.DBContext.RecommTranslations.Local.Any(Function(q) q.ResText = s))
+
+        Me.Dispatcher.Invoke(New Action(Of Integer)( _
+                             Sub(s)
+                                 For Each x In NoTransList
+                                     SharedState.DBContext.RecommTranslations.Add(New RecommTranslation() With {.ResText = x})
+                                 Next
+                             End Sub), 0)
+
+        Me.Dispatcher.Invoke(New Action(Of Integer)(Sub(s)
+                                                        Dim transDialog As New TranslatorDialog()
+                                                        transDialog.ShowDialog()
+                                                    End Sub), 0)
+        Return NoTransList.ToList()
+    End Function
 
 
     Private Sub FeedDataToDatabase(extractor As CResultsDataExtractor, worker As ComponentModel.BackgroundWorker)

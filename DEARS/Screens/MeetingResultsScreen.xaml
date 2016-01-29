@@ -43,7 +43,8 @@
 
                 <Button HorizontalAlignment="Center">Process</Button>
                 <Button HorizontalAlignment="Center" Click="GenerateButton_Click">Generate</Button>
-                <Button HorizontalAlignment="Center" Click="ImportButton_Click">Import</Button>
+                <!--<Button HorizontalAlignment="Center" Click="ImportButton_Click">Import</Button>-->
+                <Label></Label>
             </UniformGrid>
         </GroupBox>
         <DataGrid Grid.Row="1" CanUserAddRows="False"  AutoGenerateColumns="False" ItemsSource="{Binding Source={StaticResource GPAViewSource}}">

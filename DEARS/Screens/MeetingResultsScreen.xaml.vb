@@ -18,7 +18,7 @@ Public Class MeetingResultsScreen
         Dim SemesterID As Integer = SharedState.GetSingleInstance().SemesterID
 
         If Not (PropertyName = "GradeID" Or PropertyName = "CourseID" Or PropertyName = "DisciplineID") Then
-            Dim q_grades = From bt In DBContext.SemesterBatches.Include("Grade").Include("OfferedCourses")
+            Dim q_grades = From bt In DBContext.SemesterBatches.Include("Grade").Include("OfferedDisciplines").Include("OfferedDisciplines.Discipline")
                        Where bt.SemesterId = SemesterID And bt.YearId = YearID
                        Select bt
 
@@ -59,9 +59,7 @@ Public Class MeetingResultsScreen
 
     Private Sub ImportButton_Click(sender As Object, e As RoutedEventArgs)
         ' We need to start the import process
-        Dim importerDialog As New ImporterDialog()
-        importerDialog.ShowDialog()
-
+        
     End Sub
 
     Private Sub UserControl_Loaded(sender As Object, e As RoutedEventArgs)
