@@ -579,5 +579,10 @@
   <ItemGroup>
     <Resource Include="Images\server-database.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="NiceStateDB.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
