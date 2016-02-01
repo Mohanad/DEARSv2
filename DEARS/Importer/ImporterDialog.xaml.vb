@@ -1,10 +1,20 @@
 ﻿Imports DetailedResultsImporter
-Imports EntityFramework.BulkInsert.Extensions
 
 Public Class ImporterDialog
 
     Private Sub Window_Loaded(sender As Object, e As RoutedEventArgs)
         DataArea.DataContext = SharedState.GetSingleInstance
+    End Sub
+
+    Private Sub Window_ContentRendered(sender As Object, e As EventArgs)
+        Me.LoadData()
+    End Sub
+
+    Sub LoadData()
+        Dim TimeYearsViewSource = DirectCast(Me.FindResource("TimeYearsViewSource"), CollectionViewSource)
+        Dim GradesViewSource = DirectCast(Me.FindResource("GradesViewSource"), CollectionViewSource)
+
+        TimeYearsViewSource.Source = SharedState.DBContext.TimeYears.Include("Batches").ToList()
     End Sub
 
     Private Sub ExcelFileBrowseButton_Click(sender As Object, e As RoutedEventArgs)
@@ -22,14 +32,6 @@ Public Class ImporterDialog
             LogRecommPathTextBox.Text = saveFileDialog.FileName
         End If
     End Sub
-
-    'Private Sub TranslatorButton_Click(sender As Object, e As RoutedEventArgs)
-    '    Dim openFileDialog As New Forms.OpenFileDialog()
-    '    openFileDialog.Filter = "Text Document (*.txt) |*.txt"
-    '    If openFileDialog.ShowDialog() = Forms.DialogResult.OK Then
-    '        TranslatorTextBox.Text = openFileDialog.FileName
-    '    End If
-    'End Sub
 
     Private Sub StartImportButton_Click(sender As Object, e As RoutedEventArgs)
         If bgndWorker.IsBusy Then
@@ -59,18 +61,6 @@ Public Class ImporterDialog
         SharedState.DBContext.RecommTranslations.ToList()
         Return SharedState.DBContext.RecommTranslations.ToDictionary(Of String, String)(Function(s) s.ResText, Function(q) q.RecommendationType.ShortNameEnglish)
     End Function
-
-    'Function GetTransDictionary() As Dictionary(Of String, String)
-    '    Dim tmp = New Dictionary(Of String, String)()
-    '    If My.Settings.Trans_Key.Count = My.Settings.Trans_Values.Count Then
-    '        For i As Integer = 0 To My.Settings.Trans_Key.Count - 1
-    '            tmp(My.Settings.Trans_Key(i)) = My.Settings.Trans_Values(i)
-    '        Next
-    '    Else
-    '        Throw New InvalidOperationException("Keys and values do not match")
-    '    End If
-    '    Return tmp
-    'End Function
 
     Dim WithEvents bgndWorker As New System.ComponentModel.BackgroundWorker()
     Dim Filename As String
@@ -445,5 +435,4 @@ Public Class ImporterDialog
             _rtb = rtb
         End Sub
     End Class
-
 End Class

@@ -124,12 +124,12 @@
                 </StackPanel>-->
                 <DataGrid MinHeight="100" Grid.Row="4" Grid.ColumnSpan="2" Name="TranscriptSummaryDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Grade" Binding="{Binding Path=Grade.NameEnglish}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Year" Binding="{Binding Path=TimeYear.NameEnglish}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Grade" Binding="{Binding Path=Grade.NameEnglish}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Enrolled As" Binding="{Binding Path=EnrollmentType.NameEnglish}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="GPA"></DataGridTextColumn>
-                        <DataGridTextColumn Header="CGPA"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Recommendation"></DataGridTextColumn>
+                        <DataGridTextColumn Header="GPA" Binding="{Binding Path=GPAwRecomm.GPA}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="CGPA" Binding="{Binding Path=GPAwRecomm.CGPA}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Recommendation" Binding="{Binding Path=GPAwRecomm.YearRecommendationType.NameEnglish}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

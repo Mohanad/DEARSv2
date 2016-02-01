@@ -2,7 +2,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="ImporterDialog" Height="600" Width="800"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        ContentRendered="Window_ContentRendered">
+    <Window.Resources>
+        <CollectionViewSource x:Key="TimeYearsViewSource" />
+        <CollectionViewSource x:Key="GradesViewSource" Source="{Binding Source={StaticResource TimeYearsViewSource}, Path=Batches}"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -26,11 +31,11 @@
                     </Grid.RowDefinitions>
                     <UniformGrid Columns="2" Rows="3" Grid.Row="0" Grid.Column="1">
                         <Label>Year</Label>
-                        <Label Content="{Binding YearID}"></Label>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource TimeYearsViewSource}}" DisplayMemberPath="NameEnglish" SelectedValuePath="Id" SelectedValue="{Binding YearID}"></ComboBox>
                         <Label>Grade</Label>
-                        <Label Content="{Binding GradeID}"></Label>
-                        <Label>Disciplines</Label>
-                        <Label Name="DisciplinesLabel"></Label>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource GradesViewSource}}" DisplayMemberPath="Grade.NameEnglish" SelectedValuePath="GradeId" SelectedValue="{Binding GradeID}"></ComboBox>
+                        <!--<Label>Disciplines</Label>
+                        <Label Name="DisciplinesLabel"></Label>-->
                     </UniformGrid>
                     <Label  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Excel File:</Label>
                     <TextBox Name="ExcelFilePathTextBox"  Grid.Row="1"  Grid.Column="1"></TextBox>
