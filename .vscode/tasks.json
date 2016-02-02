@@ -109,7 +109,7 @@
 
 {
 	"version": "0.1.0",
-	"command": "C:/Program Files (x86)/MSBuild/12.0/Bin/msbuild",
+	"command": "msbuild",
 	"args": [
 		// Ask msbuild to generate full paths for file names.
 		"/property:GenerateFullPaths=true"
