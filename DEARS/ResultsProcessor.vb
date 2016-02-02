@@ -108,6 +108,8 @@
             gpw.YearRecommId = RecommTypeEnum.Dismiss
             gpw.Comment = "(FG 11.f)"
         ElseIf CountABs > 0 Then
+            gpw.YearRecommId = RecommTypeEnum.Subs
+            gpw.CumulativeRecommId = Nothing
             'Recomms.YearRecomm = Sub ( CountABs )
             '// Note that GPA should be NaN since some subjects will have exam mark set as NaN
             '//Recomms.CumulativeRecomm = Null
@@ -160,7 +162,15 @@
         Dim ExFraction As Decimal = mk.OfferedCourse.ExamFraction
 
         If mk.Present Then
-            AssignGrade.Total = mk.CWMark + mk.ExamMark
+            If ExFraction = 100 And CWFraction = 0 Then
+                AssignGrade.Total = mk.ExamMark
+            ElseIf CWFraction = 100 And ExFraction = 0 Then
+                AssignGrade.Total = mk.CWMark
+            Else
+                AssignGrade.Total = mk.CWMark + mk.ExamMark
+            End If
+
+
             If mk.CWMark < 0.3 * CWFraction Or mk.ExamMark < 0.3 * ExFraction Then
                 AssignGrade.Grade = "F"
             ElseIf mk.CWMark < 0.3 * CWFraction Or mk.ExamMark < 0.3 * ExFraction Then
@@ -224,7 +234,12 @@
             PreviousWeight += i
         Next
         Dim NewWieght As Integer = PreviousWeight + CurrentClass
-        Return (PreviousCGPA * PreviousWeight + CurrentClass * GPA) / NewWieght
+        If PreviousWeight = 0 Then
+            Return (CurrentClass * GPA) / NewWieght
+        Else
+            Return (PreviousCGPA * PreviousWeight + CurrentClass * GPA) / NewWieght
+        End If
+
     End Function
 
     Private Function GetProjectCourseID() As Integer
