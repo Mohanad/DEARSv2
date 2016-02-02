@@ -1916,7 +1916,7 @@
           <NavigationProperty Name="CourseEnrollment" Relationship="AcademicResultsDBModel.FK_MarksExamCW_CourseEnrollment" FromRole="MarksExamCW" ToRole="CourseEnrollment" />
           <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Courses" FromRole="MarksExamCW" ToRole="Cours" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Grades" FromRole="MarksExamCW" ToRole="Grade" />
-          <NavigationProperty Name="OfferedCours" Relationship="AcademicResultsDBModel.FK_MarksExamCW_OfferedCourse" FromRole="MarksExamCW" ToRole="OfferedCours" />
+          <NavigationProperty Name="OfferedCourse" Relationship="AcademicResultsDBModel.FK_MarksExamCW_OfferedCourse" FromRole="MarksExamCW" ToRole="OfferedCours" />
           <NavigationProperty Name="Semester" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Semesters" FromRole="MarksExamCW" ToRole="Semester" />
           <NavigationProperty Name="Student" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Students" FromRole="MarksExamCW" ToRole="Student" />
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_MarksExamCW_TimeYears" FromRole="MarksExamCW" ToRole="TimeYear" />

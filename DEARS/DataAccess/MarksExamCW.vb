@@ -38,7 +38,7 @@ Partial Public Class MarksExamCW
     Public Overridable Property CourseEnrollment As CourseEnrollment
     Public Overridable Property Course As Course
     Public Overridable Property Grade As Grade
-    Public Overridable Property OfferedCours As OfferedCourse
+    Public Overridable Property OfferedCourse As OfferedCourse
     Public Overridable Property Semester As Semester
     Public Overridable Property Student As Student
     Public Overridable Property TimeYear As TimeYear

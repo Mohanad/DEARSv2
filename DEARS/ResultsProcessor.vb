@@ -11,7 +11,25 @@
         Repeat
         Resit
     End Enum
-
+    Public Enum RecommTypeEnum
+        I = 1
+        II1
+        II2
+        III
+        Passed
+        Repeat
+        Failed
+        Subs
+        Supp
+        SubsSupp
+        Resit
+        WGPA
+        SpecialCase
+        Suspend
+        Dismiss
+        SubYear
+        II
+    End Enum
     Sub SecondSemesterProcessing(YearId As Integer, GradeId As Integer, DisciplineId As Integer, ExamType As ExamTypeEnum)
         Dim StudList As List(Of BatchEnrollment) = GetStudentEnrollmentList(YearId, GradeId, DisciplineId, ExamType)
         Dim RecommsList As List(Of GPAwRecomm) = New List(Of GPAwRecomm)(StudList.Count)
@@ -21,7 +39,11 @@
     End Sub
 
     Private Function GetStudentEnrollmentList(YearId As Integer, GradeId As Integer, DisciplineId As Integer, ExamType As ExamTypeEnum) As List(Of BatchEnrollment)
-        Throw New NotImplementedException
+        Dim studList = From benr In SharedState.DBContext.BatchEnrollments
+                       Where benr.YearId = YearId And benr.GradeId = GradeId
+                       Select benr
+
+        Return studList.ToList()
     End Function
 
     Private Function SecondSemesterStudProcess(studEnr As BatchEnrollment) As GPAwRecomm
@@ -40,28 +62,41 @@
     Class GradeTotal
         Public Mark As MarksExamCW
         Public Grade As String
-        Public Total As Decimal
+        Public Total As Double
     End Class
     Private Function SecondSemesterProcessRegularStudent(studEnr As BatchEnrollment) As GPAwRecomm
+        Dim gpw As GPAwRecomm = (From gp In SharedState.DBContext.GPAwRecomms Where
+                                 gp.StudentId = studEnr.StudentId And gp.GradeId = studEnr.GradeId And gp.YearId = studEnr.YearId).SingleOrDefault()
+        If gpw Is Nothing Then
+            gpw = New GPAwRecomm() With {.StudentId = studEnr.StudentId, .GradeId = studEnr.GradeId, .YearId = studEnr.YearId}
+        End If
+
         Dim Marks As List(Of MarksExamCW) = GetStudentMarks(studEnr, ExamTypeEnum.SecondSemester)
         Dim GradesTotalList As List(Of GradeTotal) = Marks.ConvertAll(Of GradeTotal)(Function(s) AssignGrade(s))
-        Dim Recomm As New GPAwRecomm()
         Dim PreviousCGPA As Decimal? = GetPreviousCGPA(studEnr)
 
         Dim GPA As Decimal = EvaluateGPA(GradesTotalList)
-        Dim CGPA As Decimal = EvaluateCGPA(Recomm.GPA, PreviousCGPA, studEnr.GradeId)
+        Dim CGPA As Decimal = EvaluateCGPA(gpw.GPA, PreviousCGPA, studEnr.GradeId)
 
-        Recomm.GPA = GPA
-        Recomm.CGPA = CGPA
+        gpw.GPA = GPA
+        gpw.CGPA = CGPA
 
         Dim PrjCourseID As Integer = GetProjectCourseID()
 
         If studEnr.GradeId = 5 And GradesTotalList.Any(Function(s) s.Mark.CourseId = PrjCourseID And (s.Grade = "F" Or s.Grade = "D")) Then
-
+            gpw.GPA = Nothing
+            gpw.YearRecommId = RecommTypeEnum.Repeat
+            gpw.CGPA = Nothing
+            gpw.CumulativeRecommId = RecommTypeEnum.Repeat
+            gpw.Comment = "FG 10.5"
+            Return gpw
         End If
 
-        'Recomm.RecommendationType = NiceRecomm(GPA) 'Applies 5.11, 8.2
-        'Recomm.CumulativeRecommendationType = GNiceRecomm(CGPA, PreviousCGPA, Recomm.RecommendationType) 'Applies 5.12
+        gpw.YearRecommId = NiceRecomm(GPA, gpw)
+        gpw.CumulativeRecommId = GNiceRecomm(gpw.CGPA, PreviousCGPA, gpw.YearRecommId, gpw)
+
+        'gpw.RecommendationType = NiceRecomm(GPA) 'Applies 5.11, 8.2
+        'gpw.CumulativeRecommendationType = GNiceRecomm(CGPA, PreviousCGPA, Recomm.RecommendationType) 'Applies 5.12
 
         Dim CountFs As Integer = GradesTotalList.Where(Function(s) s.Grade = "F").Count()
         Dim CountDs As Integer = GradesTotalList.Where(Function(s) s.Grade = "D").Count()
@@ -70,7 +105,8 @@
         Dim CountNonExcused As Integer = Marks.Where(Function(mk) Not mk.Present And Not mk.Excuse).Count()
 
         If CountNonExcused > (CountSubjects / 3) Then
-
+            gpw.YearRecommId = RecommTypeEnum.Dismiss
+            gpw.Comment = "(FG 11.f)"
         ElseIf CountABs > 0 Then
             'Recomms.YearRecomm = Sub ( CountABs )
             '// Note that GPA should be NaN since some subjects will have exam mark set as NaN
@@ -105,42 +141,129 @@
 
         End If
 
-        Return Recomm
+        Return gpw
 
     End Function
 
     Private Function GetStudentMarks(studEnr As BatchEnrollment, examTypeEnum As ExamTypeEnum) As List(Of MarksExamCW)
-        Throw New NotImplementedException
+        Dim marks = From mk In SharedState.DBContext.MarksExamCWs
+                    Where mk.YearId = studEnr.YearId And mk.StudentId = studEnr.StudentId And mk.GradeId = studEnr.GradeId
+                    Select mk
+
+        Return marks.ToList()
     End Function
 
-    Private Function AssignGrade(s As MarksExamCW) As GradeTotal
-        Throw New NotImplementedException
+    Private Function AssignGrade(mk As MarksExamCW) As GradeTotal
+        AssignGrade = New GradeTotal()
+        AssignGrade.Mark = mk
+        Dim CWFraction As Decimal = mk.OfferedCourse.CourseWorkFraction
+        Dim ExFraction As Decimal = mk.OfferedCourse.ExamFraction
+
+        If mk.Present Then
+            AssignGrade.Total = mk.CWMark + mk.ExamMark
+            If mk.CWMark < 0.3 * CWFraction Or mk.ExamMark < 0.3 * ExFraction Then
+                AssignGrade.Grade = "F"
+            ElseIf mk.CWMark < 0.3 * CWFraction Or mk.ExamMark < 0.3 * ExFraction Then
+                AssignGrade.Grade = "D"
+            ElseIf AssignGrade.Total >= 90 Then
+                AssignGrade.Grade = "A+"
+            ElseIf AssignGrade.Total >= 80 Then
+                AssignGrade.Grade = "A"
+            ElseIf AssignGrade.Total >= 70 Then
+                AssignGrade.Grade = "A-"
+            ElseIf AssignGrade.Total >= 60 Then
+                AssignGrade.Grade = "B+"
+            ElseIf AssignGrade.Total >= 50 Then
+                AssignGrade.Grade = "B"
+            ElseIf AssignGrade.Total >= 40 Then
+                AssignGrade.Grade = "C"
+            ElseIf AssignGrade.Total >= 30 Then
+                AssignGrade.Grade = "D"
+            End If
+            Return AssignGrade
+        ElseIf Not mk.Present And Not mk.Excuse Then
+            AssignGrade.Total = mk.CWMark
+            AssignGrade.Grade = "F"
+            Return AssignGrade
+        ElseIf Not mk.Present And mk.Excuse Then
+            AssignGrade.Total = Double.NaN
+            If mk.CWMark < 0.4 * CWFraction Then
+                AssignGrade.Grade = "AB*"
+            Else
+                AssignGrade.Grade = "AB"
+            End If
+        End If
     End Function
 
-    Private Function EvaluateGPA(GradesTotalList As List(Of GradeTotal)) As Decimal
-        Throw New NotImplementedException
+    Private Function EvaluateGPA(GradesTotalList As List(Of GradeTotal)) As Double
+        Dim TotalMark As Double = 0
+        Dim TotalCredits As Double = 0
+        For Each gr In GradesTotalList
+            TotalMark += gr.Total * gr.Mark.OfferedCourse.CreditHours
+            TotalCredits += gr.Mark.OfferedCourse.CreditHours
+        Next
+        Return (TotalMark / TotalCredits) / 10
     End Function
 
     Private Function GetPreviousCGPA(studEnr As BatchEnrollment) As Decimal?
-        Throw New NotImplementedException
+        Dim CurrentClass As Integer = studEnr.GradeId
+        If CurrentClass = 1 Then
+            Return Nothing
+        Else
+            Dim x = (From gpw In SharedState.DBContext.GPAwRecomms
+                    Where gpw.GradeId = CurrentClass - 1 And gpw.StudentId = studEnr.StudentId
+                    Order By gpw.YearId Descending Select gpw).First.CGPA
+            Return x
+        End If
     End Function
 
-    Private Function EvaluateCGPA(p1 As Decimal, PreviousCGPA As Decimal?, p3 As Integer) As Decimal?
-        Throw New NotImplementedException
+    Private Function EvaluateCGPA(GPA As Decimal, PreviousCGPA As Decimal?, CurrentClass As Integer) As Double
+
+        Dim PreviousWeight As Integer = 0
+        For i As Integer = 1 To CurrentClass - 1
+            PreviousWeight += i
+        Next
+        Dim NewWieght As Integer = PreviousWeight + CurrentClass
+        Return (PreviousCGPA * PreviousWeight + CurrentClass * GPA) / NewWieght
     End Function
 
     Private Function GetProjectCourseID() As Integer
-        Throw New NotImplementedException
+        Return (From cr In SharedState.DBContext.Courses Where cr.CourseCode = "PR5202" Select cr.Id).Single()
     End Function
 
-    Private Function NiceRecomm(GPA As Decimal) As RecommendationType
-        Throw New NotImplementedException
+    Private Function NiceRecomm(GPA As Decimal, gpw As GPAwRecomm) As RecommTypeEnum
+        If GPA >= 7.0 Then
+            Return RecommTypeEnum.I
+        ElseIf GPA >= 6.0 Then
+            Return RecommTypeEnum.II
+        ElseIf GPA >= 4.3 Then
+            Return RecommTypeEnum.III
+        ElseIf 3.5 <= GPA < 4.3 Then
+            gpw.Comment = "(FG 10.1) => Repeat"
+            Return RecommTypeEnum.SpecialCase
+        End If
     End Function
 
-    Private Function GNiceRecomm(CGPA As Decimal, PreviousCGPA As Decimal?, recommendationType As RecommendationType) As RecommendationType
-        Throw New NotImplementedException
+    Private Function GNiceRecomm(CGPA As Decimal?, PreviousCGPA As Decimal?, YRecomm As RecommTypeEnum, gpw As GPAwRecomm) As RecommTypeEnum?
+        Dim GRecomm As RecommTypeEnum = Nothing
+        If PreviousCGPA >= 4.3 And PreviousCGPA < 4.5 And CGPA < 4.5 Then
+            GRecomm = RecommTypeEnum.SpecialCase
+            gpw.Comment = "(FG10.3) => Repeat"
+        ElseIf CGPA >= 4.3 And CGPA < 4.5 Then
+            GRecomm = RecommTypeEnum.WGPA
+        ElseIf YRecomm = RecommTypeEnum.I Or YRecomm = RecommTypeEnum.II Or YRecomm = RecommTypeEnum.III Then
+            If CGPA > 7.0 Then
+                GRecomm = RecommTypeEnum.I
+            ElseIf CGPA > 6.5 Then
+                GRecomm = RecommTypeEnum.II1
+            ElseIf CGPA > 5.7 Then
+                GRecomm = RecommTypeEnum.II2
+            ElseIf CGPA > 4.5 Then
+                GRecomm = RecommTypeEnum.III
+            End If
+        Else
+            GRecomm = YRecomm
+        End If
+        Return GRecomm
     End Function
-
-
-
 End Module

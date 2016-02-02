@@ -32,18 +32,18 @@
                     </Style>
                 </UniformGrid.Resources>
                 <Label>Grade:</Label>
-                <ComboBox ItemsSource="{Binding Source={StaticResource GradesViewSource}}" DisplayMemberPath="Grade.NameEnglish" SelectedValuePath="GradeId" SelectedValue="{Binding GradeID}"></ComboBox>
+                <ComboBox Name="GradeComboBox" ItemsSource="{Binding Source={StaticResource GradesViewSource}}" DisplayMemberPath="Grade.NameEnglish" SelectedValuePath="GradeId" SelectedValue="{Binding GradeID}"></ComboBox>
                 <Label></Label>
 
                 <Label>Discipline:</Label>
                 <ComboBox ItemsSource="{Binding Source={StaticResource DisciplinesViewSource}}" DisplayMemberPath="Discipline.NameEnglishShort" SelectedValuePath="DisciplineId" SelectedValue="{Binding DisciplineID}"
                           IsEnabled="{Binding ElementName=AllDisciplinescheckBox,Path=IsChecked, Converter={StaticResource NotBoolconverter}}"
-                          ></ComboBox>
+                          Name="DisciplineComboBox"></ComboBox>
                 <CheckBox Name="AllDisciplinescheckBox" IsChecked="{Binding AllDisciplines}"  HorizontalAlignment="Center" VerticalAlignment="Center">ALL</CheckBox>
 
-                <Button HorizontalAlignment="Center">Process</Button>
-                <Button HorizontalAlignment="Center" Click="GenerateButton_Click">Generate</Button>
-                <!--<Button HorizontalAlignment="Center" Click="ImportButton_Click">Import</Button>-->
+                <Button HorizontalAlignment="Center" Name="ProcessButton" Click="ProcessButton_Click">Process</Button>
+                <Button HorizontalAlignment="Center" Name="GenerateButton" Click="GenerateButton_Click">Generate</Button>
+                
                 <Label></Label>
             </UniformGrid>
         </GroupBox>

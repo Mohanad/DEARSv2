@@ -57,11 +57,6 @@ Public Class MeetingResultsScreen
         GPAViewSource.Source = StudentsCollection
     End Sub
 
-    Private Sub ImportButton_Click(sender As Object, e As RoutedEventArgs)
-        ' We need to start the import process
-        
-    End Sub
-
     Private Sub UserControl_Loaded(sender As Object, e As RoutedEventArgs)
         GradesViewSource = CType(Me.FindResource("GradesViewSource"), CollectionViewSource)
         GPAViewSource = CType(Me.FindResource("GPAViewSource"), CollectionViewSource)
@@ -95,5 +90,22 @@ Public Class MeetingResultsScreen
         Else
             Return
         End If
+    End Sub
+
+    Private Sub ProcessButton_Click(sender As Object, e As RoutedEventArgs)
+        Me.GradeComboBox.IsEnabled = False
+        Me.DisciplineComboBox.IsEnabled = False
+        Me.AllDisciplinescheckBox.IsEnabled = False
+        Me.GenerateButton.IsEnabled = False
+
+        Me.ProcessButton.Content = "Cancel"
+
+        ' Start the processing operation.
+        Dim YearID As Integer = SharedState.GetSingleInstance().YearID
+        Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
+        Dim SemesterID As Integer = SharedState.GetSingleInstance().SemesterID
+        Dim DisciplineID As Integer = SharedState.GetSingleInstance.DisciplineID
+
+        ResultsProcessingUtilities.SecondSemesterProcessing(YearID, GradeID, DisciplineID, ExamTypeEnum.SecondSemester)
     End Sub
 End Class
