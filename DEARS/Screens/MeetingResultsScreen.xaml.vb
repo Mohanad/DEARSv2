@@ -93,6 +93,7 @@ Public Class MeetingResultsScreen
     End Sub
 
     Private Sub ProcessButton_Click(sender As Object, e As RoutedEventArgs)
+        Dim alldiscp As Boolean = Me.AllDisciplinescheckBox.IsChecked
         Me.GradeComboBox.IsEnabled = False
         Me.DisciplineComboBox.IsEnabled = False
         Me.AllDisciplinescheckBox.IsEnabled = False
@@ -107,5 +108,12 @@ Public Class MeetingResultsScreen
         Dim DisciplineID As Integer = SharedState.GetSingleInstance.DisciplineID
 
         ResultsProcessingUtilities.SecondSemesterProcessing(YearID, GradeID, DisciplineID, ExamTypeEnum.SecondSemester)
+
+        Me.GradeComboBox.IsEnabled = True
+        Me.AllDisciplinescheckBox.IsEnabled = True
+        Me.AllDisciplinescheckBox.IsChecked = SharedState.GetSingleInstance.AllDisciplines
+        Me.GenerateButton.IsEnabled = True
+        Me.ProcessButton.Content = "Process"
+        Me.ResultsDataGrid.Items.Refresh()
     End Sub
 End Class

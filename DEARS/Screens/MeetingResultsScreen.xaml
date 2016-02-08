@@ -47,15 +47,16 @@
                 <Label></Label>
             </UniformGrid>
         </GroupBox>
-        <DataGrid Grid.Row="1" CanUserAddRows="False"  AutoGenerateColumns="False" ItemsSource="{Binding Source={StaticResource GPAViewSource}}">
+        <DataGrid Grid.Row="1" CanUserAddRows="False"  AutoGenerateColumns="False" ItemsSource="{Binding Source={StaticResource GPAViewSource}}" Name="ResultsDataGrid">
             <DataGrid.Columns>
                 <DataGridTextColumn IsReadOnly="True" Header="Index" Binding="{Binding Path=Student.Index}" />
                 <DataGridTextColumn IsReadOnly="True" Header="University No" Binding="{Binding Path=Student.UnivNo}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="Name" Binding="{Binding Path=Student.NameArabic}"/>
-                <DataGridTextColumn IsReadOnly="True" Header="GPA" Binding="{Binding Path=GPA}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="GPA" Binding="{Binding Path=GPA, StringFormat=N3}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="Year Recomm" Binding="{Binding Path=YearRecommendationType.NameEnglish}"/>
-                <DataGridTextColumn IsReadOnly="True" Header="CGPA" Binding="{Binding Path=CGPA}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="CGPA" Binding="{Binding Path=CGPA, StringFormat=N3}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="Cumulative Recomm" Binding="{Binding Path=CumulativeRecommendationType.NameEnglish}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Comment" Binding="{Binding Path=Comment}"/>
             </DataGrid.Columns>
         </DataGrid>
         <!--<Expander Header="Import Options">
