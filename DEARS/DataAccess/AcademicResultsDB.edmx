@@ -1867,7 +1867,7 @@
           <Property Name="GPA" Type="Decimal" Precision="5" Scale="3" />
           <Property Name="YearRecommId" Type="Int32" Nullable="false" />
           <Property Name="CGPA" Type="Decimal" Precision="5" Scale="3" />
-          <Property Name="CumulativeRecommId" Type="Int32" />
+          <Property Name="CumulativeRecommId" Type="Int32" Nullable="true" />
           <Property Name="Comment" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BatchEnrollment" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_BatchEnrollments" FromRole="GPAwRecomm" ToRole="BatchEnrollment" />
           <NavigationProperty Name="Batch" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_Batch" FromRole="GPAwRecomm" ToRole="Batch" />

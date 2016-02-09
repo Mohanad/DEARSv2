@@ -76,7 +76,7 @@
         Dim PreviousCGPA As Decimal? = GetPreviousCGPA(studEnr)
 
         Dim GPA As Double = EvaluateGPA(GradesTotalList)
-        Dim CGPA As Double = EvaluateCGPA(GPA, PreviousCGPA, studEnr.GradeId)
+        Dim CGPA As Double? = EvaluateCGPA(GPA, PreviousCGPA, studEnr.GradeId)
 
         gpw.GPA = GPA
         gpw.CGPA = CGPA
@@ -93,7 +93,7 @@
         End If
 
         Dim Comment As String = ""
-        If studEnr.Student.Index = 94006 Then
+        If studEnr.Student.Index = 107023 Then
             Comment = ""
         End If
         gpw.YearRecommId = NiceRecomm(GPA, Comment)
@@ -107,7 +107,7 @@
         Dim CountDs As Integer = GradesTotalList.Where(Function(s) s.Grade = "D").Count()
         Dim CountABs As Integer = GradesTotalList.Where(Function(s) s.Grade = "AB" Or s.Grade = "AB*").Count()
         Dim CountSubjects As Integer = GradesTotalList.Count
-        Dim CountNonExcused As Integer = Marks.Where(Function(mk) Not mk.Present And Not mk.Excuse).Count()
+        Dim CountNonExcused As Integer = Marks.Where(Function(mk) Not mk.Present And (mk.Excuse.HasValue AndAlso Not mk.Excuse)).Count()
 
         If CountNonExcused > (CountSubjects / 3) Then
             gpw.YearRecommId = RecommTypeEnum.Dismiss
@@ -165,6 +165,18 @@
             gpw.Comment = "(FG 11.a)"
         Else
             Throw New Exception("ResultsProcessingUtilities: We don't know what this case Is")
+        End If
+        If gpw.YearRecommId = 0 Then
+            Throw New Exception("ResultsProcessingUtilities: YearRecomm must be assigned")
+        End If
+        If gpw.CumulativeRecommId = 0 Then
+            gpw.CumulativeRecommId = Nothing
+        End If
+        If gpw.YearRecommId <> 0 Then
+            gpw.YearRecommendationType = (From rec In SharedState.DBContext.RecommendationTypes.Local Where rec.Id = gpw.YearRecommId).Single()
+        End If
+        If gpw.CumulativeRecommId IsNot Nothing Then
+            gpw.CumulativeRecommendationType = (From rec In SharedState.DBContext.RecommendationTypes.Local Where rec.Id = gpw.CumulativeRecommId).Single()
         End If
 
         Return gpw
@@ -251,12 +263,16 @@
         Else
             Dim x = (From gpw In SharedState.DBContext.GPAwRecomms
                     Where gpw.GradeId = CurrentClass - 1 And gpw.StudentId = studEnr.StudentId
-                    Order By gpw.YearId Descending Select gpw).First.CGPA
-            Return x
+                    Order By gpw.YearId Descending Select gpw).FirstOrDefault
+            If x Is Nothing Then
+                Return Nothing
+            Else
+                Return x.CGPA
+            End If
         End If
     End Function
 
-    Private Function EvaluateCGPA(GPA As Decimal, PreviousCGPA As Decimal?, CurrentClass As Integer) As Double
+    Private Function EvaluateCGPA(GPA As Decimal, PreviousCGPA As Decimal?, CurrentClass As Integer) As Double?
 
         Dim PreviousWeight As Integer = 0
         For i As Integer = 1 To CurrentClass - 1
@@ -266,7 +282,12 @@
         If PreviousWeight = 0 Then
             Return (CurrentClass * GPA) / NewWieght
         Else
-            Return (PreviousCGPA * PreviousWeight + CurrentClass * GPA) / NewWieght
+            If PreviousCGPA IsNot Nothing Then
+                Return (PreviousCGPA * PreviousWeight + CurrentClass * GPA) / NewWieght
+            Else
+                Return Nothing
+            End If
+
         End If
 
     End Function
@@ -289,7 +310,7 @@
     End Function
 
     Private Function GNiceRecomm(CGPA As Decimal?, PreviousCGPA As Decimal?, YRecomm As RecommTypeEnum, ByRef Comment As String) As RecommTypeEnum?
-        Dim GRecomm As RecommTypeEnum = Nothing
+        Dim GRecomm As RecommTypeEnum? = Nothing
         If PreviousCGPA >= 4.3 And PreviousCGPA < 4.5 And CGPA < 4.5 Then
             GRecomm = RecommTypeEnum.SpecialCase
             Comment = "(FG10.3) => Repeat"
