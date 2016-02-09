@@ -35,21 +35,18 @@ Public Class MeetingResultsScreen
         Dim CourseID As Integer = SharedState.GetSingleInstance().CourseID
         Dim DisciplineID As Integer = SharedState.GetSingleInstance().DisciplineID
 
-        ' Students with records already
-        Dim q_gpas = From gpw In SharedState.DBContext.GPAwRecomms.Include("Student")
-                     Where gpw.YearId = YearID And gpw.GradeId = GradeID And
-                     gpw.BatchEnrollment.SemesterBatchEnrollments.Any(Function(s) s.DisciplineId = DisciplineID)
-                     Select gpw
+        Dim prefetch_bt = (From benr In SharedState.DBContext.BatchEnrollments.Include("GPAwRecomm")
+                  Where benr.YearId = YearID And GradeID = benr.GradeId).ToList()
 
-        ' Students with no Records
-        Dim q_benr = From benr In SharedState.DBContext.BatchEnrollments.Include("Student")
-                     Where benr.YearId = YearID And benr.GradeId = GradeID And
-                     benr.SemesterBatchEnrollments.Any(Function(s) s.DisciplineId = DisciplineID) And benr.GPAwRecomm Is Nothing
-                     Select benr
+        Dim q_gpas = (From benr In prefetch_bt
+                     Where benr.GPAwRecomm IsNot Nothing
+                     Select benr.GPAwRecomm).ToList()
+
+        DBContext.ChangeTracker.DetectChanges()
 
         Dim StudentsCollection As New ObservableEntityCollection(Of GPAwRecomm)(DBContext, q_gpas.ToList())
 
-        For Each cenr In q_benr.ToList()
+        For Each cenr In ((From x In prefetch_bt Where x.GPAwRecomm Is Nothing).ToList())
             StudentsCollection.Add(New GPAwRecomm() With {.YearId = YearID, .GradeId = GradeID, .StudentId = cenr.StudentId,
                                                           .Student = cenr.Student})
         Next
@@ -101,13 +98,20 @@ Public Class MeetingResultsScreen
 
         Me.ProcessButton.Content = "Cancel"
 
+        SharedState.DBContext.RecommendationTypes.ToList()
+
         ' Start the processing operation.
         Dim YearID As Integer = SharedState.GetSingleInstance().YearID
         Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
         Dim SemesterID As Integer = SharedState.GetSingleInstance().SemesterID
         Dim DisciplineID As Integer = SharedState.GetSingleInstance.DisciplineID
 
+        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
+
         ResultsProcessingUtilities.SecondSemesterProcessing(YearID, GradeID, DisciplineID, ExamTypeEnum.SecondSemester)
+
+        SharedState.DBContext.ChangeTracker.DetectChanges()
+        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = True
 
         Me.GradeComboBox.IsEnabled = True
         Me.AllDisciplinescheckBox.IsEnabled = True
