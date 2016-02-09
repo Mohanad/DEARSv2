@@ -1,5 +1,4 @@
 ﻿Imports System.Text.RegularExpressions
-Imports Microsoft.Office.Interop
 Public Class CWorksheetStructureAnalyzer
 	Public Islands As New List(Of String)(1000)
 	Dim _SheetName As String

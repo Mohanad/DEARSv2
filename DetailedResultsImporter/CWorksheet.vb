@@ -2,7 +2,6 @@
 Imports DocumentFormat.OpenXml.Packaging
 Imports DocumentFormat.OpenXml
 Imports System.Text.RegularExpressions
-Imports Microsoft.Office.Interop
 
 Public Class CWorkbook
 	Dim IndexColorsValue() As Integer = {&H0, &HFFFFFF, &HFF0000, &HFF00, &HFF, &HFFFF00, &HFF00FF, &HFFFF, &H0, &HFFFFFF, &HFF0000, &HFF00, &HFF, &HFFFF00, &HFF00FF, &HFFFF,

@@ -1,4 +1,4 @@
-﻿Imports ObservableDictionary
+﻿
 Public Class TranslatorDialog
     Private Sub Window_ContentRendered(sender As Object, e As EventArgs)
         If SharedState.DBContext Is Nothing Then

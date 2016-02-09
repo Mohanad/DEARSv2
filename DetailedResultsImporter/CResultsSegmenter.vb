@@ -1,5 +1,4 @@
 ﻿Imports System.Text.RegularExpressions
-Imports Microsoft.Office.Interop
 
 Public Class CResultsSegmeter
 	Shared CourseTitleRegex As New Regex("[A-Z][A-Z]\d{4}")
