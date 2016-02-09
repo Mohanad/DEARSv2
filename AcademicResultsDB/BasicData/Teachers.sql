@@ -1,6 +1,0 @@
-﻿CREATE TABLE [dbo].[Teachers]
-(
-	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-	[NameArabic] NVARCHAR(MAX) NULL, 
-    [NameEnglish] NVARCHAR(MAX) NULL
-)

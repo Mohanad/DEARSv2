@@ -543,46 +543,6 @@ Public Class CWorksheet
 		End If
 		Return True
 	End Function
-	Sub Debug_ShowRanges(ByVal FileName As String, ByVal FastForwardTill As String)
-		Dim xApp As Excel.Application = Nothing
-		Try
-			xApp = New Excel.Application()
-
-			Dim xWB As Excel.Workbook = xApp.Workbooks.Open(FileName)
-			Dim xWs As Excel.Worksheet = xWB.Worksheets(_SheetName)
-			xWs.Activate()
-			xApp.Visible = True
-			xWs.Range(erange).Select()
-			Dim ff As Boolean = True
-            Threading.Thread.Sleep(2000)
-			If FastForwardTill = "ShowERangeOnly" Then
-				xWs.Range(erange.Split(":")(1)).Select()
-                Threading.Thread.Sleep(2000)
-				xApp.Workbooks.Close()
-				xApp.Quit()
-				Return
-			End If
-			For Each rn In _ranges
-				If Not (rn.Value.Reference.StartsWith(FastForwardTill)) And ff Then
-					Continue For
-				Else
-					ff = False
-				End If
-				xWs.Range(rn.Value.Reference).Select()
-				Threading.Thread.Sleep(200)
-			Next
-			xApp.Workbooks.Close()
-			xApp.Quit()
-		Catch ex As System.Runtime.InteropServices.COMException
-			If xApp IsNot Nothing Then
-				xApp.Workbooks.Close()
-				xApp.Quit()
-			End If
-			Trace.WriteLine("Exception occured quitting ....")
-			Trace.WriteLine(ex.Message)
-			Trace.WriteLine(ex.ErrorCode.ToString("X"))
-		End Try
-	End Sub
 
 End Class
 

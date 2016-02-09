@@ -46,36 +46,4 @@ Public Class CWorksheetStructureAnalyzer
 		Return (r1.NRows = r2.NRows) And (r1.NCols = r2.NCols) And (r1.Row = r2.Row)
 	End Function
 
-	Sub Debug_ShowIslands(ByVal FileName As String, ByVal FastForwardTill As String)
-		FastForwardTill &= ":"
-		Dim xApp As Excel.Application = Nothing
-		Try
-			xApp = New Excel.Application()
-
-			Dim xWB As Excel.Workbook = xApp.Workbooks.Open(FileName)
-			Dim xWs As Excel.Worksheet = xWB.Worksheets(_SheetName)
-			xWs.Activate()
-			xApp.Visible = True
-			Dim ff As Boolean = True
-			For Each rn In Islands
-				If Not (rn.StartsWith(FastForwardTill)) And ff Then
-					Continue For
-				Else
-					ff = False
-				End If
-				xWs.Range(rn).Select()
-				Threading.Thread.Sleep(500)
-			Next
-			xApp.Workbooks.Close()
-			xApp.Quit()
-		Catch ex As System.Runtime.InteropServices.COMException
-			If xApp IsNot Nothing Then
-				xApp.Workbooks.Close()
-				xApp.Quit()
-			End If
-			Trace.WriteLine("Exception occured quitting ....")
-			Trace.WriteLine(ex.Message)
-			Trace.WriteLine(ex.ErrorCode.ToString("X"))
-		End Try
-	End Sub
 End Class

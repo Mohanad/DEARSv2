@@ -145,41 +145,6 @@ Public Class CResultsSegmeter
 		Next
 	End Sub
 
-	Public Sub Debug_ShowRegions(ByVal FileName As String, ByVal SheetName As String)
-		Dim xApp As Excel.Application = Nothing
-		Try
-			xApp = New Excel.Application()
-
-			Dim xWB As Excel.Workbook = xApp.Workbooks.Open(FileName)
-			Dim xWs As Excel.Worksheet = xWB.Worksheets(SheetName)
-			xWs.Activate()
-			xApp.Visible = True
-			Dim ff As Boolean = True
-			For Each SubRegion In {TitleRegions, BigHeaderRegions, CoursesRegions, StudentRegions, MarksRegions, GradeRegions, SummaryRegions}
-				MsgBox("NEW SET")
-				For Each rn In SubRegion
-					'If Not (rn.StartsWith(FastForwardTill)) And ff Then
-					'	Continue For
-					'Else
-					'	ff = False
-					'End If
-					xWs.Range(rn).Select()
-					Threading.Thread.Sleep(500)
-				Next
-			Next
-			xApp.Workbooks.Close()
-			xApp.Quit()
-		Catch ex As System.Runtime.InteropServices.COMException
-			If xApp IsNot Nothing Then
-				xApp.Workbooks.Close()
-				xApp.Quit()
-			End If
-			Trace.WriteLine("Exception occured quitting ....")
-			Trace.WriteLine(ex.Message)
-			Trace.WriteLine(ex.ErrorCode.ToString("X"))
-		End Try
-	End Sub
-
 	Public Sub New(ByRef ws As CWorksheet, ByRef SAna As CWorksheetStructureAnalyzer)
 		Trace.Indent()
 		Me.SheetName = ws.GetWorksheetName()
