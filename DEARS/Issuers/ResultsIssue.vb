@@ -65,9 +65,9 @@ Public Class ResultsIssue
         Dim TotalCreditHours10 As Integer = CoursesInDiscipline.Sum(Function(ct) ct.CreditHours) * 10
 
         'Dim StudentsInDiscipline = db.GetDisciplineStudentsList(_TYear, sem, Discipline, True).ToList()
-        Dim StudentsInDiscipline = (From st In db.SemesterBatchEnrollments.Include("CourseEnrollments").Include("CourseEnrollments.MarksExamCW").Include("Student")
+        Dim StudentsInDiscipline = (From st In db.SemesterBatchEnrollments.Include("CourseEnrollments").Include("CourseEnrollments.MarksExamCW").Include("Student").Include("BatchEnrollment.GPAwRecomm").Include("BatchEnrollment")
                                    Where (st.YearId = Me._TYear And st.GradeId = Me._Grade) And ((Not Me._FirstOnly And st.DisciplineId = Discipline And st.SemesterId = 2) Or (Me._FirstOnly And st.DisciplineId = disc And st.SemesterId = 1))
-                                   Select st.Student Distinct).ToList()
+                                   Select st Distinct).ToList()
 
         Dim col As Integer
         ws.SetWidths(1, 1, 15)
@@ -93,8 +93,12 @@ Public Class ResultsIssue
         ws.CreateNewRange(col, 3, "ABSENT", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
         ws.CreateNewRange(col + 1, 3, "FAIL", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
         ws.CreateNewRange(col + 2, 3, "GPA", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
-        ws.CreateNewRange(col + 3, 3, "Recommendation", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
-        ws.CreateNewRange(col + 4, 3, "CGPA", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+        If Not Me._FirstOnly Then
+            ws.CreateNewRange(col + 3, 3, "Recommendation", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+            ws.CreateNewRange(col + 4, 3, "CGPA", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+            ws.CreateNewRange(col + 5, 3, "Cumulatiev Recommendation", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+            ws.CreateNewRange(col + 6, 3, "Comment", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+        End If
 
         ws.CreateNewRange(1, 1, "TITLE AREA", CellValues.SharedString, 1, col + 4, Font:="Cambria")
 
@@ -102,23 +106,23 @@ Public Class ResultsIssue
 
         For Each stud In StudentsInDiscipline
             col = 0
-            ws.CreateNewRange(1, stR, stud.Index, CellValues.Number, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center,
+            ws.CreateNewRange(1, stR, stud.Student.Index, CellValues.Number, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center,
                Font:="Traditional arabic")
-            If stud.UnivNo IsNot Nothing Then
-                ws.CreateNewRange(2, stR, stud.UnivNo, CellValues.InlineString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin,
+            If stud.Student.UnivNo IsNot Nothing Then
+                ws.CreateNewRange(2, stR, stud.Student.UnivNo, CellValues.InlineString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin,
                   HAlign:=HorizontalAlignmentValues.Center)
             Else
                 ws.CreateNewRange(2, stR, "N/A", CellValues.InlineString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin,
                HAlign:=HorizontalAlignmentValues.Center)
             End If
-            ws.CreateNewRange(3, stR, stud.NameArabic, CellValues.InlineString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Font:="Traditional arabic",
+            ws.CreateNewRange(3, stR, stud.Student.NameArabic, CellValues.InlineString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Font:="Traditional arabic",
                HAlign:=HorizontalAlignmentValues.Right)
 
 
             'Dim mks = db.GetMarksForStudent(_TYear, sem - 1, stud.SIndex)
             'mks.AddRange(db.GetMarksForStudent(_TYear, sem, stud.SIndex))
 
-            Dim mks = (From crs In stud.MarksExamCWs
+            Dim mks = (From crs In stud.Student.MarksExamCWs
                        Where ((crs.YearId = Me._TYear And crs.GradeId = Me._Grade And crs.SemesterId = 1) Or (Not Me._FirstOnly And crs.YearId = Me._TYear And crs.GradeId = Me._Grade And crs.SemesterId = 2))
                        Select crs).ToList()
 
@@ -164,11 +168,20 @@ Public Class ResultsIssue
             If Me._FirstOnly Then
 
             Else
-                Dim rc = (From gp In stud.GPAwRecomms
-                         Where gp.YearId = Me._TYear And Me._Grade = gp.GradeId).SingleOrDefault()
+                Dim rc = stud.BatchEnrollment.GPAwRecomm
                 If rc IsNot Nothing Then
-                    '   ws.CreateNewRange(col + 3, stR, rc.RecommendationType.ShortNameEnglish, CellValues.InlineString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin,
-                    'HAlign:=HorizontalAlignmentValues.Center)
+                    ws.CreateNewRange(col + 3, stR, rc.YearRecommendationType.ShortNameEnglish, CellValues.InlineString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    If rc.CGPA.HasValue Then
+                        ws.CreateNewRange(col + 4, stR, rc.CGPA, CellValues.Number, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    Else
+                        ws.CreateNewRange(col + 4, stR, "--", CellValues.SharedString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    End If
+                    If rc.CumulativeRecommendationType IsNot Nothing Then
+                        ws.CreateNewRange(col + 5, stR, rc.CumulativeRecommendationType.ShortNameEnglish, CellValues.SharedString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    Else
+                        ws.CreateNewRange(col + 5, stR, "--", CellValues.SharedString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    End If
+                    ws.CreateNewRange(col + 6, stR, rc.Comment, CellValues.InlineString, 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
                 End If
             End If
 
