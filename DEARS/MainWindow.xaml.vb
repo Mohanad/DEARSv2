@@ -123,9 +123,9 @@ Class MainWindow
 
     Private Sub SaveToExcelButton_Click(sender As Object, e As RoutedEventArgs)
         Dim dgs As IEnumerable(Of DataGrid) = FindVisualChildren(Of DataGrid)(Me.MainArea)
-        Dim SaveDialog As New Windows.Forms.SaveFileDialog()
+        Dim SaveDialog As New Microsoft.Win32.SaveFileDialog()
         SaveDialog.Filter = "Excel Workbook (*.xlsx)|*.xlsx"
-        If SaveDialog.ShowDialog() = Forms.DialogResult.OK Then
+        If SaveDialog.ShowDialog() = True Then
             Dim SheetName As String = selectedbtn.Tag
             If selectedbtn.Tag = "CourseEnrollment" Then
                 Dim crs = (From cr In SharedState.DBContext.Courses.Local Where cr.Id = SharedState.GetSingleInstance.CourseID Select cr).Single
