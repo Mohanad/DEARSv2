@@ -4,10 +4,10 @@
     ' can be handled in this file.
 
     
-    'Private Sub Application_DispatcherUnhandledException(sender As Object, e As Windows.Threading.DispatcherUnhandledExceptionEventArgs) Handles Me.DispatcherUnhandledException
-    '    MsgBox(FlattenOutException(e.Exception))
-    '    e.Handled = True
-    'End Sub
+    Private Sub Application_DispatcherUnhandledException(sender As Object, e As Windows.Threading.DispatcherUnhandledExceptionEventArgs) Handles Me.DispatcherUnhandledException
+        MsgBox(FlattenOutException(e.Exception))
+        e.Handled = True
+    End Sub
 
     Public Shared Function FlattenOutException(ex As Exception) As String
         Dim msg As String = ex.Message
