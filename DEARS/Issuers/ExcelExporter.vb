@@ -34,7 +34,11 @@ Public Class ExcelExporter
                             Dim prps = prprtyName.Split(".")
                             value = it.GetType().GetProperty(prps(0)).GetValue(it)
                             For Each px In prps.Skip(1)
-                                value = value.GetType().GetProperty(px).GetValue(value)
+                                If value IsNot Nothing Then
+                                    value = value.GetType().GetProperty(px).GetValue(value)
+                                Else
+                                    Exit For
+                                End If
                             Next
                         Else
                             value = it.GetType().GetProperty(prprtyName).GetValue(it)

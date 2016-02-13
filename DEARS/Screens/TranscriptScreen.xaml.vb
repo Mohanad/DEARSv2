@@ -37,13 +37,26 @@ Public Class TranscriptScreen
              Order By d.YearId Ascending, d.GradeId Ascending
              Select d).ToList()
 
-            If (From d In tIssue.SelectedStudent.BatchEnrollments
+            Dim LastEnr = (From d In tIssue.SelectedStudent.BatchEnrollments
                  Order By d.YearId Ascending, d.GradeId Ascending
-                 Select d).Last.GradeId = 5 Then
-                TranscriptTypeLabel.Content = "Graduate"
-            Else
-                TranscriptTypeLabel.Content = "Undergraduate"
+                 Select d).LastOrDefault
+            If LastEnr IsNot Nothing Then
+
+                If (LastEnr).GradeId = 5 Then
+                    TranscriptTypeLabel.Content = "Graduate"
+                Else
+                    TranscriptTypeLabel.Content = "Undergraduate"
+                End If
+
+                If LastEnr.GPAwRecomm IsNot Nothing Then
+                    CGPALabel.Content = LastEnr.GPAwRecomm.CGPA
+                    If LastEnr.GPAwRecomm.CumulativeRecommendationType IsNot Nothing Then
+                        RecommendationLabel.Content = LastEnr.GPAwRecomm.CumulativeRecommendationType.NameEnglish
+                    End If
+                End If
+
             End If
+
         End If
     End Sub
 
