@@ -71,6 +71,11 @@
             gpw = New GPAwRecomm() With {.StudentId = studEnr.StudentId, .GradeId = studEnr.GradeId, .YearId = studEnr.YearId}
         End If
 
+        Dim Comment As String = ""
+        If studEnr.Student.Index = 104040 Then
+            Comment = ""
+        End If
+
         Dim Marks As List(Of MarksExamCW) = GetStudentMarks(studEnr, ExamTypeEnum.SecondSemester)
         Dim GradesTotalList As List(Of GradeTotal) = Marks.ConvertAll(Of GradeTotal)(Function(s) AssignGrade(s))
         Dim PreviousCGPA As Decimal? = GetPreviousCGPA(studEnr)
@@ -92,10 +97,6 @@
             Return gpw
         End If
 
-        Dim Comment As String = ""
-        If studEnr.Student.Index = 107023 Then
-            Comment = ""
-        End If
         gpw.YearRecommId = NiceRecomm(GPA, Comment)
         gpw.CumulativeRecommId = GNiceRecomm(gpw.CGPA, PreviousCGPA, gpw.YearRecommId, Comment)
         gpw.Comment = Comment
@@ -214,7 +215,7 @@
 
             If mk.CWMark < 0.3 * CWFraction Or mk.ExamMark < 0.3 * ExFraction Then
                 AssignGrade.Grade = "F"
-            ElseIf mk.CWMark < 0.3 * CWFraction Or mk.ExamMark < 0.3 * ExFraction Then
+            ElseIf mk.CWMark < 0.4 * CWFraction Or mk.ExamMark < 0.4 * ExFraction Then
                 AssignGrade.Grade = "D"
             ElseIf AssignGrade.Total >= 90 Then
                 AssignGrade.Grade = "A+"
