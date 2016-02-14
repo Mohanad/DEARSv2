@@ -82,6 +82,27 @@ Public Class TranscriptIssuer
             End If
         Next
 
+        If LastSemesterEnroll.BatchEnrollment.GPAwRecomm IsNot Nothing AndAlso LastSemesterEnroll.BatchEnrollment.GPAwRecomm.CGPA IsNot Nothing Then
+            ts.SetCtrlValue("CGPA", LastSemesterEnroll.BatchEnrollment.GPAwRecomm.CGPA)
+            If LastSemesterEnroll.BatchEnrollment.GPAwRecomm.CumulativeRecommendationType IsNot Nothing Then
+                ts.SetCtrlValue("Grade", LastSemesterEnroll.BatchEnrollment.GPAwRecomm.CumulativeRecommendationType.NameEnglish)
+            End If
+        End If
+        tags.Remove("CGPA")
+        tags.Remove("Grade")
+
+        For Each gpatag In tags.Where(Function(s) s.StartsWith("GPA"))
+            Dim gr = Integer.Parse(gpatag.Substring(3))
+            Dim lastRes = (From enr In SelectedStudent.BatchEnrollments
+                           Where enr.GPAwRecomm IsNot Nothing And enr.GPAwRecomm.GradeId = gr
+                           Order By enr.GPAwRecomm.YearId Descending Take 1).SingleOrDefault()
+            If lastRes IsNot Nothing Then
+                ts.SetCtrlValue(gpatag, lastRes.GPAwRecomm.GPA)
+            End If
+        Next
+
+        ts.SetCtrlValue("IssueData", System.DateTime.Today)
+
         ts.Close()
 
         Process.Start("winword", """" + TranscriptFilename + """")
