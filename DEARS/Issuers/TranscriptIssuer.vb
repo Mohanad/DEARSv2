@@ -98,6 +98,15 @@ Public Class TranscriptIssuer
                            Order By enr.GPAwRecomm.YearId Descending Take 1).SingleOrDefault()
             If lastRes IsNot Nothing Then
                 ts.SetCtrlValue(gpatag, lastRes.GPAwRecomm.GPA)
+                ts.SetCtrlValue("Class" & gr, lastRes.GPAwRecomm.YearRecommendationType.NameEnglish)
+            End If
+            Dim firstYr = (From enr In SelectedStudent.BatchEnrollments
+                           Where enr.GradeId = gr Order By enr.YearId Ascending Take 1).SingleOrDefault()
+            If firstYr IsNot Nothing Then
+                ts.SetCtrlValue(firstYr.Grade.NameEnglish & "TY" & 1, firstYr.YearId)
+            End If
+            If lastRes IsNot Nothing Then
+                ts.SetCtrlValue(lastRes.Grade.NameEnglish & "TY" & 2, lastRes.YearId + 1)
             End If
         Next
 

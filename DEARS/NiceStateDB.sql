@@ -28,7 +28,7 @@ INSERT [dbo].[Grades] ([Id], [NameEnglish], [NameArabic])
 VALUES 
 (1, N'First', N'الأول'),
 (2, N'Second', N'الثاني'),
-(3, N'Thrid', N'الثالث'),
+(3, N'Third', N'الثالث'),
 (4, N'Fourth', N'الرابع'),
 (5, N'Fifth', N'الخامس')
 SET IDENTITY_INSERT [dbo].[Grades] OFF
