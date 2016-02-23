@@ -151,7 +151,21 @@ Class MainWindow
     End Function
 
     Private Sub ImportFromExcelButton_Click(sender As Object, e As RoutedEventArgs)
-
+        Dim openFileDialog As New Forms.OpenFileDialog()
+        openFileDialog.Filter = "Excel OpenXML Document (*.xlsx) |*.xlsx"
+        openFileDialog.CheckFileExists = True
+        If openFileDialog.ShowDialog() = Forms.DialogResult.OK Then
+            If IO.File.Exists(openFileDialog.FileName) Then
+                Dim wb As New DetailedResultsImporter.CWorkbook(openFileDialog.FileName, False)
+                Dim xlsImportDialog As New ExcelImporterDialog()
+                xlsImportDialog.wb = wb
+                CType(xlsImportDialog.FindResource("SheetsViewSource"), CollectionViewSource).Source = wb.GetWorksheetNames()
+                If xlsImportDialog.ShowDialog() Then
+                    'CType(ViewDictionary(selectedbtn.Tag), IBaseScreen)
+                End If
+                wb.Close()
+            End If
+        End If
     End Sub
 
     Private Sub Window_ContentRendered(sender As Object, e As EventArgs)

@@ -37,8 +37,10 @@ Public Class CWorkbook
 			Throw New NotImplementedException("Later")
 		End If
 
-		_ss = xlWB.WorkbookPart.WorkbookStylesPart.Stylesheet
-		_sst = xlWB.WorkbookPart.SharedStringTablePart.SharedStringTable
+        _ss = xlWB.WorkbookPart.WorkbookStylesPart.Stylesheet
+        If xlWB.WorkbookPart.SharedStringTablePart IsNot Nothing Then
+            _sst = xlWB.WorkbookPart.SharedStringTablePart.SharedStringTable
+        End If
 		Dim Fills = _ss.Elements(Of Fills).Single().Elements(Of Fill).ToList()
 		FillColors = New List(Of String)
 		For Each f In Fills

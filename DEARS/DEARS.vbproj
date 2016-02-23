@@ -210,6 +210,9 @@
     <Compile Include="DataAccess\TuitionType.vb">
       <DependentUpon>AcademicResultsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Importer\ExcelImporterDialog.xaml.vb">
+      <DependentUpon>ExcelImporterDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Importer\ImporterDialog.xaml.vb">
       <DependentUpon>ImporterDialog.xaml</DependentUpon>
     </Compile>
@@ -304,6 +307,10 @@
     <Compile Include="SQLConnectWindow.xaml.vb">
       <DependentUpon>SQLConnectWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Importer\ExcelImporterDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Importer\ImporterDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

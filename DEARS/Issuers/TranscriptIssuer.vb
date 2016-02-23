@@ -69,14 +69,8 @@ Public Class TranscriptIssuer
                 Dim mrk = (From x In SelectedStudent.MarksExamCWs
                        Where x.CourseId = crs.Id).SingleOrDefault()
                 If mrk IsNot Nothing Then
-                    Dim fin = 0
-                    If mrk.ExamMark.HasValue Then
-                        fin += mrk.ExamMark
-                    End If
-                    If mrk.CWMark.HasValue Then
-                        fin += mrk.CWMark
-                    End If
-                    ts.SetCtrlValue(courseTag, MakeGrade(fin))
+                    Dim gr = ResultsProcessingUtilities.AssignGrade(mrk)
+                    ts.SetCtrlValue(courseTag, gr.Grade)
                     tags.Remove(courseTag)
                 End If
             End If
@@ -97,7 +91,9 @@ Public Class TranscriptIssuer
                            Where enr.GPAwRecomm IsNot Nothing And enr.GPAwRecomm.GradeId = gr
                            Order By enr.GPAwRecomm.YearId Descending Take 1).SingleOrDefault()
             If lastRes IsNot Nothing Then
-                ts.SetCtrlValue(gpatag, lastRes.GPAwRecomm.GPA)
+                If lastRes.GPAwRecomm.GPA IsNot Nothing Then
+                    ts.SetCtrlValue(gpatag, System.Math.Round(lastRes.GPAwRecomm.GPA.Value, 2))
+                End If
                 ts.SetCtrlValue("Class" & gr, lastRes.GPAwRecomm.YearRecommendationType.NameEnglish)
             End If
             Dim firstYr = (From enr In SelectedStudent.BatchEnrollments

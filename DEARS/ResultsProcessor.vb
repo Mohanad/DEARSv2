@@ -72,7 +72,7 @@
         End If
 
         Dim Comment As String = ""
-        If studEnr.Student.Index = 104040 Then
+        If studEnr.Student.Index = 104012 Then
             Comment = ""
         End If
 
@@ -192,7 +192,7 @@
         Return marks.ToList()
     End Function
 
-    Private Function AssignGrade(mk As MarksExamCW) As GradeTotal
+    Public Function AssignGrade(mk As MarksExamCW) As GradeTotal
         AssignGrade = New GradeTotal()
         AssignGrade.Mark = mk
         Dim CWFraction As Decimal = mk.OfferedCourse.CourseWorkFraction
