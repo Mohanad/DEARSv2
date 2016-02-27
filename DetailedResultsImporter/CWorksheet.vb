@@ -19,7 +19,7 @@ Public Class CWorkbook
 
 	Public FillColors As List(Of String)
 	Public FinStyles As List(Of String)
-    Dim tmpFile As String = My.Computer.FileSystem.SpecialDirectories.Temp + "\Temp134.xlsx"
+    Dim tmpFile As String = My.Computer.FileSystem.GetTempFileName()
 	Public Sub Close()
 		xlWB.Close()
         IO.File.Delete(tmpFile)

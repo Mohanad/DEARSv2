@@ -7,6 +7,7 @@
     <UserControl.Resources>
         <CollectionViewSource x:Key="GradesViewSource" />
         <CollectionViewSource x:Key="StudentsEnrollmentViewSource" />
+        <CollectionViewSource x:Key="EligiblesViewSource" />
         <CollectionViewSource x:Key="EnrollmentsViewSource" />
     </UserControl.Resources>
     <Grid>
@@ -61,11 +62,12 @@
 
 
 
-            <DataGrid Grid.Row="1" Width="Auto" Grid.Column="2">
+            <DataGrid Grid.Row="1" Width="Auto" Grid.Column="2" CanUserAddRows="False" Name="EligibleStudsDataGrid" AutoGenerateColumns="False"
+                      ItemsSource="{Binding Source={StaticResource EligiblesViewSource}}">
                 <DataGrid.Columns>
-                    <DataGridComboBoxColumn Header="Index" />
-                    <DataGridComboBoxColumn Header="Univ No" />
-                    <DataGridComboBoxColumn Header="Name" />
+                    <DataGridTextColumn Header="Index" Binding="{Binding Path=Student.Index, Mode=TwoWay,  UpdateSourceTrigger=LostFocus, ValidatesOnExceptions=True}"/>
+                    <DataGridTextColumn Header="Univ No"  Binding="{Binding Path=Student.UnivNo,  Mode=TwoWay, UpdateSourceTrigger=LostFocus, ValidatesOnExceptions=True}"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Student.NameArabic,  Mode=TwoWay, UpdateSourceTrigger=LostFocus,ValidatesOnExceptions=True}"/>
                 </DataGrid.Columns>
             </DataGrid>
 

@@ -52,6 +52,7 @@ Public Class MeetingResultsScreen
         Next
 
         GPAViewSource.Source = StudentsCollection
+        GPAViewSource.View.Filter = AddressOf DisciplineFilterFunction
     End Sub
 
     Private Sub UserControl_Loaded(sender As Object, e As RoutedEventArgs)
@@ -90,34 +91,58 @@ Public Class MeetingResultsScreen
     End Sub
 
     Private Sub ProcessButton_Click(sender As Object, e As RoutedEventArgs)
-        Dim alldiscp As Boolean = Me.AllDisciplinescheckBox.IsChecked
-        Me.GradeComboBox.IsEnabled = False
-        Me.DisciplineComboBox.IsEnabled = False
-        Me.AllDisciplinescheckBox.IsEnabled = False
-        Me.GenerateButton.IsEnabled = False
+        Try
+            Dim alldiscp As Boolean = Me.AllDisciplinescheckBox.IsChecked
+            Me.GradeComboBox.IsEnabled = False
+            Me.DisciplineComboBox.IsEnabled = False
+            Me.AllDisciplinescheckBox.IsEnabled = False
+            Me.GenerateButton.IsEnabled = False
 
-        Me.ProcessButton.Content = "Cancel"
+            Me.ProcessButton.Content = "Cancel"
 
-        SharedState.DBContext.RecommendationTypes.ToList()
+            SharedState.DBContext.RecommendationTypes.ToList()
 
-        ' Start the processing operation.
-        Dim YearID As Integer = SharedState.GetSingleInstance().YearID
-        Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
-        Dim SemesterID As Integer = SharedState.GetSingleInstance().SemesterID
-        Dim DisciplineID As Integer = SharedState.GetSingleInstance.DisciplineID
+            ' Start the processing operation.
+            Dim YearID As Integer = SharedState.GetSingleInstance().YearID
+            Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
+            Dim SemesterID As Integer = SharedState.GetSingleInstance().SemesterID
+            Dim DisciplineID As Integer = SharedState.GetSingleInstance.DisciplineID
 
-        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
+            SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
 
-        ResultsProcessingUtilities.SecondSemesterProcessing(YearID, GradeID, DisciplineID, ExamTypeEnum.SecondSemester)
+            ResultsProcessingUtilities.SecondSemesterProcessing(YearID, GradeID, DisciplineID, ExamTypeEnum.SecondSemester)
+        Catch ex As Exception
+            MsgBox(Application.FlattenOutException(ex))
+        Finally
+            SharedState.DBContext.ChangeTracker.DetectChanges()
+            SharedState.DBContext.Configuration.AutoDetectChangesEnabled = True
 
-        SharedState.DBContext.ChangeTracker.DetectChanges()
-        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = True
-
-        Me.GradeComboBox.IsEnabled = True
-        Me.AllDisciplinescheckBox.IsEnabled = True
-        Me.AllDisciplinescheckBox.IsChecked = SharedState.GetSingleInstance.AllDisciplines
-        Me.GenerateButton.IsEnabled = True
-        Me.ProcessButton.Content = "Process"
-        Me.ResultsDataGrid.Items.Refresh()
+            Me.GradeComboBox.IsEnabled = True
+            Me.AllDisciplinescheckBox.IsEnabled = True
+            Me.AllDisciplinescheckBox.IsChecked = SharedState.GetSingleInstance.AllDisciplines
+            Me.DisciplineComboBox.IsEnabled = Not Me.AllDisciplinescheckBox.IsChecked
+            Me.GenerateButton.IsEnabled = True
+            Me.ProcessButton.Content = "Process"
+            Me.ResultsDataGrid.Items.Refresh()
+        End Try
     End Sub
+
+    Private Sub AllDisciplinescheckBox_Checked(sender As Object, e As RoutedEventArgs)
+        GPAViewSource.View.Filter = AddressOf DisciplineFilterFunction
+    End Sub
+
+    Private Sub AllDisciplinescheckBox_Unchecked(sender As Object, e As RoutedEventArgs)
+        GPAViewSource.View.Filter = AddressOf DisciplineFilterFunction
+    End Sub
+
+    Private Function DisciplineFilterFunction(s As Object) As Boolean
+        Dim item = CType(s, GPAwRecomm)
+        If AllDisciplinescheckBox.IsChecked Then
+            Return True
+        Else
+            Dim SemesterID = SharedState.GetSingleInstance.SemesterID
+            Return (SharedState.GetSingleInstance.DisciplineID = _
+                    item.BatchEnrollment.SemesterBatchEnrollments.Where(Function(q) q.SemesterId = SemesterID).First.DisciplineId)
+        End If
+    End Function
 End Class

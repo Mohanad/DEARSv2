@@ -13,6 +13,7 @@ Public Class StudentEnrollmentScreen
     Private GradesViewSource As CollectionViewSource
     Private StudentsEnrollmentViewSource As CollectionViewSource
     Private EnrollmentsViewSource As CollectionViewSource
+    Private EligiblesViewSource As CollectionViewSource
 
     Dim StudsCollection As StudentSearchCollection
     Sub LoadData(PropertyName As String) Implements IBaseScreen.LoadData
@@ -49,6 +50,14 @@ Public Class StudentEnrollmentScreen
 
         StudentsEnrollmentViewSource.Source = StudsCollection
 
+        Dim q_regstuds = q_studenr.ToList().ConvertAll(Of Integer)(Function(s) s.StudentId).ToList()
+
+        Dim q_passed_n = (From enr In DBContext.BatchEnrollments
+                         Where enr.YearId = (YearID - 1) And (GradeID - 1) = enr.GradeId And enr.GPAwRecomm.YearRecommendationType.Pass = True).ToList()
+        'And q_regstuds.Contains(enr.StudentId)
+
+        EligiblesViewSource.Source = q_passed_n.ToList()
+
         'Dim q_elstud = From enr In DBContext.BatchEnrollments
         '               Where enr.YearId = YearID And enr.GradeId = GradeID And
     End Sub
@@ -58,6 +67,7 @@ Public Class StudentEnrollmentScreen
         GradesViewSource = CType(Me.FindResource("GradesViewSource"), CollectionViewSource)
         StudentsEnrollmentViewSource = CType(Me.FindResource("StudentsEnrollmentViewSource"), CollectionViewSource)
         EnrollmentsViewSource = CType(Me.FindResource("EnrollmentsViewSource"), CollectionViewSource)
+        EligiblesViewSource = CType(Me.FindResource("EligiblesViewSource"), CollectionViewSource)
 
         DBContext.Configuration.ProxyCreationEnabled = False
         LoadData("")

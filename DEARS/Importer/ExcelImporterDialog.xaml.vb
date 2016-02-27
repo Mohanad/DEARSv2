@@ -4,8 +4,6 @@
         Dim sheetName As String = e.AddedItems(0)
         Dim ws As DetailedResultsImporter.CWorksheet = wb.GetWorksheet(sheetName)
 
-        For Each rn In ws._ranges
-            MsgBox(rn.Value)
-        Next
+        MsgBox(ws.GetWorksheetName())
     End Sub
 End Class

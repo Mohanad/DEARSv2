@@ -38,7 +38,7 @@ SET IDENTITY_INSERT [dbo].[Disciplines] ON
 
 INSERT [dbo].[Disciplines] ([Id], [NameEnglish], [NameArabic], [NameEnglishShort], [NameArabicShort]) 
 VALUES 
-(1, N'Non-Specialized', N'غير متخصص', N'Non-Specilized', N'غير متخصص'),
+(1, N'Non-Specialized', N'غير متخصص', N'Non-Specialized', N'غير متخصص'),
 (2, N'Electronic and Computer Systems Engineering', N'هندسة الإلكترونيات و نظم الحاسوب', N'Electronics', N'إلكترونيات'),
 (3, N'Electronic Systems Software Engineering', N'هندسة برمجيات النطم الإلكترونية', N'Software', N'هندسة برمجيات'),
 (4, N'Telecommunications Engineering', N'هندسة الإتصالات', N'Telecommunications', N'اتصالات'),

@@ -39,7 +39,8 @@
                 <ComboBox ItemsSource="{Binding Source={StaticResource DisciplinesViewSource}}" DisplayMemberPath="Discipline.NameEnglishShort" SelectedValuePath="DisciplineId" SelectedValue="{Binding DisciplineID}"
                           IsEnabled="{Binding ElementName=AllDisciplinescheckBox,Path=IsChecked, Converter={StaticResource NotBoolconverter}}"
                           Name="DisciplineComboBox"></ComboBox>
-                <CheckBox Name="AllDisciplinescheckBox" IsChecked="{Binding AllDisciplines}"  HorizontalAlignment="Center" VerticalAlignment="Center">ALL</CheckBox>
+                <CheckBox Name="AllDisciplinescheckBox" IsChecked="{Binding AllDisciplines}"  HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Checked="AllDisciplinescheckBox_Checked" Unchecked="AllDisciplinescheckBox_Unchecked">ALL</CheckBox>
 
                 <Button HorizontalAlignment="Center" Name="ProcessButton" Click="ProcessButton_Click">Process</Button>
                 <Button HorizontalAlignment="Center" Name="GenerateButton" Click="GenerateButton_Click">Generate</Button>
