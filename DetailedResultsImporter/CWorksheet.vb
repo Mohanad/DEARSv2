@@ -385,7 +385,10 @@ Public Class CWorksheet
             erange = "A1:" & CColumn.GetColumnName(maxCol) & maxRow
         End If
 
-
+        If Not IsCellInRange(erange, icol, irow) Then
+            icol = 1
+            irow = 1
+        End If
 
 		Dim lastIncCol As Boolean = False
 		Dim selector As Integer = 0
@@ -393,7 +396,10 @@ Public Class CWorksheet
         While IsCellInRange(erange, icol, irow)
             'Simple: check cell if empty move down else move right
             selector = irow * MaxRowWidth + icol
-            Dim mergedRange As Boolean = mcells.TryGetValue(selector, ref)
+            Dim mergedRange As Boolean = False
+            If mcells IsNot Nothing Then
+                mergedRange = mcells.TryGetValue(selector, ref)
+            End If
 
             'If (GetCellValue(sheetData, icol, irow) Is Nothing) Xor (GetCellValue(GetCell(irow, icol)) Is Nothing) Then
             '	Beep()
@@ -615,45 +621,45 @@ Public Structure CStyle
 	'Public cNumFmt As NumFmt
 End Structure
 
-Structure CColumn
-	Public Shared Function GetColumnName(ByVal ColNumber As Integer) As String
-		'Verify in range number
-		Dim colName As String = ""
-		Dim m As Integer = 0
-		While (ColNumber > 0)
-			m = System.Math.Floor((ColNumber - 1) Mod 26)
-			colName = Chr(65 + m) + colName
-			ColNumber = Int((ColNumber - m) / 26)
-		End While
-		Return colName
-	End Function
-	Public Shared Function GetColumnNumber(ByVal ColumnName As String) As Integer
-		Dim j As Integer
-		Dim numb As Integer = 0
-		For i As Integer = ColumnName.Length - 1 To 0 Step -1
-			j = ColumnName.Length - 1 - i
-			numb = numb + (AscW(ColumnName.Chars(i)) - 64) * System.Math.Pow(26, j)
-		Next
-		Return numb
-	End Function
-	Public Shared Function MakeColumn(ByVal col As Spreadsheet.Column) As CColumn
-		Dim cl As CColumn
-		cl.Min = col.Min.Value
-		cl.Max = col.Max.Value
-		If col.Hidden IsNot Nothing Then
-			cl.Hidden = col.Hidden.Value
-		End If
-		If col.Width IsNot Nothing Then
-			cl.Width = col.Width.Value
-			If col.Width.Value = 0 Then
-				cl.Hidden = True
-			End If
-		End If
-		Return cl
-	End Function
+Public Structure CColumn
+    Public Shared Function GetColumnName(ByVal ColNumber As Integer) As String
+        'Verify in range number
+        Dim colName As String = ""
+        Dim m As Integer = 0
+        While (ColNumber > 0)
+            m = System.Math.Floor((ColNumber - 1) Mod 26)
+            colName = Chr(65 + m) + colName
+            ColNumber = Int((ColNumber - m) / 26)
+        End While
+        Return colName
+    End Function
+    Public Shared Function GetColumnNumber(ByVal ColumnName As String) As Integer
+        Dim j As Integer
+        Dim numb As Integer = 0
+        For i As Integer = ColumnName.Length - 1 To 0 Step -1
+            j = ColumnName.Length - 1 - i
+            numb = numb + (AscW(ColumnName.Chars(i)) - 64) * System.Math.Pow(26, j)
+        Next
+        Return numb
+    End Function
+    Public Shared Function MakeColumn(ByVal col As Spreadsheet.Column) As CColumn
+        Dim cl As CColumn
+        cl.Min = col.Min.Value
+        cl.Max = col.Max.Value
+        If col.Hidden IsNot Nothing Then
+            cl.Hidden = col.Hidden.Value
+        End If
+        If col.Width IsNot Nothing Then
+            cl.Width = col.Width.Value
+            If col.Width.Value = 0 Then
+                cl.Hidden = True
+            End If
+        End If
+        Return cl
+    End Function
 
-	Dim Min As Integer
-	Dim Max As Integer
-	Dim Width As Double
-	Dim Hidden As Boolean
+    Dim Min As Integer
+    Dim Max As Integer
+    Dim Width As Double
+    Dim Hidden As Boolean
 End Structure

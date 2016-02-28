@@ -88,6 +88,17 @@
     Private Sub UserControl_Unloaded(sender As Object, e As RoutedEventArgs)
         QueryParamsBox.DataContext = Nothing
     End Sub
+
+    Sub ImportFromExcelFile(Filename As String)
+        Dim wb As New DetailedResultsImporter.CWorkbook(Filename, False)
+        Dim xlsImportDialog As New ExcelImporterDialog()
+        xlsImportDialog.wb = wb
+        xlsImportDialog.RequiredDataColumns = New List(Of String)({"Index", "UnivNo", "Name", "CWMark"})
+        CType(xlsImportDialog.FindResource("SheetsViewSource"), CollectionViewSource).Source = wb.GetWorksheetNames()
+        If xlsImportDialog.ShowDialog() Then
+            wb.Close()
+        End If
+    End Sub
 End Class
 
 Public Class MaximumMarkValidation

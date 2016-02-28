@@ -156,14 +156,8 @@ Class MainWindow
         openFileDialog.CheckFileExists = True
         If openFileDialog.ShowDialog() = Forms.DialogResult.OK Then
             If IO.File.Exists(openFileDialog.FileName) Then
-                Dim wb As New DetailedResultsImporter.CWorkbook(openFileDialog.FileName, False)
-                Dim xlsImportDialog As New ExcelImporterDialog()
-                xlsImportDialog.wb = wb
-                CType(xlsImportDialog.FindResource("SheetsViewSource"), CollectionViewSource).Source = wb.GetWorksheetNames()
-                If xlsImportDialog.ShowDialog() Then
-                    'CType(ViewDictionary(selectedbtn.Tag), IBaseScreen)
-                End If
-                wb.Close()
+                ' For now we will work on the Import CW Marks screen for developmentpurposes.
+                CType(ViewDictionary(selectedbtn.Tag), CourseWorkMarksScreen).ImportFromExcelFile(openFileDialog.FileName)
             End If
         End If
     End Sub
