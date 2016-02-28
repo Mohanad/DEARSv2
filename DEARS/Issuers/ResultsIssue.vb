@@ -99,8 +99,12 @@ Public Class ResultsIssue
             ws.CreateNewRange(col + 5, 3, "Cumulatiev Recommendation", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
             ws.CreateNewRange(col + 6, 3, "Comment", CellValues.SharedString, 3, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
         End If
+        If Not Me._FirstOnly Then
+            ws.CreateNewRange(1, 1, "TITLE AREA", CellValues.SharedString, 1, col + 6, Font:="Cambria")
+        Else
+            ws.CreateNewRange(1, 1, "TITLE AREA", CellValues.SharedString, 1, col + 2, Font:="Cambria")
+        End If
 
-        ws.CreateNewRange(1, 1, "TITLE AREA", CellValues.SharedString, 1, col + 4, Font:="Cambria")
 
         Dim stR As Integer = 6
 

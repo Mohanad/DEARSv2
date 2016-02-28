@@ -372,20 +372,32 @@ Public Class CWorksheet
 		Dim icol As Integer = 7
 		Dim irow As Integer = 5
 
-		Dim maxRow As Integer = CRange.RangeHeight(sheetDims.Reference.Value)
-		Dim maxCol As Integer = CRange.RangeWidth(sheetDims.Reference.Value)
+        Dim maxRow As Integer = 0
+        Dim maxCol As Integer = 0
+        Dim erange = Nothing
+        If sheetDims IsNot Nothing Then
+            maxRow = CRange.RangeHeight(sheetDims.Reference.Value)
+            maxCol = CRange.RangeWidth(sheetDims.Reference.Value)
+            erange = sheetDims.Reference.Value
+        Else
+            maxRow = _wsh.Descendants(Of Row).Max(Function(s) UInt32Value.ToUInt32(s.RowIndex))
+            maxCol = _wsh.Descendants(Of Column).Max(Function(s) UInt32Value.ToUInt32(s.Max))
+            erange = "A1:" & CColumn.GetColumnName(maxCol) & maxRow
+        End If
+
+
 
 		Dim lastIncCol As Boolean = False
 		Dim selector As Integer = 0
 		Dim ref As String = ""
-		While IsCellInRange(sheetDims.Reference.Value, icol, irow)
-			'Simple: check cell if empty move down else move right
-			selector = irow * MaxRowWidth + icol
-			Dim mergedRange As Boolean = mcells.TryGetValue(selector, ref)
+        While IsCellInRange(erange, icol, irow)
+            'Simple: check cell if empty move down else move right
+            selector = irow * MaxRowWidth + icol
+            Dim mergedRange As Boolean = mcells.TryGetValue(selector, ref)
 
-			'If (GetCellValue(sheetData, icol, irow) Is Nothing) Xor (GetCellValue(GetCell(irow, icol)) Is Nothing) Then
-			'	Beep()
-			'End If
+            'If (GetCellValue(sheetData, icol, irow) Is Nothing) Xor (GetCellValue(GetCell(irow, icol)) Is Nothing) Then
+            '	Beep()
+            'End If
 
             If (GetCellValue(sheetData, icol, irow) Is Nothing) Then
                 If mergedRange Then
@@ -414,7 +426,7 @@ Public Class CWorksheet
                 End If
                 lastIncCol = True
             End If
-		End While
+        End While
 		If lastIncCol Then
 			irow = maxRow
 		End If
