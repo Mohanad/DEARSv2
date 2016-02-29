@@ -2,6 +2,7 @@
 
 Public Class DisciplineCurriculumScreen
     Implements IBaseScreen
+
     Public ReadOnly Property DBContext As AcademicResultsDBEntities Implements IBaseScreen.DBContext
         Get
             Return SharedState.DBContext
@@ -60,5 +61,9 @@ Public Class DisciplineCurriculumScreen
 
     Private Sub UserControl_Unloaded(sender As Object, e As RoutedEventArgs)
         QueryParamnsBox.DataContext = Nothing
+    End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
     End Sub
 End Class

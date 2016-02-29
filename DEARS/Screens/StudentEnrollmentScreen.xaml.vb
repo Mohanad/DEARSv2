@@ -9,7 +9,7 @@ Public Class StudentEnrollmentScreen
             Return SharedState.DBContext
         End Get
     End Property
-     
+
     Private GradesViewSource As CollectionViewSource
     Private StudentsEnrollmentViewSource As CollectionViewSource
     Private EnrollmentsViewSource As CollectionViewSource
@@ -36,7 +36,7 @@ Public Class StudentEnrollmentScreen
 
         EnrollmentsViewSource.Source = DBContext.EnrollmentTypes.ToList()
 
-        
+
         Dim q_studenr = From enr In DBContext.BatchEnrollments.Include("Student")
                         Where enr.YearId = YearID And enr.GradeId = GradeID
                         Select enr
@@ -80,6 +80,10 @@ Public Class StudentEnrollmentScreen
     End Sub
 
     Private Sub Button_Click(sender As Object, e As RoutedEventArgs)
+
+    End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
 
     End Sub
 End Class

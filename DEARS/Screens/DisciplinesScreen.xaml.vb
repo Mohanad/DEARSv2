@@ -22,4 +22,7 @@
         DisciplinesViewSource.Source = New ObservableEntityCollection(Of Discipline)(DBContext, grades)
     End Sub
 
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
+    End Sub
 End Class

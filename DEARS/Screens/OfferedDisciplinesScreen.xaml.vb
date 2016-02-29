@@ -35,4 +35,8 @@
 
         OfferedDisciplinesViewSource.Source = New ObservableEntityCollection(Of OfferedDiscipline)(DBContext, q_offereddisciplines)
     End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
+    End Sub
 End Class

@@ -61,6 +61,10 @@ Public Class ManageDatabase
         Dim importerDialog As New ImporterDialog()
         importerDialog.ShowDialog()
     End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
+    End Sub
 End Class
 
 

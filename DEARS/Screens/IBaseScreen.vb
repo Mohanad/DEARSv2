@@ -1,6 +1,9 @@
 ﻿Public Interface IBaseScreen
     ReadOnly Property DBContext As AcademicResultsDBEntities
     Sub LoadData(PropertyName As String)
+
+    Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String)))
+
 End Interface
 
 Public Class DuplicateValidationRule

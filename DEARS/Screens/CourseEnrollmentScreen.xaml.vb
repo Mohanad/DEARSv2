@@ -14,7 +14,7 @@
         Dim YearID As Integer = SharedState.GetSingleInstance().YearID
         Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
         Dim SemesterID As Integer = SharedState.GetSingleInstance().SemesterID
-        
+
 
         If Not (PropertyName = "GradeID" Or PropertyName = "CourseID" Or PropertyName = "DisciplineID") Then
             Dim q_grades = From bt In DBContext.SemesterBatches.Include("Grade").Include("OfferedCourses")
@@ -89,6 +89,10 @@
 
     Private Sub AllDisciplinescheckBox_Unchecked(sender As Object, e As RoutedEventArgs)
         StudentsViewSource.View.Filter = AddressOf DisciplineFilterFunction
+    End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
     End Sub
 End Class
 

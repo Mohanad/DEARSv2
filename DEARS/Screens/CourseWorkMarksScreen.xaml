@@ -46,7 +46,7 @@
                 <CheckBox Name="AllDisciplinescheckBox" IsChecked="{Binding AllDisciplines}"  HorizontalAlignment="Center" VerticalAlignment="Center" Checked="AllDisciplinescheckBox_Checked" Unchecked="AllDisciplinescheckBox_Unchecked">ALL</CheckBox>
             </UniformGrid>
         </GroupBox>
-        <DataGrid Grid.Row="1" Width="Auto" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding Source={StaticResource StudentsViewSource}}">
+        <DataGrid Grid.Row="1" Width="Auto" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding Source={StaticResource StudentsViewSource}}" Name="CourseworkMarksDataGrid">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>

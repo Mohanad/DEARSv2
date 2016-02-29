@@ -151,13 +151,32 @@ Class MainWindow
     End Function
 
     Private Sub ImportFromExcelButton_Click(sender As Object, e As RoutedEventArgs)
+        Dim dgs As IEnumerable(Of DataGrid) = FindVisualChildren(Of DataGrid)(Me.MainArea)
+        Dim targetDataGrid = dgs.First
+
         Dim openFileDialog As New Forms.OpenFileDialog()
         openFileDialog.Filter = "Excel OpenXML Document (*.xlsx) |*.xlsx"
         openFileDialog.CheckFileExists = True
+
         If openFileDialog.ShowDialog() = Forms.DialogResult.OK Then
             If IO.File.Exists(openFileDialog.FileName) Then
                 ' For now we will work on the Import CW Marks screen for developmentpurposes.
-                CType(ViewDictionary(selectedbtn.Tag), CourseWorkMarksScreen).ImportFromExcelFile(openFileDialog.FileName)
+
+                Dim wb As New DetailedResultsImporter.CWorkbook(openFileDialog.FileName, False)
+                Dim xlsImportDialog As New ExcelImporterDialog()
+                xlsImportDialog.wb = wb
+                xlsImportDialog.RequiredDataColumns = targetDataGrid.Columns.ToList.ConvertAll(Function(s) s.Header.ToString)
+
+                CType(xlsImportDialog.FindResource("SheetsViewSource"), CollectionViewSource).Source = wb.GetWorksheetNames()
+                If xlsImportDialog.ShowDialog() = True Then
+                    wb.Close()
+                    'TODO: Validation of equal heights for data rows.
+
+                    CType(ViewDictionary(selectedbtn.Tag), IBaseScreen).SaveDataColumnsToEntities(xlsImportDialog.ExtractedData)
+                Else
+                    wb.Close()
+                End If
+
             End If
         End If
     End Sub

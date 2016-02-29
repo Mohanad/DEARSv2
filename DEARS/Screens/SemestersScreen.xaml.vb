@@ -23,4 +23,8 @@
 
         SemestersViewSource.Source = New ObservableEntityCollection(Of Semester)(DBContext, q_semesters)
     End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
+    End Sub
 End Class

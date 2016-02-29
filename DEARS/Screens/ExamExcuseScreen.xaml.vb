@@ -38,7 +38,7 @@
                         Where cwm.YearId = YearID And cwm.GradeId = GradeID And cwm.CourseId = CourseID And cwm.SemesterId = SemesterID And (cwm.Present = False)
                         Select cwm
 
-       
+
         Dim StudentsCollection As New ObservableEntityCollection(Of MarksExamCW)(DBContext, q_cwmarks)
 
         StudentsViewSource.Source = StudentsCollection
@@ -70,5 +70,9 @@
 
     Private Sub UserControl_Unloaded(sender As Object, e As RoutedEventArgs)
         QueryParamsBox.DataContext = Nothing
+    End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
     End Sub
 End Class

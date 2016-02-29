@@ -92,4 +92,8 @@ Public Class TranscriptScreen
     Private Sub UserControl_Unloaded(sender As Object, e As RoutedEventArgs)
         RemoveHandler tIssue.PropertyChanged, AddressOf StudentSelected
     End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
+    End Sub
 End Class

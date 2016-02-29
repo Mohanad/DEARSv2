@@ -23,4 +23,8 @@
 
         TeachersViewSource.Source = New ObservableEntityCollection(Of Teacher)(DBContext, q_teachers)
     End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
+    End Sub
 End Class

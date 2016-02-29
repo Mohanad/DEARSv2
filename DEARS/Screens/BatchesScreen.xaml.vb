@@ -2,6 +2,7 @@
 Public Class BatchesScreen
     Implements IBaseScreen
 
+
     Public ReadOnly Property DBContext As AcademicResultsDBEntities Implements IBaseScreen.DBContext
         Get
             Return SharedState.DBContext
@@ -45,5 +46,9 @@ Public Class BatchesScreen
         x.Insert(x.Count, y1)
         x.Remove(y1)
         DBContext.SaveChanges()
+    End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
     End Sub
 End Class

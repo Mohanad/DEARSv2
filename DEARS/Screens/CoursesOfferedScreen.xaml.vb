@@ -2,6 +2,7 @@
 
 Public Class CoursesOfferedScreen
     Implements IBaseScreen
+
     Public ReadOnly Property DBContext As AcademicResultsDBEntities Implements IBaseScreen.DBContext
         Get
             Return SharedState.DBContext
@@ -53,5 +54,9 @@ Public Class CoursesOfferedScreen
                               Select oc
 
         OfferedCoursesViewSource.Source = New ObservableEntityCollection(Of OfferedCourse)(DBContext, q_offeredcourse)
+    End Sub
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
     End Sub
 End Class

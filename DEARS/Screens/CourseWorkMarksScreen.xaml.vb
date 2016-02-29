@@ -89,16 +89,29 @@
         QueryParamsBox.DataContext = Nothing
     End Sub
 
-    Sub ImportFromExcelFile(Filename As String)
-        Dim wb As New DetailedResultsImporter.CWorkbook(Filename, False)
-        Dim xlsImportDialog As New ExcelImporterDialog()
-        xlsImportDialog.wb = wb
-        xlsImportDialog.RequiredDataColumns = New List(Of String)({"Index", "UnivNo", "Name", "CWMark"})
-        CType(xlsImportDialog.FindResource("SheetsViewSource"), CollectionViewSource).Source = wb.GetWorksheetNames()
-        If xlsImportDialog.ShowDialog() Then
-            wb.Close()
-        End If
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+        'For Coursework Marks we have YearID, GradeID, SemesterID, CourseID, StudentID.
+        Dim YearID As Integer = SharedState.GetSingleInstance().YearID
+        Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
+        Dim SemesterID As Integer = SharedState.GetSingleInstance().SemesterID
+        Dim CourseID As Integer = SharedState.GetSingleInstance().CourseID
+
+        Dim indexList = ExtractedData("Index").ConvertAll(Function(s) Integer.Parse(s))
+
+        'TODO: Check indices before modifying entities. This ensures either full import or no import.
+
+        For i As Integer = 0 To indexList.Count - 1
+            Dim StudentID As Integer = (From stud In SharedState.DBContext.Students.Local
+                                        Where stud.Index = indexList(i) Select stud.Id).Single()
+            Dim cwmark = (From cwm In SharedState.DBContext.MarksExamCWs.Local
+                          Where cwm.StudentId = StudentID And cwm.GradeId = GradeID And cwm.YearId = YearID And _
+                          cwm.SemesterId = SemesterID And cwm.CourseId = CourseID).Single()
+            cwmark.CWMark = ExtractedData("Coursework Marks")(i)
+        Next
+
+        CourseworkMarksDataGrid.Items.Refresh()
     End Sub
+
 End Class
 
 Public Class MaximumMarkValidation

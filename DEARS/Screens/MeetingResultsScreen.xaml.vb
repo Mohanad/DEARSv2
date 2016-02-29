@@ -145,4 +145,8 @@ Public Class MeetingResultsScreen
                     item.BatchEnrollment.SemesterBatchEnrollments.Where(Function(q) q.SemesterId = SemesterID).First.DisciplineId)
         End If
     End Function
+
+    Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+
+    End Sub
 End Class
