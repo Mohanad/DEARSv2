@@ -16,7 +16,6 @@ Public Class ExcelImporterDialog
         ws = wb.GetWorksheet(sheetName)
         StartRowTextBox.Text = DetailedResultsImporter.CRange.RangeRow(ws.erange)
         EndRowTextBox.Text = DetailedResultsImporter.CRange.RangeRow(ws.erange) + DetailedResultsImporter.CRange.RangeHeight(ws.erange) - 1
-        Me.DialogResult = False
     End Sub
 
     Private Sub RadioButton_Checked(sender As Object, e As RoutedEventArgs)
@@ -33,7 +32,13 @@ Public Class ExcelImporterDialog
         Dim firstRowData As List(Of String) = ws.ExtractDataFromSubrange("A" & firstRowNum & ":" & _
                                                                          CColumn.GetColumnName(lastColNum) & firstRowNum)
         FileHeadersViewSource.Source = firstRowData
-        Me.DialogResult = False
+        For Each x In ColumnMapping
+            If firstRowData.Contains(x.ScreenColumnName) Then
+                x.FileColumnName = x.ScreenColumnName
+            End If
+        Next
+
+        ColumnMappingGroupBox.IsEnabled = True
     End Sub
 
     Class ColumnMappingPair
@@ -68,12 +73,12 @@ Public Class ExcelImporterDialog
         Next
 
         Me.DialogResult = True
-        Me.Close()
+        'Me.Close()
     End Sub
 
 
     Private Sub CancelButton_Click(sender As Object, e As RoutedEventArgs)
         Me.DialogResult = False
-        Me.Close()
+        'Me.Close()
     End Sub
 End Class

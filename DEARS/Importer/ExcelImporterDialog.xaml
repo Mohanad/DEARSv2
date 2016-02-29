@@ -43,9 +43,9 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Column Mapping?" Grid.Row="2">
+        <GroupBox Header="Column Mapping?" Grid.Row="2" IsEnabled="False" Name="ColumnMappingGroupBox">
             <DataGrid ItemsSource="{Binding Source={StaticResource ColumnMappingViewSource}}" CanUserAddRows="False" CanUserDeleteRows="False"
-                      AutoGenerateColumns="False">
+                      AutoGenerateColumns="False" Name="ColumnMappingDataGrid">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Column Screen Name" Binding="{Binding Path=ScreenColumnName}" IsReadOnly="True"></DataGridTextColumn>
                     <DataGridComboBoxColumn Header="Column File Name" DisplayMemberPath="." SelectedValuePath="."
