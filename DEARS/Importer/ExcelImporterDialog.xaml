@@ -58,7 +58,7 @@
         <UniformGrid Columns="4" Rows="1" Grid.Row="3">
             <Label></Label>
             <Button Margin="10" Name="ImportButton" Click="ImportButton_Click">Import</Button>
-            <Button Margin="10">Cancel</Button>
+            <Button Margin="10" Name="CancelButton" Click="CancelButton_Click">Cancel</Button>
         </UniformGrid>
         <!--<GroupBox Header="Data">
             <DataGrid Name="ExcelDataGrid">

@@ -283,23 +283,36 @@ Public Class CWorksheet
 			Next
 		End If
 	End Sub
-	Function ExtractDataFromSubrange(ByVal Subrange As String) As List(Of String)
-		Dim data As New List(Of String)
-		Dim rnSel As Integer = Me.RangeSelector(Subrange)
-		Dim base As CRange = Me._ranges(rnSel)
-		Dim crn As CRange = Nothing
-		Dim colInc As Integer = Me._ranges(rnSel).NCols
-		Dim i As Integer = 0
-		For icol As Integer = base.Column To (base.Column + CRange.RangeWidth(Subrange) - 1) Step base.NCols
-			If Me._ranges.TryGetValue(rnSel + i * base.NCols, crn) Then
-				data.Add(crn.Value)
-			Else
-				data.Add(Nothing)
-			End If
-			i += 1
-		Next
-		Return data
-	End Function
+    Function ExtractDataColumn(colNum As Integer, firstRowNum As Integer, lastRowNum As Integer) As List(Of String)
+        Dim data As New List(Of String)
+        Dim crn As CRange = Nothing
+        For Row = firstRowNum To lastRowNum
+            If Me._ranges.TryGetValue(Row * MaxRowWidth + colNum, crn) Then
+                data.Add(crn.Value)
+            Else
+                data.Add(Nothing)
+            End If
+        Next
+        Return data
+    End Function
+
+    Function ExtractDataFromSubrange(ByVal Subrange As String) As List(Of String)
+        Dim data As New List(Of String)
+        Dim rnSel As Integer = Me.RangeSelector(Subrange)
+        Dim base As CRange = Me._ranges(rnSel)
+        Dim crn As CRange = Nothing
+        Dim colInc As Integer = Me._ranges(rnSel).NCols
+        Dim i As Integer = 0
+        For icol As Integer = base.Column To (base.Column + CRange.RangeWidth(Subrange) - 1) Step base.NCols
+            If Me._ranges.TryGetValue(rnSel + i * base.NCols, crn) Then
+                data.Add(crn.Value)
+            Else
+                data.Add(Nothing)
+            End If
+            i += 1
+        Next
+        Return data
+    End Function
 	Function GetCellValue(ByVal cl As Cell) As String
 		If cl Is Nothing Then
 			Return Nothing

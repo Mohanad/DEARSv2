@@ -16,6 +16,7 @@ Public Class ExcelImporterDialog
         ws = wb.GetWorksheet(sheetName)
         StartRowTextBox.Text = DetailedResultsImporter.CRange.RangeRow(ws.erange)
         EndRowTextBox.Text = DetailedResultsImporter.CRange.RangeRow(ws.erange) + DetailedResultsImporter.CRange.RangeHeight(ws.erange) - 1
+        Me.DialogResult = False
     End Sub
 
     Private Sub RadioButton_Checked(sender As Object, e As RoutedEventArgs)
@@ -32,13 +33,7 @@ Public Class ExcelImporterDialog
         Dim firstRowData As List(Of String) = ws.ExtractDataFromSubrange("A" & firstRowNum & ":" & _
                                                                          CColumn.GetColumnName(lastColNum) & firstRowNum)
         FileHeadersViewSource.Source = firstRowData
-
-        If WithHeaderRadioButton.IsChecked And Not NoHeaderRadioButton.IsChecked Then
-
-        ElseIf Not WithHeaderRadioButton.IsChecked And NoHeaderRadioButton.IsChecked Then
-
-        End If
-
+        Me.DialogResult = False
     End Sub
 
     Class ColumnMappingPair
@@ -51,6 +46,34 @@ Public Class ExcelImporterDialog
     End Class
 
     Private Sub ImportButton_Click(sender As Object, e As RoutedEventArgs)
+        Dim firstRowNum As Integer = Integer.Parse(StartRowTextBox.Text)
+        Dim lastRowNum As Integer = Integer.Parse(EndRowTextBox.Text)
 
+        Dim lastColNum As Integer = CRange.RangeColumn(ws.erange) + CRange.RangeWidth(ws.erange) - 1
+        Dim firstRowData As List(Of String) = ws.ExtractDataFromSubrange("A" & firstRowNum & ":" & _
+                                                                         CColumn.GetColumnName(lastColNum) & firstRowNum)
+        ExtractedData = New Dictionary(Of String, List(Of String))()
+
+        For Each it In ColumnMapping
+            Dim colNum = firstRowData.IndexOf(it.FileColumnName) + 1
+            If colNum < 1 Then
+                Throw New Exception("I am too old for this!! And it is late 1:15am")
+            End If
+
+            If WithHeaderRadioButton.IsChecked And Not NoHeaderRadioButton.IsChecked Then
+                ExtractedData(it.ScreenColumnName) = ws.ExtractDataColumn(colNum, firstRowNum + 1, lastRowNum)
+            ElseIf Not WithHeaderRadioButton.IsChecked And NoHeaderRadioButton.IsChecked Then
+                ExtractedData(it.ScreenColumnName) = ws.ExtractDataColumn(colNum, firstRowNum, lastRowNum)
+            End If
+        Next
+
+        Me.DialogResult = True
+        Me.Close()
+    End Sub
+
+
+    Private Sub CancelButton_Click(sender As Object, e As RoutedEventArgs)
+        Me.DialogResult = False
+        Me.Close()
     End Sub
 End Class
