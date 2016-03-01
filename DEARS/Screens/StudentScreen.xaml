@@ -43,7 +43,6 @@
                         <DataGridTextColumn Header="Name (English)" Binding="{Binding Path=NameEnglish, UpdateSourceTrigger=LostFocus}"/>
                         <DataGridTextColumn Header="Name (Arabic)" Binding="{Binding Path=NameArabic, UpdateSourceTrigger=LostFocus}"/>
                         <DataGridTextColumn Header="Phone" />
-                        <DataGridTextColumn/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
