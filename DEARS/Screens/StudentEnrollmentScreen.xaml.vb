@@ -84,6 +84,30 @@ Public Class StudentEnrollmentScreen
     End Sub
 
     Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+        'For Student Registration YearID, GradeID, StudentID.
+        Dim YearID As Integer = SharedState.GetSingleInstance().YearID
+        Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
+
+        Dim indexList = ExtractedData("Index").ConvertAll(Function(s) Integer.Parse(s))
+
+        'TODO: Check indices before modifying entities. This ensures either full import or no import.
+
+        For i As Integer = 0 To indexList.Count - 1
+            Dim ind = indexList(i)
+            Dim student As Student = (From stud In SharedState.DBContext.Students
+                                        Where stud.Index = ind Select stud).SingleOrDefault()
+            Dim senr = (From enr In SharedState.DBContext.BatchEnrollments.Local
+                        Where enr.StudentId = student.Id And enr.YearId = YearID And enr.GradeId = GradeID).SingleOrDefault()
+
+            Dim xet = ExtractedData("Enrollment")(i)
+            If senr Is Nothing Then
+                Dim stud_searcher = New StudentSearcher() With {.Student = student}
+                StudsCollection.Add(stud_searcher)
+                senr = stud_searcher.BatchEnrollment
+            End If
+            senr.EnrollmentTypeId = (From et In SharedState.DBContext.EnrollmentTypes.Local
+                                         Where et.NameEnglish = xet Select et.Id).SingleOrDefault()
+        Next
 
     End Sub
 End Class

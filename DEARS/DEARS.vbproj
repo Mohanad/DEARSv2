@@ -583,6 +583,10 @@
     <Resource Include="Images\server-database.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\ImageMohammed.JPG" />
+    <Content Include="Nationalities.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="NiceStateDB.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

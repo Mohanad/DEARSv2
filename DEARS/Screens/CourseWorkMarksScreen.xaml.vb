@@ -101,12 +101,15 @@
         'TODO: Check indices before modifying entities. This ensures either full import or no import.
 
         For i As Integer = 0 To indexList.Count - 1
+            Dim ind = indexList(i)
             Dim StudentID As Integer = (From stud In SharedState.DBContext.Students.Local
-                                        Where stud.Index = indexList(i) Select stud.Id).Single()
+                                        Where stud.Index = ind Select stud.Id).Single()
             Dim cwmark = (From cwm In SharedState.DBContext.MarksExamCWs.Local
                           Where cwm.StudentId = StudentID And cwm.GradeId = GradeID And cwm.YearId = YearID And _
                           cwm.SemesterId = SemesterID And cwm.CourseId = CourseID).Single()
-            cwmark.CWMark = ExtractedData("Coursework Marks")(i)
+            If ExtractedData("Coursework Marks") IsNot Nothing Then
+                cwmark.CWMark = ExtractedData("Coursework Marks")(i)
+            End If
         Next
 
         CourseworkMarksDataGrid.Items.Refresh()

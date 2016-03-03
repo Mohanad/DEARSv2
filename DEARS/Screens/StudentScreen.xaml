@@ -12,7 +12,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Grid.Column="0">
@@ -25,8 +25,12 @@
         <Expander Grid.Row="1" Grid.Column="0" IsExpanded="True">
             <Expander.Header>Search Results
             </Expander.Header>
-            <StackPanel>
-                <ToolBar>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ToolBar Grid.Row="0">
                     <Button Click="NewStudentButton_Click">
                         <Image Name="NewStudentButton" Source="../Images/New.png" Width="24" Height="24"/>
                     </Button>
@@ -35,7 +39,7 @@
                     </Button>
                 </ToolBar>
 
-                <DataGrid Name="StudentsDataGrid" ItemsSource="{Binding Source={StaticResource StudentsViewSource}}"
+                <DataGrid Grid.Row="1" Name="StudentsDataGrid" ItemsSource="{Binding Source={StaticResource StudentsViewSource}}"
                       CanUserAddRows="False" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Index" Binding="{Binding Path=Index, UpdateSourceTrigger=LostFocus}"/>
@@ -45,9 +49,9 @@
                         <DataGridTextColumn Header="Phone" />
                     </DataGrid.Columns>
                 </DataGrid>
-            </StackPanel>
+            </Grid>
         </Expander>
-        <Expander Header="Student Details" Grid.Column="0" Grid.Row="2"
+        <Expander Header="Student Details" Grid.Column="0" Grid.Row="2" Margin="0,0,0,40"
                   IsExpanded="True"
                   Name="StudentDetailsBox"
                   DataContext="{Binding ElementName=StudentsDataGrid, Path=SelectedItem}">
@@ -58,12 +62,12 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition/>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -97,18 +101,20 @@
                          Text="{}"></TextBox>
                 <DatePicker Grid.Row="7" Grid.Column="2" Margin="20,5,0,5"
                          HorizontalAlignment="Left"   />
-                <TextBox Margin="20,5,0,5" Grid.Row="8" Grid.Column="2"
-                         Text="{}"></TextBox>
+                <ComboBox Margin="20,5,0,5" Grid.Row="8" Grid.Column="2" Name="NationalityComboBox"
+                         Text="{}"></ComboBox>
                 <TextBox Margin="20,5,0,5" Grid.Row="9" Grid.Column="2"
-                         Text="{}"></TextBox>
+                         Text="{}">
+                </TextBox>
                 <TextBox Margin="20,5,0,5" Grid.Row="10" Grid.Column="2"
                          Text="{}"></TextBox>
-                <Image VerticalAlignment="Top" Grid.Row="0" 
-                       Grid.Column="0" Grid.RowSpan="7"
-                       Source="/DEARS;component/Images/IMG_1529.JPG">
-                    <Image.Width>120</Image.Width>
-                    <Image.Height>180</Image.Height>
+                <Image VerticalAlignment="Top" Grid.Row="0" Name="StudentImage"
+                       Grid.Column="0" Grid.RowSpan="6" Source="/DEARS;component/Images/ImageMohammed.JPG"
+                       >
+                    <Image.Width>150</Image.Width>
+                    <Image.Height>150</Image.Height>
                 </Image>
+                <Button Grid.Row="6" Grid.Column="0" Margin="5" Name="ImageBrowseButton" Click="ImageBrowseButton_Click">Browse</Button>
             </Grid>
         </Expander>
     </Grid>

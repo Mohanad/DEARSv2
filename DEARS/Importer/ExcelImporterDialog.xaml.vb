@@ -62,7 +62,8 @@ Public Class ExcelImporterDialog
         For Each it In ColumnMapping
             Dim colNum = firstRowData.IndexOf(it.FileColumnName) + 1
             If colNum < 1 Then
-                Throw New Exception("I am too old for this!! And it is late 1:15am")
+                ExtractedData(it.ScreenColumnName) = Nothing
+                Continue For
             End If
 
             If WithHeaderRadioButton.IsChecked And Not NoHeaderRadioButton.IsChecked Then

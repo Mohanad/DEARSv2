@@ -42,6 +42,8 @@
 
     Private Sub UserControl_Loaded(sender As Object, e As RoutedEventArgs)
         StudentsViewSource = CType(Me.FindResource("StudentsViewSource"), CollectionViewSource)
+        Dim NationalitiesText As String = System.IO.File.ReadAllText("Nationalities.txt")
+        NationalityComboBox.ItemsSource = NationalitiesText.Split(",")
     End Sub
 
     Private Sub DeleteStudentButton_Click(sender As Object, e As RoutedEventArgs)
@@ -55,6 +57,47 @@
     End Sub
 
     Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+        Dim indexList As List(Of String) = ExtractedData("Index")
+        Dim studPrefecth = SharedState.DBContext.Students.Where(Function(s) indexList.Contains(s.Id)).ToList()
+
+
+        Dim obsstud = New ObservableEntityCollection(Of Student)(DBContext)
+        For i As Integer = 0 To indexList.Count - 1
+            Dim index = indexList(i)
+            Dim stud = (From st In SharedState.DBContext.Students.Local
+                       Where st.Index = index).SingleOrDefault()
+            If stud Is Nothing Then
+                stud = New Student() With {.Index = ExtractedData("Index")(i)}
+            End If
+            With stud
+                .NameArabic = ExtractedData("Name (Arabic)")(i)
+                .NameEnglish = ExtractedData("Name (English)")(i)
+                .UnivNo = ExtractedData("University No")(i)
+            End With
+            obsstud.Add(stud)
+        Next
+        StudentsViewSource.Source = obsstud
+
+    End Sub
+
+    Private Sub ImageBrowseButton_Click(sender As Object, e As RoutedEventArgs)
+        Dim openFileDialog As New Microsoft.Win32.OpenFileDialog()
+        openFileDialog.CheckFileExists = True
+        openFileDialog.Filter = "BMP|*.bmp|GIF|*.gif|JPG|*.jpg;*.jpeg|PNG|*.png|TIFF|*.tif;*.tiff|" _
+       & "All Graphics Types|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff"
+
+        If openFileDialog.ShowDialog() = True Then
+            Dim src As BitmapImage = New BitmapImage()
+            src.BeginInit()
+            src.UriSource = New Uri(openFileDialog.FileName, UriKind.Absolute)
+            src.EndInit()
+            If src.PixelWidth = 600 Or src.PixelHeight = 600 Then
+                StudentImage.Source = src
+                Exit Sub
+            End If
+            MsgBox("Image Must be 600 x 600")
+        End If
+
 
     End Sub
 End Class
