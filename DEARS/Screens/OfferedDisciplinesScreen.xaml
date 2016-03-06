@@ -41,7 +41,8 @@
                 <Label IsEnabled="False"></Label>-->
             </UniformGrid>
         </GroupBox>
-        <DataGrid Grid.Row="1" Width="Auto" ItemsSource="{Binding Source={StaticResource OfferedDisciplinesViewSource}}" AutoGenerateColumns="False">
+        <DataGrid Grid.Row="1" Width="Auto" ItemsSource="{Binding Source={StaticResource OfferedDisciplinesViewSource}}" AutoGenerateColumns="False"
+                  Name="OfferedDisciplinesDataGrid">
             <DataGrid.RowValidationRules>
                 <local:DuplicateValidationRule ValidationStep="UpdatedValue"/>
             </DataGrid.RowValidationRules>

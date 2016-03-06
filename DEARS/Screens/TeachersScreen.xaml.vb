@@ -25,6 +25,17 @@
     End Sub
 
     Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
-
+        Dim teachersList As List(Of String) = ExtractedData("Name (Arabic)")
+        For i As Integer = 0 To teachersList.Count - 1
+            Dim tch = (From tr In SharedState.DBContext.Teachers.Local
+                       Where tr.NameArabic = teachersList(i)).SingleOrDefault()
+            If tch IsNot Nothing Then
+                tch.NameEnglish = ExtractedData("Name (English)")(i)
+            Else
+                tch = New Teacher() With {.NameArabic = teachersList(i), _
+                                         .NameEnglish = ExtractedData("Name (English)")(i)}
+                CType(TeachersViewSource.Source, ObservableEntityCollection(Of Teacher)).Add(tch)
+            End If
+        Next
     End Sub
 End Class

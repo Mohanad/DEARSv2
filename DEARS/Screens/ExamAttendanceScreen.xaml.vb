@@ -81,6 +81,27 @@
     End Sub
 
     Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+        Dim YearID As Integer = SharedState.GetSingleInstance().YearID
+        Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
+        Dim SemesterID As Integer = SharedState.GetSingleInstance().SemesterID
+        Dim CourseID As Integer = SharedState.GetSingleInstance().CourseID
 
+        Dim indexList = ExtractedData("Index").ConvertAll(Function(s) Integer.Parse(s))
+
+        'TODO: Check indices before modifying entities. This ensures either full import or no import.
+
+        For i As Integer = 0 To indexList.Count - 1
+            Dim ind = indexList(i)
+            Dim StudentID As Integer = (From stud In SharedState.DBContext.Students.Local
+                                        Where stud.Index = ind Select stud.Id).Single()
+            Dim exmark = (From exm In SharedState.DBContext.MarksExamCWs.Local
+                          Where exm.StudentId = StudentID And exm.GradeId = GradeID And exm.YearId = YearID And _
+                          exm.SemesterId = SemesterID And exm.CourseId = CourseID).Single()
+            If ExtractedData("Attendance") IsNot Nothing Then
+                exmark.Present = ExtractedData("Attendance")(i)
+            End If
+        Next
+
+        ExamAttendanceDataGrid.Items.Refresh()
     End Sub
 End Class

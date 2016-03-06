@@ -26,13 +26,14 @@
 
         Dim courseCodeList As List(Of String) = ExtractedData("Course Code")
         For i As Integer = 0 To courseCodeList.Count - 1
+            Dim courseCode = courseCodeList(i).Trim()
             Dim crs = (From cr In SharedState.DBContext.Courses.Local
-                       Where cr.CourseCode = courseCodeList(i)).SingleOrDefault()
+                       Where cr.CourseCode.Trim() = courseCode).SingleOrDefault()
             If crs IsNot Nothing Then
                 crs.TitleEnglish = ExtractedData("Course Title (English)")(i)
                 crs.TitleArabic = ExtractedData("Course Title (Arabic)")(i)
             Else
-                crs = New Course() With {.CourseCode = courseCodeList(i), _
+                crs = New Course() With {.CourseCode = courseCode, _
                                          .TitleEnglish = ExtractedData("Course Title (English)")(i), _
                                          .TitleArabic = ExtractedData("Course Title (Arabic)")(i)}
                 CType(CoursesViewSource.Source, ObservableEntityCollection(Of Course)).Add(crs)

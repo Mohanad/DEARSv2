@@ -42,8 +42,8 @@ Public Class CoursesOfferedScreen
             End If
         End If
 
-        Dim q_courses = From cr In DBContext.Courses
-                        Select cr
+        Dim q_courses = (From cr In DBContext.Courses
+                        Select cr).ToList()
         CoursesViewSource = CType(Me.FindResource("CoursesViewSource"), CollectionViewSource)
         CoursesViewSource.Source = New ObservableEntityCollection(Of Course)(DBContext, q_courses)
 
@@ -57,6 +57,31 @@ Public Class CoursesOfferedScreen
     End Sub
 
     Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+        Dim YearID As Integer = SharedState.GetSingleInstance().YearID
+        Dim SemesterID As Integer = SharedState.GetSingleInstance().SemesterID
+        Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
 
+        SharedState.DBContext.Courses.ToList()
+
+        'TODO: Check Entities to be formed
+
+        For i As Integer = 0 To ExtractedData("Course Code").Count - 1
+            Dim courseCode = ExtractedData("Course Code")(i).Trim()
+            Dim course As Course = (From cr In SharedState.DBContext.Courses.Local
+                           Where cr.CourseCode.Trim() = courseCode Select cr).Single()
+            Dim ofc = (From od In SharedState.DBContext.OfferedCourses.Local
+                       Where od.YearId = YearID And od.SemesterId = SemesterID And od.GradeId = GradeID And od.CourseId = course.Id).SingleOrDefault()
+            If ofc Is Nothing Then
+                ofc = New OfferedCourse() With {.YearId = YearID, .GradeId = GradeID, .CourseId = course.Id, .SemesterId = SemesterID}
+                CType(OfferedCoursesViewSource.Source, ObservableEntityCollection(Of OfferedCourse)).Add(ofc)
+            End If
+            With ofc
+                .CreditHours = ExtractedData("Credit Hours")(i)
+                .CourseWorkFraction = ExtractedData("Coursework")(i)
+                .ExamFraction = ExtractedData("Exam")(i)
+            End With
+        Next
+
+        OfferedCoursesDataGrid.Items.Refresh()
     End Sub
 End Class
