@@ -35,7 +35,7 @@ Partial Public Class CourseDiscipline
     Public Overridable Property Course As Course
     Public Overridable Property Discipline As Discipline
     Public Overridable Property Grade As Grade
-    Public Overridable Property OfferedCourse As OfferedCourse
+    Public Overridable Property OfferedCours As OfferedCourse
     Public Overridable Property OfferedDiscipline As OfferedDiscipline
     Public Overridable Property SemesterBatch As SemesterBatch
     Public Overridable Property Semester As Semester

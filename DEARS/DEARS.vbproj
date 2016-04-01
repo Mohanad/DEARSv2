@@ -584,6 +584,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\ImageMohammed.JPG" />
+    <Resource Include="Images\MainLogo.png" />
     <Content Include="Nationalities.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

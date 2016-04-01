@@ -172,7 +172,13 @@ Class MainWindow
                     wb.Close()
                     'TODO: Validation of equal heights for data rows.
 
+                    SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
+                    SharedState.DBContext.Configuration.ValidateOnSaveEnabled = False
+
                     CType(ViewDictionary(selectedbtn.Tag), IBaseScreen).SaveDataColumnsToEntities(xlsImportDialog.ExtractedData)
+
+                    SharedState.DBContext.Configuration.AutoDetectChangesEnabled = True
+                    SharedState.DBContext.Configuration.ValidateOnSaveEnabled = True
                 Else
                     wb.Close()
                 End If

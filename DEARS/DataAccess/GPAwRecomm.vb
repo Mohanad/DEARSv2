@@ -28,9 +28,9 @@ Partial Public Class GPAwRecomm
     Public Property YearId As Integer
     Public Property GradeId As Integer
     Public Property StudentId As Integer
-    Public Property GPA As Nullable(Of Decimal)
+    Public Property GPA As Nullable(Of Double)
     Public Property YearRecommId As Integer
-    Public Property CGPA As Nullable(Of Decimal)
+    Public Property CGPA As Nullable(Of Double)
     Public Property CumulativeRecommId As Nullable(Of Integer)
     Public Property Comment As String
 

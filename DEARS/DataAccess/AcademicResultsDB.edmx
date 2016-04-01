@@ -115,9 +115,9 @@
           <Property Name="YearId" Type="int" Nullable="false" />
           <Property Name="GradeId" Type="int" Nullable="false" />
           <Property Name="StudentId" Type="int" Nullable="false" />
-          <Property Name="GPA" Type="decimal" Precision="5" Scale="3" />
+          <Property Name="GPA" Type="float" />
           <Property Name="YearRecommId" Type="int" Nullable="false" />
-          <Property Name="CGPA" Type="decimal" Precision="5" Scale="3" />
+          <Property Name="CGPA" Type="float" />
           <Property Name="CumulativeRecommId" Type="int" />
           <Property Name="Comment" Type="nvarchar" MaxLength="50" />
         </EntityType>
@@ -1760,7 +1760,7 @@
           <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_CourseDisciplines_Courses" FromRole="CourseDiscipline" ToRole="Cours" />
           <NavigationProperty Name="Discipline" Relationship="AcademicResultsDBModel.FK_CourseDisciplines_Disciplines" FromRole="CourseDiscipline" ToRole="Discipline" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_CourseDisciplines_Grades" FromRole="CourseDiscipline" ToRole="Grade" />
-          <NavigationProperty Name="OfferedCourse" Relationship="AcademicResultsDBModel.FK_CourseDisciplines_OfferedCourses" FromRole="CourseDiscipline" ToRole="OfferedCours" />
+          <NavigationProperty Name="OfferedCours" Relationship="AcademicResultsDBModel.FK_CourseDisciplines_OfferedCourses" FromRole="CourseDiscipline" ToRole="OfferedCours" />
           <NavigationProperty Name="OfferedDiscipline" Relationship="AcademicResultsDBModel.FK_CourseDisciplines_OfferedDisciplines" FromRole="CourseDiscipline" ToRole="OfferedDiscipline" />
           <NavigationProperty Name="SemesterBatch" Relationship="AcademicResultsDBModel.FK_CourseDisciplines_SemesterBatch" FromRole="CourseDiscipline" ToRole="SemesterBatch" />
           <NavigationProperty Name="Semester" Relationship="AcademicResultsDBModel.FK_CourseDisciplines_Semesters" FromRole="CourseDiscipline" ToRole="Semester" />
@@ -1779,7 +1779,7 @@
           <Property Name="SemesterId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
           <Property Name="CourseId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Cours" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Courses" FromRole="CourseEnrollment" ToRole="Cours" />
+          <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Courses" FromRole="CourseEnrollment" ToRole="Cours" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Grades" FromRole="CourseEnrollment" ToRole="Grade" />
           <NavigationProperty Name="OfferedCourse" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_OfferedCourses" FromRole="CourseEnrollment" ToRole="OfferedCours" />
           <NavigationProperty Name="SemesterBatchEnrollment" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_SemesterBatchEnrollments" FromRole="CourseEnrollment" ToRole="SemesterBatchEnrollment" />
@@ -1864,10 +1864,10 @@
           <Property Name="YearId" Type="Int32" Nullable="false" />
           <Property Name="GradeId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
-          <Property Name="GPA" Type="Decimal" Precision="5" Scale="3" />
+          <Property Name="GPA" Type="Double" />
           <Property Name="YearRecommId" Type="Int32" Nullable="false" />
-          <Property Name="CGPA" Type="Decimal" Precision="5" Scale="3" />
-          <Property Name="CumulativeRecommId" Type="Int32" Nullable="true" />
+          <Property Name="CGPA" Type="Double" />
+          <Property Name="CumulativeRecommId" Type="Int32" />
           <Property Name="Comment" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BatchEnrollment" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_BatchEnrollments" FromRole="GPAwRecomm" ToRole="BatchEnrollment" />
           <NavigationProperty Name="Batch" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_Batch" FromRole="GPAwRecomm" ToRole="Batch" />
