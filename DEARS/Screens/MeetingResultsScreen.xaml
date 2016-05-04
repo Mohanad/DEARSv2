@@ -44,7 +44,7 @@
 
                 <Button HorizontalAlignment="Center" Name="ProcessButton" Click="ProcessButton_Click">Process</Button>
                 <Button HorizontalAlignment="Center" Name="GenerateButton" Click="GenerateButton_Click">Generate</Button>
-                <!--<Button HorizontalAlignment="Center" Name="TestButton" Click="TestButton_Click" Height="26" Margin="105,0,106,0" VerticalAlignment="Bottom">Generate</Button>-->
+                <Button HorizontalAlignment="Center" Name="DecisionsButton" Click="DecisionsButton_Click">Decisions</Button>
                 <Label></Label>
             </UniformGrid>
         </GroupBox>

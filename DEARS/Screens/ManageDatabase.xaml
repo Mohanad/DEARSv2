@@ -10,7 +10,7 @@
             <Button Name="RecreateDatabaseButton" Margin="30" Click="RecreateDatabaseButton_Click" MaxHeight="40">Create/Recreate Database</Button>
             <Button Name="BasicDataButton" Margin="30" Click="BasicDataButton_Click" MaxHeight="40">Inject Basic Data</Button>
             <Button Name="BulkImportButton" Margin="30" Click="BulkImportButton_Click" MaxHeight="40">Bulk Import Button</Button>
-            <Button Margin="30" MaxHeight="40"></Button>
+            <Button Name="AkodeImporter"  Margin="30" MaxHeight="40">Akode Importer</Button>
         </UniformGrid>
     </Grid>
 </UserControl>

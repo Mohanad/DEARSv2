@@ -36,7 +36,7 @@
 
                 <Label>Course:</Label>
                 <ComboBox ItemsSource="{Binding Source={StaticResource CoursesViewSource}}" DisplayMemberPath="Course.TitleEnglish" SelectedValuePath="CourseId" SelectedValue="{Binding CourseID}"></ComboBox>
-                <Label></Label>
+                <Label Content="{Binding Source={StaticResource CoursesViewSource}, Path=Course.CourseCode}" HorizontalAlignment="Left"></Label>
 
                 <Label>Discipline:</Label>
                 <ComboBox ItemsSource="{Binding Source={StaticResource DisciplinesViewSource}}" DisplayMemberPath="Discipline.NameEnglishShort" SelectedValuePath="DisciplineId" SelectedValue="{Binding DisciplineID}"

@@ -40,5 +40,7 @@ Partial Public Class TimeYear
     Public Overridable Property OfferedDisciplines As ICollection(Of OfferedDiscipline) = New HashSet(Of OfferedDiscipline)
     Public Overridable Property SemesterBatchEnrollments As ICollection(Of SemesterBatchEnrollment) = New HashSet(Of SemesterBatchEnrollment)
     Public Overridable Property SemesterBatches As ICollection(Of SemesterBatch) = New HashSet(Of SemesterBatch)
+    Public Overridable Property SubSuppGPAwRecomms As ICollection(Of SubSuppGPAwRecomm) = New HashSet(Of SubSuppGPAwRecomm)
+    Public Overridable Property SubSuppMarksExamCWs As ICollection(Of SubSuppMarksExamCW) = New HashSet(Of SubSuppMarksExamCW)
 
 End Class

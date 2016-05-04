@@ -10,10 +10,10 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class GPAwRecomm
-	Implements IEquatable(Of GPAwRecomm)
+Partial Public Class SubSuppGPAwRecomm
+	Implements IEquatable(Of SubSuppGPAwRecomm)
 
-	Function Equals1(other as GPAwRecomm) as Boolean Implements IEquatable(Of GPAwRecomm).Equals
+	Function Equals1(other as SubSuppGPAwRecomm) as Boolean Implements IEquatable(Of SubSuppGPAwRecomm).Equals
 		
 		 If DirectCast(Me, Object).Equals(DirectCast(other, Object)) Then
             Return True
@@ -36,11 +36,11 @@ Partial Public Class GPAwRecomm
 
     Public Overridable Property BatchEnrollment As BatchEnrollment
     Public Overridable Property Batch As Batch
-    Public Overridable Property CumulativeRecommendationType As RecommendationType
+    Public Overridable Property GPAwRecomm As GPAwRecomm
     Public Overridable Property Grade As Grade
+    Public Overridable Property RecommendationType As RecommendationType
+    Public Overridable Property RecommendationType1 As RecommendationType
     Public Overridable Property Student As Student
     Public Overridable Property TimeYear As TimeYear
-    Public Overridable Property YearRecommendationType As RecommendationType
-    Public Overridable Property SubSuppGPAwRecomm As SubSuppGPAwRecomm
 
 End Class

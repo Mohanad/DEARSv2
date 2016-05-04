@@ -44,12 +44,19 @@ Public Class MeetingResultsScreen
 
         DBContext.ChangeTracker.DetectChanges()
 
+        DBContext.Configuration.AutoDetectChangesEnabled = False
+        DBContext.Configuration.ValidateOnSaveEnabled = False
+
         Dim StudentsCollection As New ObservableEntityCollection(Of GPAwRecomm)(DBContext, q_gpas.ToList())
 
         For Each cenr In ((From x In prefetch_bt Where x.GPAwRecomm Is Nothing).ToList())
             StudentsCollection.Add(New GPAwRecomm() With {.YearId = YearID, .GradeId = GradeID, .StudentId = cenr.StudentId,
                                                           .Student = cenr.Student})
         Next
+
+        DBContext.ChangeTracker.DetectChanges()
+        DBContext.Configuration.AutoDetectChangesEnabled = True
+        DBContext.Configuration.ValidateOnSaveEnabled = True
 
         GPAViewSource.Source = StudentsCollection
         GPAViewSource.View.Filter = AddressOf DisciplineFilterFunction
@@ -110,7 +117,12 @@ Public Class MeetingResultsScreen
 
             SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
 
-            ResultsProcessingUtilities.SecondSemesterProcessing(YearID, GradeID, DisciplineID, ExamTypeEnum.SecondSemester)
+            If SharedState.GetSingleInstance.SemesterID = 2 Then
+                ResultsProcessingUtilities.SecondSemesterProcessing(YearID, GradeID, DisciplineID, ExamTypeEnum.SecondSemester)
+            ElseIf SharedState.GetSingleInstance.SemesterID = 1 Then
+                MsgBox("No processong needed for first semester. Generate output immediately if desired.")
+            End If
+
         Catch ex As Exception
             MsgBox(Application.FlattenOutException(ex))
         Finally
@@ -148,5 +160,10 @@ Public Class MeetingResultsScreen
 
     Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
 
+    End Sub
+
+    Private Sub DecisionsButton_Click(sender As Object, e As RoutedEventArgs)
+        Dim decDialog As New FacultyBoardDecisionsScreen()
+        decDialog.ShowDialog()
     End Sub
 End Class

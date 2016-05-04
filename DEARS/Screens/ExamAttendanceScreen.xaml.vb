@@ -42,6 +42,13 @@
                      Where cenr.YearId = YearID And cenr.GradeId = GradeID And cenr.CourseId = CourseID And cenr.SemesterId = SemesterID And (cenr.MarksExamCW Is Nothing)
                      Select cenr
 
+        ' If All values are Null this is a new entry. Fill all with present.
+        If q_cwmarks.ToList.All(Function(s) s.Present Is Nothing) Then
+            For Each exatt In q_cwmarks.ToList()
+                exatt.Present = True
+            Next
+        End If
+
         Dim StudentsCollection As New ObservableEntityCollection(Of MarksExamCW)(DBContext, q_cwmarks)
 
         For Each cenr In q_cenr.ToList()

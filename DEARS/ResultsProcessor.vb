@@ -1,4 +1,34 @@
 ﻿Public Module ResultsProcessingUtilities
+    Function GetOfferedCourseStatisticsModel(ofc As OfferedCourse) As OfferedCourseStatisticsModel
+        Dim ofcsm As New OfferedCourseStatisticsModel()
+        ofcsm.CourseCode = ofc.Course.CourseCode
+        ofcsm.TitleEnglish = ofc.Course.TitleEnglish
+        ofcsm.TotalStudents = ofc.CourseEnrollments.Count()
+        ofcsm.Absentees = ofc.MarksExamCWs.Where(Function(s) Not s.Present).Count()
+
+        Dim grs = ofc.MarksExamCWs.ToList().ConvertAll(Function(s) ResultsProcessingUtilities.AssignGrade(s))
+        ofcsm.Fail = grs.Where(Function(s) s.Grade = "F" Or s.Grade = "F*" Or s.Grade = "D" Or s.Grade = "D*" Or s.Grade = "AB*").Count()
+        ofcsm.Pass = grs.Where(Function(s) s.Total >= 40).Count()
+        ofcsm.Average = grs.Where(Function(s) s.Mark.Present).Average(Function(q) q.Total)
+        Dim avg_sqr = ofcsm.Average * ofcsm.Average
+        ofcsm.StandardDeviation = Math.Sqrt(grs.Where(Function(s) s.Mark.Present).Average(Function(q) q.Total * q.Total - avg_sqr))
+        ofcsm.Average = Math.Round(ofcsm.Average, 2)
+        ofcsm.StandardDeviation = Math.Round(ofcsm.StandardDeviation, 2)
+
+        ofcsm.CountAplus = grs.LongCount(Function(s) s.Grade = "A+")
+        ofcsm.CountA = grs.LongCount(Function(s) s.Grade = "A")
+        ofcsm.CountAminus = grs.LongCount(Function(s) s.Grade = "A-")
+        ofcsm.CountBplus = grs.LongCount(Function(s) s.Grade = "B+")
+        ofcsm.CountB = grs.LongCount(Function(s) s.Grade = "B")
+        ofcsm.CountC = grs.LongCount(Function(s) s.Grade = "C")
+        ofcsm.CountD = grs.LongCount(Function(s) s.Grade = "D")
+        ofcsm.CountF = grs.LongCount(Function(s) s.Grade = "F")
+        ofcsm.CountDstar = grs.LongCount(Function(s) s.Grade = "D*")
+        ofcsm.CountFstar = grs.LongCount(Function(s) s.Grade = "F*")
+        ofcsm.CountAB = grs.LongCount(Function(s) s.Grade = "AB")
+        ofcsm.CountABstar = grs.LongCount(Function(s) s.Grade = "AB*")
+        Return ofcsm
+    End Function
     Public Enum ExamTypeEnum
         FirstSemester
         SecondSemester
@@ -29,6 +59,7 @@
         Dismiss
         SubYear
         II
+        MultiD
     End Enum
     Sub SecondSemesterProcessing(YearId As Integer, GradeId As Integer, DisciplineId As Integer, ExamType As ExamTypeEnum)
         Dim StudList As List(Of BatchEnrollment) = GetStudentEnrollmentList(YearId, GradeId, DisciplineId, ExamType)
@@ -139,9 +170,9 @@
             gpw.Comment = String.Format("Supp ({0})", CountFs + CountDs)
         ElseIf GPA >= 4.5 And (CountDs + CountFs) < Math.Ceiling(CountSubjects / 3) + 1 And (CountDs >= 1) Then
             'Recomms.YearRecomm .Append(‘Special Case (FG 9.2) ⇒ Supp ( CountFs + CountDs - 1))’)
-            gpw.YearRecommId = RecommTypeEnum.SpecialCase
-            gpw.CumulativeRecommId = RecommTypeEnum.SpecialCase
-            gpw.Comment = String.Format("Special Case (FG 9.2) ⇒ Supp ({0})", CountFs + CountDs)
+            gpw.YearRecommId = RecommTypeEnum.MultiD
+            gpw.CumulativeRecommId = RecommTypeEnum.MultiD
+            gpw.Comment = String.Format("Multiplie-Ds (FG 9.2) ⇒ Supp ({0})", CountFs + CountDs)
             '// Applies 9.2
             '// Skip 9.3 applies to Supp
         ElseIf 3.5 <= GPA And GPA < 4.3 And CountFs = 0 And CountDs = 0 Then

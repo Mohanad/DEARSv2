@@ -35,5 +35,6 @@ Partial Public Class Batch
     Public Overridable Property TimeYear As TimeYear
     Public Overridable Property GPAwRecomms As ICollection(Of GPAwRecomm) = New HashSet(Of GPAwRecomm)
     Public Overridable Property SemesterBatches As ICollection(Of SemesterBatch) = New HashSet(Of SemesterBatch)
+    Public Overridable Property SubSuppGPAwRecomms As ICollection(Of SubSuppGPAwRecomm) = New HashSet(Of SubSuppGPAwRecomm)
 
 End Class

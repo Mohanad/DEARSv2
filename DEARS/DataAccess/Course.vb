@@ -35,5 +35,6 @@ Partial Public Class Course
     Public Overridable Property CourseTeachers As ICollection(Of CourseTeacher) = New HashSet(Of CourseTeacher)
     Public Overridable Property MarksExamCWs As ICollection(Of MarksExamCW) = New HashSet(Of MarksExamCW)
     Public Overridable Property OfferedCourses As ICollection(Of OfferedCourse) = New HashSet(Of OfferedCourse)
+    Public Overridable Property SubSuppMarksExamCWs As ICollection(Of SubSuppMarksExamCW) = New HashSet(Of SubSuppMarksExamCW)
 
 End Class

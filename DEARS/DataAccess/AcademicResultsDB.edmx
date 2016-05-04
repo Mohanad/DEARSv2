@@ -232,6 +232,40 @@
           <Property Name="NameArabic" Type="nvarchar(max)" />
           <Property Name="NameEnglish" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="SubSuppGPAwRecomm">
+          <Key>
+            <PropertyRef Name="YearId" />
+            <PropertyRef Name="GradeId" />
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="YearId" Type="int" Nullable="false" />
+          <Property Name="GradeId" Type="int" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="GPA" Type="float" />
+          <Property Name="YearRecommId" Type="int" Nullable="false" />
+          <Property Name="CGPA" Type="float" />
+          <Property Name="CumulativeRecommId" Type="int" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="SubSuppMarksExamCW">
+          <Key>
+            <PropertyRef Name="YearId" />
+            <PropertyRef Name="GradeId" />
+            <PropertyRef Name="SemesterId" />
+            <PropertyRef Name="CourseId" />
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="YearId" Type="int" Nullable="false" />
+          <Property Name="GradeId" Type="int" Nullable="false" />
+          <Property Name="SemesterId" Type="int" Nullable="false" />
+          <Property Name="CourseId" Type="int" Nullable="false" />
+          <Property Name="StudentId" Type="int" Nullable="false" />
+          <Property Name="ExamTypeId" Type="int" Nullable="false" />
+          <Property Name="CWMark" Type="float" />
+          <Property Name="Present" Type="bit" />
+          <Property Name="Excuse" Type="bit" />
+          <Property Name="ExamMark" Type="float" />
+        </EntityType>
         <EntityType Name="Teachers">
           <Key>
             <PropertyRef Name="Id" />
@@ -1116,6 +1150,242 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_Batch">
+          <End Role="Batches" Type="Self.Batches" Multiplicity="1" />
+          <End Role="SubSuppGPAwRecomm" Type="Self.SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batches">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_BatchEnrollments">
+          <End Role="BatchEnrollments" Type="Self.BatchEnrollments" Multiplicity="1" />
+          <End Role="SubSuppGPAwRecomm" Type="Self.SubSuppGPAwRecomm" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="BatchEnrollments">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="StudentId" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_CumulativeRecommendations">
+          <End Role="RecommendationTypes" Type="Self.RecommendationTypes" Multiplicity="0..1" />
+          <End Role="SubSuppGPAwRecomm" Type="Self.SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecommendationTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="CumulativeRecommId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_GPAwRecomm">
+          <End Role="GPAwRecomm" Type="Self.GPAwRecomm" Multiplicity="1" />
+          <End Role="SubSuppGPAwRecomm" Type="Self.SubSuppGPAwRecomm" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="GPAwRecomm">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="StudentId" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_Grades">
+          <End Role="Grades" Type="Self.Grades" Multiplicity="1" />
+          <End Role="SubSuppGPAwRecomm" Type="Self.SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grades">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="GradeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_Students">
+          <End Role="Students" Type="Self.Students" Multiplicity="1" />
+          <End Role="SubSuppGPAwRecomm" Type="Self.SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_TimeYears">
+          <End Role="TimeYears" Type="Self.TimeYears" Multiplicity="1" />
+          <End Role="SubSuppGPAwRecomm" Type="Self.SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TimeYears">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="YearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_YearRecommendations">
+          <End Role="RecommendationTypes" Type="Self.RecommendationTypes" Multiplicity="1" />
+          <End Role="SubSuppGPAwRecomm" Type="Self.SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecommendationTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="YearRecommId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_CourseEnrollment">
+          <End Role="CourseEnrollments" Type="Self.CourseEnrollments" Multiplicity="1" />
+          <End Role="SubSuppMarksExamCW" Type="Self.SubSuppMarksExamCW" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CourseEnrollments">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="StudentId" />
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="StudentId" />
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_Courses">
+          <End Role="Courses" Type="Self.Courses" Multiplicity="1" />
+          <End Role="SubSuppMarksExamCW" Type="Self.SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Courses">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_ExamType">
+          <End Role="ExamTypes" Type="Self.ExamTypes" Multiplicity="1" />
+          <End Role="SubSuppMarksExamCW" Type="Self.SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExamTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="ExamTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_Grades">
+          <End Role="Grades" Type="Self.Grades" Multiplicity="1" />
+          <End Role="SubSuppMarksExamCW" Type="Self.SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grades">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="GradeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_MarksExamCW">
+          <End Role="MarksExamCW" Type="Self.MarksExamCW" Multiplicity="1" />
+          <End Role="SubSuppMarksExamCW" Type="Self.SubSuppMarksExamCW" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MarksExamCW">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="StudentId" />
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="StudentId" />
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_OfferedCourse">
+          <End Role="OfferedCourses" Type="Self.OfferedCourses" Multiplicity="1" />
+          <End Role="SubSuppMarksExamCW" Type="Self.SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OfferedCourses">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_Semesters">
+          <End Role="Semesters" Type="Self.Semesters" Multiplicity="1" />
+          <End Role="SubSuppMarksExamCW" Type="Self.SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Semesters">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="SemesterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_Students">
+          <End Role="Students" Type="Self.Students" Multiplicity="1" />
+          <End Role="SubSuppMarksExamCW" Type="Self.SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_TimeYears">
+          <End Role="TimeYears" Type="Self.TimeYears" Multiplicity="1" />
+          <End Role="SubSuppMarksExamCW" Type="Self.SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TimeYears">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="YearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="RecommTranslations_RecommendationTypes">
           <End Role="RecommendationTypes" Type="Self.RecommendationTypes" Multiplicity="0..1" />
           <End Role="RecommTranslations" Type="Self.RecommTranslations" Multiplicity="*" />
@@ -1149,6 +1419,8 @@
           <EntitySet Name="SemesterBatches" EntityType="Self.SemesterBatches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Semesters" EntityType="Self.Semesters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubSuppGPAwRecomm" EntityType="Self.SubSuppGPAwRecomm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubSuppMarksExamCW" EntityType="Self.SubSuppMarksExamCW" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Teachers" EntityType="Self.Teachers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TimeYears" EntityType="Self.TimeYears" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TuitionTypes" EntityType="Self.TuitionTypes" Schema="dbo" store:Type="Tables" />
@@ -1412,6 +1684,74 @@
             <End Role="TimeYears" EntitySet="TimeYears" />
             <End Role="SemesterBatchEnrollments" EntitySet="SemesterBatchEnrollments" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_Batch" Association="Self.FK_SubSuppGPAwRecomm_Batch">
+            <End Role="Batches" EntitySet="Batches" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_BatchEnrollments" Association="Self.FK_SubSuppGPAwRecomm_BatchEnrollments">
+            <End Role="BatchEnrollments" EntitySet="BatchEnrollments" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_CumulativeRecommendations" Association="Self.FK_SubSuppGPAwRecomm_CumulativeRecommendations">
+            <End Role="RecommendationTypes" EntitySet="RecommendationTypes" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_GPAwRecomm" Association="Self.FK_SubSuppGPAwRecomm_GPAwRecomm">
+            <End Role="GPAwRecomm" EntitySet="GPAwRecomm" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_Grades" Association="Self.FK_SubSuppGPAwRecomm_Grades">
+            <End Role="Grades" EntitySet="Grades" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_Students" Association="Self.FK_SubSuppGPAwRecomm_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_TimeYears" Association="Self.FK_SubSuppGPAwRecomm_TimeYears">
+            <End Role="TimeYears" EntitySet="TimeYears" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_YearRecommendations" Association="Self.FK_SubSuppGPAwRecomm_YearRecommendations">
+            <End Role="RecommendationTypes" EntitySet="RecommendationTypes" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_CourseEnrollment" Association="Self.FK_SubSuppMarksExamCW_CourseEnrollment">
+            <End Role="CourseEnrollments" EntitySet="CourseEnrollments" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_Courses" Association="Self.FK_SubSuppMarksExamCW_Courses">
+            <End Role="Courses" EntitySet="Courses" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_ExamType" Association="Self.FK_SubSuppMarksExamCW_ExamType">
+            <End Role="ExamTypes" EntitySet="ExamTypes" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_Grades" Association="Self.FK_SubSuppMarksExamCW_Grades">
+            <End Role="Grades" EntitySet="Grades" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_MarksExamCW" Association="Self.FK_SubSuppMarksExamCW_MarksExamCW">
+            <End Role="MarksExamCW" EntitySet="MarksExamCW" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_OfferedCourse" Association="Self.FK_SubSuppMarksExamCW_OfferedCourse">
+            <End Role="OfferedCourses" EntitySet="OfferedCourses" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_Semesters" Association="Self.FK_SubSuppMarksExamCW_Semesters">
+            <End Role="Semesters" EntitySet="Semesters" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_Students" Association="Self.FK_SubSuppMarksExamCW_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCW" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_TimeYears" Association="Self.FK_SubSuppMarksExamCW_TimeYears">
+            <End Role="TimeYears" EntitySet="TimeYears" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCW" />
+          </AssociationSet>
           <AssociationSet Name="RecommTranslations_RecommendationTypes" Association="Self.RecommTranslations_RecommendationTypes">
             <End Role="RecommendationTypes" EntitySet="RecommendationTypes" />
             <End Role="RecommTranslations" EntitySet="RecommTranslations" />
@@ -1442,6 +1782,8 @@
           <EntitySet Name="SemesterBatches" EntityType="AcademicResultsDBModel.SemesterBatch" />
           <EntitySet Name="Semesters" EntityType="AcademicResultsDBModel.Semester" />
           <EntitySet Name="Students" EntityType="AcademicResultsDBModel.Student" />
+          <EntitySet Name="SubSuppGPAwRecomms" EntityType="AcademicResultsDBModel.SubSuppGPAwRecomm" />
+          <EntitySet Name="SubSuppMarksExamCWs" EntityType="AcademicResultsDBModel.SubSuppMarksExamCW" />
           <EntitySet Name="Teachers" EntityType="AcademicResultsDBModel.Teacher" />
           <EntitySet Name="TimeYears" EntityType="AcademicResultsDBModel.TimeYear" />
           <EntitySet Name="TuitionTypes" EntityType="AcademicResultsDBModel.TuitionType" />
@@ -1473,6 +1815,10 @@
             <End Role="BatchEnrollment" EntitySet="BatchEnrollments" />
             <End Role="SemesterBatchEnrollment" EntitySet="SemesterBatchEnrollments" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_BatchEnrollments" Association="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_BatchEnrollments">
+            <End Role="BatchEnrollment" EntitySet="BatchEnrollments" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomms" />
+          </AssociationSet>
           <AssociationSet Name="FK_Batch_Grades" Association="AcademicResultsDBModel.FK_Batch_Grades">
             <End Role="Grade" EntitySet="Grades" />
             <End Role="Batch" EntitySet="Batches" />
@@ -1488,6 +1834,10 @@
           <AssociationSet Name="FK_SemesterBatch_Batch" Association="AcademicResultsDBModel.FK_SemesterBatch_Batch">
             <End Role="Batch" EntitySet="Batches" />
             <End Role="SemesterBatch" EntitySet="SemesterBatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_Batch" Association="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Batch">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomms" />
           </AssociationSet>
           <AssociationSet Name="FK_CourseDisciplines_Courses" Association="AcademicResultsDBModel.FK_CourseDisciplines_Courses">
             <End Role="Cours" EntitySet="Courses" />
@@ -1553,6 +1903,10 @@
             <End Role="CourseEnrollment" EntitySet="CourseEnrollments" />
             <End Role="MarksExamCW" EntitySet="MarksExamCWs" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_CourseEnrollment" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_CourseEnrollment">
+            <End Role="CourseEnrollment" EntitySet="CourseEnrollments" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
+          </AssociationSet>
           <AssociationSet Name="FK_CourseTeachers_Disciplines" Association="AcademicResultsDBModel.FK_CourseTeachers_Disciplines">
             <End Role="Cours" EntitySet="Courses" />
             <End Role="CourseTeacher" EntitySet="CourseTeachers" />
@@ -1564,6 +1918,10 @@
           <AssociationSet Name="FK_OfferedCourses_Courses" Association="AcademicResultsDBModel.FK_OfferedCourses_Courses">
             <End Role="Cours" EntitySet="Courses" />
             <End Role="OfferedCours" EntitySet="OfferedCourses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_Courses" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Courses">
+            <End Role="Cours" EntitySet="Courses" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
           </AssociationSet>
           <AssociationSet Name="FK_CourseTeachers_Grades" Association="AcademicResultsDBModel.FK_CourseTeachers_Grades">
             <End Role="Grade" EntitySet="Grades" />
@@ -1597,6 +1955,10 @@
             <End Role="Discipline" EntitySet="Disciplines" />
             <End Role="SemesterBatchEnrollment" EntitySet="SemesterBatchEnrollments" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_ExamType" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_ExamType">
+            <End Role="ExamType" EntitySet="ExamTypes" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
+          </AssociationSet>
           <AssociationSet Name="FK_GPAwRecomm_CumulativeRecommendations" Association="AcademicResultsDBModel.FK_GPAwRecomm_CumulativeRecommendations">
             <End Role="RecommendationType" EntitySet="RecommendationTypes" />
             <End Role="GPAwRecomm" EntitySet="GPAwRecomms" />
@@ -1616,6 +1978,10 @@
           <AssociationSet Name="FK_GPAwRecomm_YearRecommendations" Association="AcademicResultsDBModel.FK_GPAwRecomm_YearRecommendations">
             <End Role="RecommendationType" EntitySet="RecommendationTypes" />
             <End Role="GPAwRecomm" EntitySet="GPAwRecomms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_GPAwRecomm" Association="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_GPAwRecomm">
+            <End Role="GPAwRecomm" EntitySet="GPAwRecomms" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomms" />
           </AssociationSet>
           <AssociationSet Name="FK_MarksExamCW_Grades" Association="AcademicResultsDBModel.FK_MarksExamCW_Grades">
             <End Role="Grade" EntitySet="Grades" />
@@ -1637,6 +2003,14 @@
             <End Role="Grade" EntitySet="Grades" />
             <End Role="SemesterBatchEnrollment" EntitySet="SemesterBatchEnrollments" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_Grades" Association="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Grades">
+            <End Role="Grade" EntitySet="Grades" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_Grades" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Grades">
+            <End Role="Grade" EntitySet="Grades" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
+          </AssociationSet>
           <AssociationSet Name="FK_MarksExamCW_OfferedCourse" Association="AcademicResultsDBModel.FK_MarksExamCW_OfferedCourse">
             <End Role="OfferedCours" EntitySet="OfferedCourses" />
             <End Role="MarksExamCW" EntitySet="MarksExamCWs" />
@@ -1653,6 +2027,10 @@
             <End Role="TimeYear" EntitySet="TimeYears" />
             <End Role="MarksExamCW" EntitySet="MarksExamCWs" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_MarksExamCW" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExa">
+            <End Role="MarksExamCW" EntitySet="MarksExamCWs" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
+          </AssociationSet>
           <AssociationSet Name="FK_OfferedCourses_SemesterBatch" Association="AcademicResultsDBModel.FK_OfferedCourses_SemesterBatch">
             <End Role="SemesterBatch" EntitySet="SemesterBatches" />
             <End Role="OfferedCours" EntitySet="OfferedCourses" />
@@ -1664,6 +2042,10 @@
           <AssociationSet Name="FK_OfferedCourses_TimeYears" Association="AcademicResultsDBModel.FK_OfferedCourses_TimeYears">
             <End Role="TimeYear" EntitySet="TimeYears" />
             <End Role="OfferedCours" EntitySet="OfferedCourses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_OfferedCourse" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_OfferedCourse">
+            <End Role="OfferedCours" EntitySet="OfferedCourses" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
           </AssociationSet>
           <AssociationSet Name="FK_OfferedDisciplines_SemesterBatch" Association="AcademicResultsDBModel.FK_OfferedDisciplines_SemesterBatch">
             <End Role="SemesterBatch" EntitySet="SemesterBatches" />
@@ -1680,6 +2062,14 @@
           <AssociationSet Name="FK_SemesterBatchEnrollments_OfferedDisciplines" Association="AcademicResultsDBModel.FK_SemesterBatchEnrollments_OfferedDisciplines">
             <End Role="OfferedDiscipline" EntitySet="OfferedDisciplines" />
             <End Role="SemesterBatchEnrollment" EntitySet="SemesterBatchEnrollments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_CumulativeRecommendations" Association="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_CumulativeRecommendations">
+            <End Role="RecommendationType" EntitySet="RecommendationTypes" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_YearRecommendations" Association="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_YearRecommendations">
+            <End Role="RecommendationType" EntitySet="RecommendationTypes" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomms" />
           </AssociationSet>
           <AssociationSet Name="RecommTranslations_RecommendationTypes" Association="AcademicResultsDBModel.RecommTranslations_RecommendationTypes">
             <End Role="RecommendationType" EntitySet="RecommendationTypes" />
@@ -1709,6 +2099,26 @@
             <End Role="TimeYear" EntitySet="TimeYears" />
             <End Role="SemesterBatch" EntitySet="SemesterBatches" />
           </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_Semesters" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Semesters">
+            <End Role="Semester" EntitySet="Semesters" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_Students" Association="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Students">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_Students" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Students">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppGPAwRecomm_TimeYears" Association="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_TimeYears">
+            <End Role="TimeYear" EntitySet="TimeYears" />
+            <End Role="SubSuppGPAwRecomm" EntitySet="SubSuppGPAwRecomms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubSuppMarksExamCW_TimeYears" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_TimeYears">
+            <End Role="TimeYear" EntitySet="TimeYears" />
+            <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="BatchEnrollment">
           <Key>
@@ -1727,6 +2137,7 @@
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_BatchEnrollments_TimeYears" FromRole="BatchEnrollment" ToRole="TimeYear" />
           <NavigationProperty Name="GPAwRecomm" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_BatchEnrollments" FromRole="BatchEnrollment" ToRole="GPAwRecomm" />
           <NavigationProperty Name="SemesterBatchEnrollments" Relationship="AcademicResultsDBModel.FK_SemesterBatchEnrollments_BatchEnrollments" FromRole="BatchEnrollment" ToRole="SemesterBatchEnrollment" />
+          <NavigationProperty Name="SubSuppGPAwRecomm" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_BatchEnrollments" FromRole="BatchEnrollment" ToRole="SubSuppGPAwRecomm" />
         </EntityType>
         <EntityType Name="Batch">
           <Key>
@@ -1742,6 +2153,7 @@
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_Batch_TimeYears" FromRole="Batch" ToRole="TimeYear" />
           <NavigationProperty Name="GPAwRecomms" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_Batch" FromRole="Batch" ToRole="GPAwRecomm" />
           <NavigationProperty Name="SemesterBatches" Relationship="AcademicResultsDBModel.FK_SemesterBatch_Batch" FromRole="Batch" ToRole="SemesterBatch" />
+          <NavigationProperty Name="SubSuppGPAwRecomms" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Batch" FromRole="Batch" ToRole="SubSuppGPAwRecomm" />
         </EntityType>
         <EntityType Name="CourseDiscipline">
           <Key>
@@ -1779,7 +2191,7 @@
           <Property Name="SemesterId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
           <Property Name="CourseId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Courses" FromRole="CourseEnrollment" ToRole="Cours" />
+          <NavigationProperty Name="Cours" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Courses" FromRole="CourseEnrollment" ToRole="Cours" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Grades" FromRole="CourseEnrollment" ToRole="Grade" />
           <NavigationProperty Name="OfferedCourse" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_OfferedCourses" FromRole="CourseEnrollment" ToRole="OfferedCours" />
           <NavigationProperty Name="SemesterBatchEnrollment" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_SemesterBatchEnrollments" FromRole="CourseEnrollment" ToRole="SemesterBatchEnrollment" />
@@ -1787,6 +2199,7 @@
           <NavigationProperty Name="Student" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Students" FromRole="CourseEnrollment" ToRole="Student" />
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_TimeYears" FromRole="CourseEnrollment" ToRole="TimeYear" />
           <NavigationProperty Name="MarksExamCW" Relationship="AcademicResultsDBModel.FK_MarksExamCW_CourseEnrollment" FromRole="CourseEnrollment" ToRole="MarksExamCW" />
+          <NavigationProperty Name="SubSuppMarksExamCW" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_CourseEnrollment" FromRole="CourseEnrollment" ToRole="SubSuppMarksExamCW" />
         </EntityType>
         <EntityType Name="Course">
           <Key>
@@ -1801,6 +2214,7 @@
           <NavigationProperty Name="CourseTeachers" Relationship="AcademicResultsDBModel.FK_CourseTeachers_Disciplines" FromRole="Cours" ToRole="CourseTeacher" />
           <NavigationProperty Name="MarksExamCWs" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Courses" FromRole="Cours" ToRole="MarksExamCW" />
           <NavigationProperty Name="OfferedCourses" Relationship="AcademicResultsDBModel.FK_OfferedCourses_Courses" FromRole="Cours" ToRole="OfferedCours" />
+          <NavigationProperty Name="SubSuppMarksExamCWs" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Courses" FromRole="Cours" ToRole="SubSuppMarksExamCW" />
         </EntityType>
         <EntityType Name="CourseTeacher">
           <Key>
@@ -1817,7 +2231,7 @@
           <Property Name="CourseId" Type="Int32" Nullable="false" />
           <Property Name="TeacherId" Type="Int32" Nullable="false" />
           <Property Name="TuitionTypeId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Cours" Relationship="AcademicResultsDBModel.FK_CourseTeachers_Disciplines" FromRole="CourseTeacher" ToRole="Cours" />
+          <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_CourseTeachers_Disciplines" FromRole="CourseTeacher" ToRole="Cours" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_CourseTeachers_Grades" FromRole="CourseTeacher" ToRole="Grade" />
           <NavigationProperty Name="OfferedCours" Relationship="AcademicResultsDBModel.FK_CourseTeachers_OfferedCourses" FromRole="CourseTeacher" ToRole="OfferedCours" />
           <NavigationProperty Name="Semester" Relationship="AcademicResultsDBModel.FK_CourseTeachers_Semesters" FromRole="CourseTeacher" ToRole="Semester" />
@@ -1854,6 +2268,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="NameArabic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="NameEnglish" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SubSuppMarksExamCWs" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_ExamType" FromRole="ExamType" ToRole="SubSuppMarksExamCW" />
         </EntityType>
         <EntityType Name="GPAwRecomm">
           <Key>
@@ -1876,6 +2291,7 @@
           <NavigationProperty Name="Student" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_Students" FromRole="GPAwRecomm" ToRole="Student" />
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_TimeYears" FromRole="GPAwRecomm" ToRole="TimeYear" />
           <NavigationProperty Name="YearRecommendationType" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_YearRecommendations" FromRole="GPAwRecomm" ToRole="RecommendationType" />
+          <NavigationProperty Name="SubSuppGPAwRecomm" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_GPAwRecomm" FromRole="GPAwRecomm" ToRole="SubSuppGPAwRecomm" />
         </EntityType>
         <EntityType Name="Grade">
           <Key>
@@ -1895,6 +2311,8 @@
           <NavigationProperty Name="OfferedDisciplines" Relationship="AcademicResultsDBModel.FK_OfferedDisciplines_Grades" FromRole="Grade" ToRole="OfferedDiscipline" />
           <NavigationProperty Name="SemesterBatches" Relationship="AcademicResultsDBModel.FK_SemesterBatch_Grades" FromRole="Grade" ToRole="SemesterBatch" />
           <NavigationProperty Name="SemesterBatchEnrollments" Relationship="AcademicResultsDBModel.FK_SemesterBatchEnrollments_Grades" FromRole="Grade" ToRole="SemesterBatchEnrollment" />
+          <NavigationProperty Name="SubSuppGPAwRecomms" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Grades" FromRole="Grade" ToRole="SubSuppGPAwRecomm" />
+          <NavigationProperty Name="SubSuppMarksExamCWs" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Grades" FromRole="Grade" ToRole="SubSuppMarksExamCW" />
         </EntityType>
         <EntityType Name="MarksExamCW">
           <Key>
@@ -1920,6 +2338,7 @@
           <NavigationProperty Name="Semester" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Semesters" FromRole="MarksExamCW" ToRole="Semester" />
           <NavigationProperty Name="Student" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Students" FromRole="MarksExamCW" ToRole="Student" />
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_MarksExamCW_TimeYears" FromRole="MarksExamCW" ToRole="TimeYear" />
+          <NavigationProperty Name="SubSuppMarksExamCW" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExa" FromRole="MarksExamCW" ToRole="SubSuppMarksExamCW" />
         </EntityType>
         <EntityType Name="OfferedCourse">
           <Key>
@@ -1944,6 +2363,7 @@
           <NavigationProperty Name="SemesterBatch" Relationship="AcademicResultsDBModel.FK_OfferedCourses_SemesterBatch" FromRole="OfferedCours" ToRole="SemesterBatch" />
           <NavigationProperty Name="Semester" Relationship="AcademicResultsDBModel.FK_OfferedCourses_Semesters" FromRole="OfferedCours" ToRole="Semester" />
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_OfferedCourses_TimeYears" FromRole="OfferedCours" ToRole="TimeYear" />
+          <NavigationProperty Name="SubSuppMarksExamCWs" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_OfferedCourse" FromRole="OfferedCours" ToRole="SubSuppMarksExamCW" />
         </EntityType>
         <EntityType Name="OfferedDiscipline">
           <Key>
@@ -1975,6 +2395,8 @@
           <Property Name="ShortNameEnglish" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="GPAwRecomms" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_CumulativeRecommendations" FromRole="RecommendationType" ToRole="GPAwRecomm" />
           <NavigationProperty Name="GPAwRecomms1" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_YearRecommendations" FromRole="RecommendationType" ToRole="GPAwRecomm" />
+          <NavigationProperty Name="SubSuppGPAwRecomms" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_CumulativeRecommendations" FromRole="RecommendationType" ToRole="SubSuppGPAwRecomm" />
+          <NavigationProperty Name="SubSuppGPAwRecomms1" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_YearRecommendations" FromRole="RecommendationType" ToRole="SubSuppGPAwRecomm" />
           <NavigationProperty Name="RecommTranslations" Relationship="AcademicResultsDBModel.RecommTranslations_RecommendationTypes" FromRole="RecommendationType" ToRole="RecommTranslation" />
         </EntityType>
         <EntityType Name="RecommTranslation">
@@ -2040,6 +2462,7 @@
           <NavigationProperty Name="OfferedDisciplines" Relationship="AcademicResultsDBModel.FK_OfferedDisciplines_Semesters" FromRole="Semester" ToRole="OfferedDiscipline" />
           <NavigationProperty Name="SemesterBatchEnrollments" Relationship="AcademicResultsDBModel.FK_SemesterBatchEnrollments_Semesters" FromRole="Semester" ToRole="SemesterBatchEnrollment" />
           <NavigationProperty Name="SemesterBatches" Relationship="AcademicResultsDBModel.FK_SemesterBatch_Semesters" FromRole="Semester" ToRole="SemesterBatch" />
+          <NavigationProperty Name="SubSuppMarksExamCWs" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Semesters" FromRole="Semester" ToRole="SubSuppMarksExamCW" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -2055,6 +2478,59 @@
           <NavigationProperty Name="GPAwRecomms" Relationship="AcademicResultsDBModel.FK_GPAwRecomm_Students" FromRole="Student" ToRole="GPAwRecomm" />
           <NavigationProperty Name="MarksExamCWs" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Students" FromRole="Student" ToRole="MarksExamCW" />
           <NavigationProperty Name="SemesterBatchEnrollments" Relationship="AcademicResultsDBModel.FK_SemesterBatchEnrollments_Students" FromRole="Student" ToRole="SemesterBatchEnrollment" />
+          <NavigationProperty Name="SubSuppGPAwRecomms" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Students" FromRole="Student" ToRole="SubSuppGPAwRecomm" />
+          <NavigationProperty Name="SubSuppMarksExamCWs" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Students" FromRole="Student" ToRole="SubSuppMarksExamCW" />
+        </EntityType>
+        <EntityType Name="SubSuppGPAwRecomm">
+          <Key>
+            <PropertyRef Name="YearId" />
+            <PropertyRef Name="GradeId" />
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="YearId" Type="Int32" Nullable="false" />
+          <Property Name="GradeId" Type="Int32" Nullable="false" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="GPA" Type="Double" />
+          <Property Name="YearRecommId" Type="Int32" Nullable="false" />
+          <Property Name="CGPA" Type="Double" />
+          <Property Name="CumulativeRecommId" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BatchEnrollment" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_BatchEnrollments" FromRole="SubSuppGPAwRecomm" ToRole="BatchEnrollment" />
+          <NavigationProperty Name="Batch" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Batch" FromRole="SubSuppGPAwRecomm" ToRole="Batch" />
+          <NavigationProperty Name="GPAwRecomm" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_GPAwRecomm" FromRole="SubSuppGPAwRecomm" ToRole="GPAwRecomm" />
+          <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Grades" FromRole="SubSuppGPAwRecomm" ToRole="Grade" />
+          <NavigationProperty Name="RecommendationType" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_CumulativeRecommendations" FromRole="SubSuppGPAwRecomm" ToRole="RecommendationType" />
+          <NavigationProperty Name="RecommendationType1" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_YearRecommendations" FromRole="SubSuppGPAwRecomm" ToRole="RecommendationType" />
+          <NavigationProperty Name="Student" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Students" FromRole="SubSuppGPAwRecomm" ToRole="Student" />
+          <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_TimeYears" FromRole="SubSuppGPAwRecomm" ToRole="TimeYear" />
+        </EntityType>
+        <EntityType Name="SubSuppMarksExamCW">
+          <Key>
+            <PropertyRef Name="YearId" />
+            <PropertyRef Name="GradeId" />
+            <PropertyRef Name="SemesterId" />
+            <PropertyRef Name="CourseId" />
+            <PropertyRef Name="StudentId" />
+          </Key>
+          <Property Name="YearId" Type="Int32" Nullable="false" />
+          <Property Name="GradeId" Type="Int32" Nullable="false" />
+          <Property Name="SemesterId" Type="Int32" Nullable="false" />
+          <Property Name="CourseId" Type="Int32" Nullable="false" />
+          <Property Name="StudentId" Type="Int32" Nullable="false" />
+          <Property Name="ExamTypeId" Type="Int32" Nullable="false" />
+          <Property Name="CWMark" Type="Double" />
+          <Property Name="Present" Type="Boolean" />
+          <Property Name="Excuse" Type="Boolean" />
+          <Property Name="ExamMark" Type="Double" />
+          <NavigationProperty Name="CourseEnrollment" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_CourseEnrollment" FromRole="SubSuppMarksExamCW" ToRole="CourseEnrollment" />
+          <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Courses" FromRole="SubSuppMarksExamCW" ToRole="Cours" />
+          <NavigationProperty Name="ExamType" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_ExamType" FromRole="SubSuppMarksExamCW" ToRole="ExamType" />
+          <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Grades" FromRole="SubSuppMarksExamCW" ToRole="Grade" />
+          <NavigationProperty Name="MarksExamCW" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExa" FromRole="SubSuppMarksExamCW" ToRole="MarksExamCW" />
+          <NavigationProperty Name="OfferedCourse" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_OfferedCourse" FromRole="SubSuppMarksExamCW" ToRole="OfferedCours" />
+          <NavigationProperty Name="Semester" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Semesters" FromRole="SubSuppMarksExamCW" ToRole="Semester" />
+          <NavigationProperty Name="Student" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Students" FromRole="SubSuppMarksExamCW" ToRole="Student" />
+          <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_TimeYears" FromRole="SubSuppMarksExamCW" ToRole="TimeYear" />
         </EntityType>
         <EntityType Name="Teacher">
           <Key>
@@ -2083,6 +2559,8 @@
           <NavigationProperty Name="OfferedDisciplines" Relationship="AcademicResultsDBModel.FK_OfferedDisciplines_TimeYears" FromRole="TimeYear" ToRole="OfferedDiscipline" />
           <NavigationProperty Name="SemesterBatchEnrollments" Relationship="AcademicResultsDBModel.FK_SemesterBatchEnrollments_TimeYears" FromRole="TimeYear" ToRole="SemesterBatchEnrollment" />
           <NavigationProperty Name="SemesterBatches" Relationship="AcademicResultsDBModel.FK_SemesterBatch_TimeYears" FromRole="TimeYear" ToRole="SemesterBatch" />
+          <NavigationProperty Name="SubSuppGPAwRecomms" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_TimeYears" FromRole="TimeYear" ToRole="SubSuppGPAwRecomm" />
+          <NavigationProperty Name="SubSuppMarksExamCWs" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_TimeYears" FromRole="TimeYear" ToRole="SubSuppMarksExamCW" />
         </EntityType>
         <EntityType Name="TuitionType">
           <Key>
@@ -2187,6 +2665,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_BatchEnrollments">
+          <End Type="AcademicResultsDBModel.BatchEnrollment" Role="BatchEnrollment" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppGPAwRecomm" Role="SubSuppGPAwRecomm" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="BatchEnrollment">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="StudentId" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Batch_Grades">
           <End Type="AcademicResultsDBModel.Grade" Role="Grade" Multiplicity="1" />
           <End Type="AcademicResultsDBModel.Batch" Role="Batch" Multiplicity="*" />
@@ -2234,6 +2728,20 @@
               <PropertyRef Name="GradeId" />
             </Principal>
             <Dependent Role="SemesterBatch">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_Batch">
+          <End Type="AcademicResultsDBModel.Batch" Role="Batch" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppGPAwRecomm" Role="SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
               <PropertyRef Name="YearId" />
               <PropertyRef Name="GradeId" />
             </Dependent>
@@ -2467,6 +2975,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubSuppMarksExamCW_CourseEnrollment">
+          <End Type="AcademicResultsDBModel.CourseEnrollment" Role="CourseEnrollment" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CourseEnrollment">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="StudentId" />
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="StudentId" />
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CourseTeachers_Disciplines">
           <End Type="AcademicResultsDBModel.Course" Role="Cours" Multiplicity="1" />
           <End Type="AcademicResultsDBModel.CourseTeacher" Role="CourseTeacher" Multiplicity="*" />
@@ -2499,6 +3027,18 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="OfferedCours">
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_Courses">
+          <End Type="AcademicResultsDBModel.Course" Role="Cours" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cours">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
               <PropertyRef Name="CourseId" />
             </Dependent>
           </ReferentialConstraint>
@@ -2605,6 +3145,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubSuppMarksExamCW_ExamType">
+          <End Type="AcademicResultsDBModel.ExamType" Role="ExamType" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExamType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="ExamTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_GPAwRecomm_CumulativeRecommendations">
           <End Type="AcademicResultsDBModel.RecommendationType" Role="RecommendationType" Multiplicity="0..1" />
           <End Type="AcademicResultsDBModel.GPAwRecomm" Role="GPAwRecomm" Multiplicity="*" />
@@ -2662,6 +3214,22 @@
             </Principal>
             <Dependent Role="GPAwRecomm">
               <PropertyRef Name="YearRecommId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_GPAwRecomm">
+          <End Type="AcademicResultsDBModel.GPAwRecomm" Role="GPAwRecomm" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppGPAwRecomm" Role="SubSuppGPAwRecomm" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="GPAwRecomm">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="StudentId" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="StudentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2725,6 +3293,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_Grades">
+          <End Type="AcademicResultsDBModel.Grade" Role="Grade" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppGPAwRecomm" Role="SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="GradeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_Grades">
+          <End Type="AcademicResultsDBModel.Grade" Role="Grade" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grade">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="GradeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MarksExamCW_OfferedCourse">
           <End Type="AcademicResultsDBModel.OfferedCourse" Role="OfferedCours" Multiplicity="1" />
           <End Type="AcademicResultsDBModel.MarksExamCW" Role="MarksExamCW" Multiplicity="*" />
@@ -2779,6 +3371,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SubSuppMarksExamCW_MarksExa">
+          <End Type="AcademicResultsDBModel.MarksExamCW" Role="MarksExamCW" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MarksExamCW">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="StudentId" />
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="StudentId" />
+              <PropertyRef Name="CourseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_OfferedCourses_SemesterBatch">
           <End Type="AcademicResultsDBModel.SemesterBatch" Role="SemesterBatch" Multiplicity="1" />
           <End Type="AcademicResultsDBModel.OfferedCourse" Role="OfferedCours" Multiplicity="*" />
@@ -2816,6 +3428,24 @@
             </Principal>
             <Dependent Role="OfferedCours">
               <PropertyRef Name="YearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_OfferedCourse">
+          <End Type="AcademicResultsDBModel.OfferedCourse" Role="OfferedCours" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OfferedCours">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="CourseId" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="YearId" />
+              <PropertyRef Name="GradeId" />
+              <PropertyRef Name="SemesterId" />
+              <PropertyRef Name="CourseId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2874,6 +3504,30 @@
               <PropertyRef Name="GradeId" />
               <PropertyRef Name="SemesterId" />
               <PropertyRef Name="DisciplineId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_CumulativeRecommendations">
+          <End Type="AcademicResultsDBModel.RecommendationType" Role="RecommendationType" Multiplicity="0..1" />
+          <End Type="AcademicResultsDBModel.SubSuppGPAwRecomm" Role="SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecommendationType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="CumulativeRecommId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_YearRecommendations">
+          <End Type="AcademicResultsDBModel.RecommendationType" Role="RecommendationType" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppGPAwRecomm" Role="SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecommendationType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="YearRecommId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2961,6 +3615,66 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="SemesterBatch">
+              <PropertyRef Name="YearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_Semesters">
+          <End Type="AcademicResultsDBModel.Semester" Role="Semester" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Semester">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="SemesterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_Students">
+          <End Type="AcademicResultsDBModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppGPAwRecomm" Role="SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_Students">
+          <End Type="AcademicResultsDBModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
+              <PropertyRef Name="StudentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppGPAwRecomm_TimeYears">
+          <End Type="AcademicResultsDBModel.TimeYear" Role="TimeYear" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppGPAwRecomm" Role="SubSuppGPAwRecomm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TimeYear">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppGPAwRecomm">
+              <PropertyRef Name="YearId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubSuppMarksExamCW_TimeYears">
+          <End Type="AcademicResultsDBModel.TimeYear" Role="TimeYear" Multiplicity="1" />
+          <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TimeYear">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SubSuppMarksExamCW">
               <PropertyRef Name="YearId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3182,6 +3896,36 @@
                 <ScalarProperty Name="UnivNo" ColumnName="UnivNo" />
                 <ScalarProperty Name="Index" ColumnName="Index" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubSuppGPAwRecomms">
+            <EntityTypeMapping TypeName="AcademicResultsDBModel.SubSuppGPAwRecomm">
+              <MappingFragment StoreEntitySet="SubSuppGPAwRecomm">
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="CumulativeRecommId" ColumnName="CumulativeRecommId" />
+                <ScalarProperty Name="CGPA" ColumnName="CGPA" />
+                <ScalarProperty Name="YearRecommId" ColumnName="YearRecommId" />
+                <ScalarProperty Name="GPA" ColumnName="GPA" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="GradeId" ColumnName="GradeId" />
+                <ScalarProperty Name="YearId" ColumnName="YearId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubSuppMarksExamCWs">
+            <EntityTypeMapping TypeName="AcademicResultsDBModel.SubSuppMarksExamCW">
+              <MappingFragment StoreEntitySet="SubSuppMarksExamCW">
+                <ScalarProperty Name="ExamMark" ColumnName="ExamMark" />
+                <ScalarProperty Name="Excuse" ColumnName="Excuse" />
+                <ScalarProperty Name="Present" ColumnName="Present" />
+                <ScalarProperty Name="CWMark" ColumnName="CWMark" />
+                <ScalarProperty Name="ExamTypeId" ColumnName="ExamTypeId" />
+                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="CourseId" ColumnName="CourseId" />
+                <ScalarProperty Name="SemesterId" ColumnName="SemesterId" />
+                <ScalarProperty Name="GradeId" ColumnName="GradeId" />
+                <ScalarProperty Name="YearId" ColumnName="YearId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

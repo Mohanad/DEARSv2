@@ -47,6 +47,7 @@ Class MainWindow
         ViewDictionary("DisciplineCurriculum") = New DisciplineCurriculumScreen()
         ViewDictionary("DatabaseManagement") = New ManageDatabase()
         ViewDictionary("TimelineManagement") = New TimelineManagementScreen()
+        ViewDictionary("LeaderBoard") = New LeaderBoardScreen()
 
 
 
@@ -56,7 +57,7 @@ Class MainWindow
     End Sub
     Sub RefreshMainView(sender As Object, e As PropertyChangedEventArgs)
        
-        If MainArea.Content IsNot Nothing Then
+        If MainArea.Content IsNot Nothing AndAlso selectedbtn IsNot Nothing Then
             CType(ViewDictionary(selectedbtn.Tag), IBaseScreen).LoadData(e.PropertyName)
         End If
     End Sub
@@ -112,7 +113,11 @@ Class MainWindow
             'CType(ViewDictionary(selectedbtn.Tag), IBaseScreen).CancelEdit()
             If MsgBox("There are unsaved changes navigating without saving them will cause loss of changes. Do you want to navigate?", MsgBoxStyle.YesNo, "Unsaved Changes") _
                 = MsgBoxResult.Yes Then
+                SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
+                SharedState.DBContext.Configuration.ValidateOnSaveEnabled = False
                 RollBack()
+                SharedState.DBContext.Configuration.AutoDetectChangesEnabled = True
+                SharedState.DBContext.Configuration.ValidateOnSaveEnabled = True
                 CType(ViewDictionary(selectedbtn.Tag), IBaseScreen).LoadData("")
                 CType(sender, RadioButton).IsChecked = True
             Else
@@ -123,6 +128,12 @@ Class MainWindow
 
     Private Sub SaveToExcelButton_Click(sender As Object, e As RoutedEventArgs)
         Dim dgs As IEnumerable(Of DataGrid) = FindVisualChildren(Of DataGrid)(Me.MainArea)
+        Dim targetDataGrid = dgs.FirstOrDefault
+        If targetDataGrid Is Nothing Then
+            MsgBox("No Save here")
+            Exit Sub
+        End If
+
         Dim SaveDialog As New Microsoft.Win32.SaveFileDialog()
         SaveDialog.Filter = "Excel Workbook (*.xlsx)|*.xlsx"
         If SaveDialog.ShowDialog() = True Then
@@ -152,7 +163,11 @@ Class MainWindow
 
     Private Sub ImportFromExcelButton_Click(sender As Object, e As RoutedEventArgs)
         Dim dgs As IEnumerable(Of DataGrid) = FindVisualChildren(Of DataGrid)(Me.MainArea)
-        Dim targetDataGrid = dgs.First
+        Dim targetDataGrid = dgs.FirstOrDefault
+        If targetDataGrid Is Nothing Then
+            MsgBox("No Importer here")
+            Exit Sub
+        End If
 
         Dim openFileDialog As New Forms.OpenFileDialog()
         openFileDialog.Filter = "Excel OpenXML Document (*.xlsx) |*.xlsx"
@@ -214,10 +229,15 @@ Class MainWindow
         'SharedState.DBContext.Batches.ToList()
         'SharedState.DBContext.SemesterBatches.ToList()
 
-        SharedState.GetSingleInstance.YearID = 2010
-        SharedState.GetSingleInstance.SemesterID = 1
-        SharedState.GetSingleInstance.GradeID = 1
-        SharedState.GetSingleInstance.DisciplineID = 1
+        If SharedState.DBContext.TimeYears.Local.Count > 0 Then
+            SharedState.GetSingleInstance.YearID = SharedState.DBContext.TimeYears.Local.Last.Id
+            Dim YearID = SharedState.GetSingleInstance.YearID
+            Dim LastSem = SharedState.DBContext.TimeYears.Local.Single(Function(s) s.Id = YearID).SemesterBatches.LastOrDefault
+            If LastSem IsNot Nothing Then
+                SharedState.GetSingleInstance.SemesterID = LastSem.SemesterId
+            End If
+        End If
+        SharedState.GetSingleInstance.AllDisciplines = True
 
         SharedDataDisplayGrid.DataContext = SharedStateInstance
 

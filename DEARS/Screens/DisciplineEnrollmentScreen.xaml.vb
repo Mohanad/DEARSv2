@@ -51,14 +51,49 @@
 
         Dim DiscpEnrCollection As New ObservableEntityCollection(Of SemesterBatchEnrollment)(DBContext, q_discipenr)
 
+        'Auto Enroll if only one specialization.
+        Dim discpoff = (From offd In SharedState.DBContext.OfferedDisciplines
+                       Where offd.YearId = YearID And offd.GradeId = GradeID And offd.SemesterId = SemesterID
+                       Select offd).ToList()
+
+        Dim countDisciplines As Integer = discpoff.Count()
+
         For Each benr In q_nodiscp.ToList()
-            DiscpEnrCollection.Add(New SemesterBatchEnrollment() With {.Student = benr.Student, .YearId = YearID, .GradeId = GradeID, .SemesterId = SemesterID})
+            If countDisciplines = 1 Then
+                DiscpEnrCollection.Add(New SemesterBatchEnrollment() With {.Student = benr.Student, .YearId = YearID, .GradeId = GradeID, .SemesterId = SemesterID,
+                                                                           .DisciplineId = discpoff.Single().DisciplineId})
+            Else
+                DiscpEnrCollection.Add(New SemesterBatchEnrollment() With {.Student = benr.Student, .YearId = YearID, .GradeId = GradeID, .SemesterId = SemesterID})
+            End If
         Next
 
         DisciplineEnrollmentsViewSource.Source = DiscpEnrCollection
     End Sub
 
     Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
+        ''For Student Registration YearID, GradeID, StudentID.
+        'Dim YearID As Integer = SharedState.GetSingleInstance().YearID
+        'Dim GradeID As Integer = SharedState.GetSingleInstance().GradeID
 
+        'Dim indexList = ExtractedData("Index").ConvertAll(Function(s) Integer.Parse(s))
+
+        ''TODO: Check indices before modifying entities. This ensures either full import or no import.
+
+        'For i As Integer = 0 To indexList.Count - 1
+        '    Dim ind = indexList(i)
+        '    Dim student As Student = (From stud In SharedState.DBContext.Students
+        '                                Where stud.Index = ind Select stud).SingleOrDefault()
+        '    Dim senr = (From enr In SharedState.DBContext.BatchEnrollments.Local
+        '                Where enr.StudentId = student.Id And enr.YearId = YearID And enr.GradeId = GradeID).SingleOrDefault()
+
+        '    Dim xet = ExtractedData("Enrollment")(i)
+        '    If senr Is Nothing Then
+        '        Dim stud_searcher = New StudentSearcher() With {.Student = student}
+        '        StudsCollection.Add(stud_searcher)
+        '        senr = stud_searcher.BatchEnrollment
+        '    End If
+        '    senr.EnrollmentTypeId = (From et In SharedState.DBContext.EnrollmentTypes.Local
+        '                                 Where et.NameEnglish = xet Select et.Id).SingleOrDefault()
+        'Next
     End Sub
 End Class

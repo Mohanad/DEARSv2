@@ -42,6 +42,8 @@ Partial Public Class AcademicResultsDBEntities
     Public Overridable Property SemesterBatches() As DbSet(Of SemesterBatch)
     Public Overridable Property Semesters() As DbSet(Of Semester)
     Public Overridable Property Students() As DbSet(Of Student)
+    Public Overridable Property SubSuppGPAwRecomms() As DbSet(Of SubSuppGPAwRecomm)
+    Public Overridable Property SubSuppMarksExamCWs() As DbSet(Of SubSuppMarksExamCW)
     Public Overridable Property Teachers() As DbSet(Of Teacher)
     Public Overridable Property TimeYears() As DbSet(Of TimeYear)
     Public Overridable Property TuitionTypes() As DbSet(Of TuitionType)

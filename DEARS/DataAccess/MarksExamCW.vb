@@ -42,5 +42,6 @@ Partial Public Class MarksExamCW
     Public Overridable Property Semester As Semester
     Public Overridable Property Student As Student
     Public Overridable Property TimeYear As TimeYear
+    Public Overridable Property SubSuppMarksExamCW As SubSuppMarksExamCW
 
 End Class

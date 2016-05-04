@@ -32,7 +32,7 @@ Partial Public Class CourseTeacher
     Public Property TeacherId As Integer
     Public Property TuitionTypeId As Integer
 
-    Public Overridable Property Cours As Course
+    Public Overridable Property Course As Course
     Public Overridable Property Grade As Grade
     Public Overridable Property OfferedCours As OfferedCourse
     Public Overridable Property Semester As Semester

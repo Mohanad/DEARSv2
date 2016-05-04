@@ -29,4 +29,6 @@ Partial Public Class ExamType
     Public Property NameArabic As String
     Public Property NameEnglish As String
 
+    Public Overridable Property SubSuppMarksExamCWs As ICollection(Of SubSuppMarksExamCW) = New HashSet(Of SubSuppMarksExamCW)
+
 End Class

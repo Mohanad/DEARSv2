@@ -51,6 +51,9 @@
                      Where q_comp_disc.Any(Function(s) s = denr.DisciplineId) And denr.YearId = YearID And denr.GradeId = GradeID And SemesterID = denr.SemesterId And Not denr.CourseEnrollments.Any(Function(s) s.CourseId = CourseID)
                      Select denr
 
+        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
+        SharedState.DBContext.Configuration.ValidateOnSaveEnabled = False
+
         Dim StudentsCollection As New ObservableEntityCollection(Of CourseEnrollment)(DBContext, q_cenrstud)
 
         For Each sbe In q_comp.ToList()
@@ -60,6 +63,9 @@
         StudentsViewSource.Source = StudentsCollection
         DBContext.ChangeTracker.DetectChanges()
         StudentsViewSource.View.Filter = AddressOf DisciplineFilterFunction
+
+        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = True
+        SharedState.DBContext.Configuration.ValidateOnSaveEnabled = True
 
     End Sub
 

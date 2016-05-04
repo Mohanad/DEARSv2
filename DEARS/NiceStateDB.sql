@@ -235,8 +235,9 @@ SET IDENTITY_INSERT [dbo].[Teachers] OFF
 
 INSERT [dbo].[ExamTypes] ([Id], [NameArabic], [NameEnglish]) 
 VALUES 
-(1, N'النظامي', N'Regular'),
-(2, N'ملاحق و بديل', N'Subs/Supp')
+(0, N'عادي', N'Normal'),
+(1, N'بديل', N'Substitute'),
+(2, N'ملحق', N'Supplementary')
 
 INSERT [dbo].[EnrollmentTypes] ([Id], NameArabic, [NameEnglish]) 
 VALUES 
@@ -260,11 +261,12 @@ VALUES
 (9, N'ملحق', N'Supplementary', N'Supp.', 0),
 (10, N'بديل\ملحق', N'Substitute/Supplementary', N'Subs./Supp.', 0),
 (11, N'إعادة جلوس', N'Resit', N'Resit', 0),
-(12, N'معدل ضعيف', N'Weak GPA', N'WGPA', 0),
+(12, N'معدل ضعيف', N'Weak GPA', N'WGPA', 1),
 (13, N'حالة خاصة', N'Special Case', N'Special Case', 0),
 (14, N'تجميد', N'Suspend', N'Suspend', 0),
 (15, N'فصل', N'Dismiss', N'Dismiss', 0),
-(16, N'عام بديل', N'Substitute Year', N'Sub. Year', 0)
+(16, N'عام بديل', N'Substitute Year', N'Sub. Year', 0),
+(18, N'D متعددة', N'Multi-D', N'Multi-D', 0)
 
 
 INSERT [dbo].[RecommTranslations] ([ResText], [RecommendationTypeN])

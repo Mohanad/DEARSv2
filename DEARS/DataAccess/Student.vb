@@ -36,5 +36,7 @@ Partial Public Class Student
     Public Overridable Property GPAwRecomms As ICollection(Of GPAwRecomm) = New HashSet(Of GPAwRecomm)
     Public Overridable Property MarksExamCWs As ICollection(Of MarksExamCW) = New HashSet(Of MarksExamCW)
     Public Overridable Property SemesterBatchEnrollments As ICollection(Of SemesterBatchEnrollment) = New HashSet(Of SemesterBatchEnrollment)
+    Public Overridable Property SubSuppGPAwRecomms As ICollection(Of SubSuppGPAwRecomm) = New HashSet(Of SubSuppGPAwRecomm)
+    Public Overridable Property SubSuppMarksExamCWs As ICollection(Of SubSuppMarksExamCW) = New HashSet(Of SubSuppMarksExamCW)
 
 End Class

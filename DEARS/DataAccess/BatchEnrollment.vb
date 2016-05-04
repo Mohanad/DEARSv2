@@ -37,5 +37,6 @@ Partial Public Class BatchEnrollment
     Public Overridable Property TimeYear As TimeYear
     Public Overridable Property GPAwRecomm As GPAwRecomm
     Public Overridable Property SemesterBatchEnrollments As ICollection(Of SemesterBatchEnrollment) = New HashSet(Of SemesterBatchEnrollment)
+    Public Overridable Property SubSuppGPAwRecomm As SubSuppGPAwRecomm
 
 End Class

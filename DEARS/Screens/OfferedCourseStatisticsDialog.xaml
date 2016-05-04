@@ -1,0 +1,92 @@
+﻿<Window xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"  x:Class="OfferedCourseStatisticsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="OfferedCourseStatisticsDialog" Height="600" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="Summary Statistics">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label FontWeight="ExtraBold" Content="{Binding CourseCode}"></Label>
+                <Label FontWeight="ExtraBold" Content="{Binding TitleEnglish}" Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="1"></Label>
+                <Label Grid.Row="2">Total Students</Label>
+                <Label Grid.Row="2" Grid.Column="1" Content="{Binding TotalStudents}"></Label>
+                <Label Grid.Row="2" Grid.Column="2">Absentees</Label>
+                <Label Grid.Row="2" Grid.Column="3" Content="{Binding Absentees}"></Label>
+                <Label Grid.Row="3">Pass</Label>
+                <Label Grid.Row="3" Grid.Column="1" Content="{Binding Pass}"></Label>
+                <Label Grid.Row="3" Grid.Column="2">Fail</Label>
+                <Label Grid.Row="3" Grid.Column="3" Content="{Binding Fail}"></Label>
+                <Label Grid.Row="4">Average</Label>
+                <Label Grid.Row="4" Grid.Column="1" Content="{Binding Average}"></Label>
+                <Label Grid.Row="4" Grid.Column="2">Standard Deviation</Label>
+                <Label Grid.Row="4" Grid.Column="3" Content="{Binding StandardDeviation}"></Label>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Distribution" Grid.Row="1">
+            <DockPanel LastChildFill="True">
+                <UniformGrid Columns="2" DockPanel.Dock="Left" MinWidth="90">
+                    <UniformGrid.Resources>
+                        <Style TargetType="Label">
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="BorderBrush" Value="Black" />
+                        </Style>
+                    </UniformGrid.Resources>
+                    <Label>A+</Label>
+                    <Label Content="{Binding CountAplus}"></Label>
+
+                    <Label>A</Label>
+                    <Label Content="{Binding CountA}"></Label>
+                    <Label>A-</Label>
+                    <Label Content="{Binding CountAminus}"></Label>
+                    <Label>B+</Label>
+                    <Label Content="{Binding CountBplus}"></Label>
+                    <Label>B</Label>
+                    <Label Content="{Binding CountB}"></Label>
+                    <Label>C</Label>
+                    <Label Content="{Binding CountC}"></Label>
+                    <Label>D</Label>
+                    <Label Content="{Binding CountD}"></Label>
+                    <Label>F</Label>
+                    <Label Content="{Binding CountF}"></Label>
+                    <Label>D*</Label>
+                    <Label Content="{Binding CountDstar}"></Label>
+                    <Label>F*</Label>
+                    <Label Content="{Binding CountFstar}"></Label>
+                    <Label>AB</Label>
+                    <Label Content="{Binding CountAB}"></Label>
+                    <Label>AB*</Label>
+                    <Label Content="{Binding CountABstar}"></Label>
+                </UniformGrid>
+                <chartingToolkit:Chart Name="CourseChartArea">
+                    <chartingToolkit:Chart.Title>
+                        <Binding>
+                            <Binding.Path>TitleEnglish</Binding.Path>
+                        </Binding>
+                    </chartingToolkit:Chart.Title>
+                    <chartingToolkit:LineSeries Name="CourseLineSeries" DependentValuePath="Y" IndependentValuePath="X" ItemsSource="{Binding}" Title="Actual" />
+                    <chartingToolkit:LineSeries Name="IdealLineSeries" DependentValuePath="Y" IndependentValuePath="X" ItemsSource="{Binding}" Title="Normal Dist."/>
+                </chartingToolkit:Chart>
+            </DockPanel>
+        </GroupBox>
+    </Grid>
+</Window>

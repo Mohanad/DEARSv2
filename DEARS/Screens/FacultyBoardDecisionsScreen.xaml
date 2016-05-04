@@ -1,0 +1,104 @@
+﻿<Window x:Class="FacultyBoardDecisionsScreen"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="FacultyBoardDecisionsScreen" >
+    <DockPanel VerticalAlignment="Stretch">
+        <Expander DockPanel.Dock="Top" VerticalAlignment="Stretch" IsExpanded="True" Header="Special Cases" Grid.Row="0" BorderThickness="3" BorderBrush="Black">
+            <DockPanel>
+                <DataGrid DockPanel.Dock="Top">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Index" />
+                        <DataGridTextColumn Header="University No" />
+                        <DataGridTextColumn Header="Name" />
+                        <DataGridTextColumn Header="GPA" Binding="{Binding Path=GPA, StringFormat=N3}"/>
+                        <DataGridTextColumn Header="Year Recomm" Binding="{Binding Path=YearRecommendationType.NameEnglish}"/>
+                        <DataGridTextColumn Header="CGPA" Binding="{Binding Path=CGPA, StringFormat=N3}"/>
+                        <DataGridTextColumn Header="Cumulative Recomm" Binding="{Binding Path=CumulativeRecommendationType.NameEnglish}"/>
+                        <DataGridTextColumn Header="Comment" Binding="{Binding Path=Comment}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <GroupBox BorderThickness="2" BorderBrush="Azure" Margin="20,0,0,20" Header="Case History" Grid.Row="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" DockPanel.Dock="Top">
+                    <DataGrid Name="CaseDetailsDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Year" Binding="{Binding Path=TimeYear.NameEnglish}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Grade" Binding="{Binding Path=Grade.NameEnglish}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Enrolled As" Binding="{Binding Path=EnrollmentType.NameEnglish}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="GPA" Binding="{Binding Path=GPAwRecomm.GPA}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="CGPA" Binding="{Binding Path=GPAwRecomm.CGPA}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Recommendation" Binding="{Binding Path=GPAwRecomm.YearRecommendationType.NameEnglish}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox Header="Available Decisions" DockPanel.Dock="Bottom" Margin="20,0,0,10" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <RadioButton Grid.Column="0">Repeat</RadioButton>
+                        <RadioButton Grid.Column="1">Dismiss</RadioButton>
+                        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">Apply</Button>
+                    </Grid>
+                </GroupBox>
+            </DockPanel>
+        </Expander>
+        <Expander DockPanel.Dock="Bottom" VerticalAlignment="Stretch" IsExpanded="True" Header="Multiple D Cases" Grid.Row="1" BorderThickness="3" BorderBrush="Black">
+            <DockPanel>
+                <DataGrid DockPanel.Dock="Top">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Index" />
+                        <DataGridTextColumn Header="University No" />
+                        <DataGridTextColumn Header="Name" />
+                        <DataGridTextColumn Header="GPA" Binding="{Binding Path=GPA, StringFormat=N3}"/>
+                        <DataGridTextColumn Header="Year Recomm" Binding="{Binding Path=YearRecommendationType.NameEnglish}"/>
+                        <DataGridTextColumn Header="CGPA" Binding="{Binding Path=CGPA, StringFormat=N3}"/>
+                        <DataGridTextColumn Header="Cumulative Recomm" Binding="{Binding Path=CumulativeRecommendationType.NameEnglish}"/>
+                        <DataGridTextColumn Header="Comment" Binding="{Binding Path=Comment}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <GroupBox BorderThickness="2" BorderBrush="Azure" Margin="20,0,0,20" Header="Case History" Grid.Row="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" DockPanel.Dock="Top">
+                    <DataGrid Name="CaseDetailsDataGrid_MultiDs" AutoGenerateColumns="False" CanUserAddRows="False" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Year" Binding="{Binding Path=TimeYear.NameEnglish}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Grade" Binding="{Binding Path=Grade.NameEnglish}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Enrolled As" Binding="{Binding Path=EnrollmentType.NameEnglish}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="GPA" Binding="{Binding Path=GPAwRecomm.GPA}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="CGPA" Binding="{Binding Path=GPAwRecomm.CGPA}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Recommendation" Binding="{Binding Path=GPAwRecomm.YearRecommendationType.NameEnglish}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox Header="Available Decisions" DockPanel.Dock="Bottom" Margin="20,0,0,10" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <RadioButton Grid.Column="0">Repeat</RadioButton>
+                        <RadioButton Grid.Column="1">Dismiss</RadioButton>
+                        <StackPanel Grid.Column="0" Grid.Row="1">
+                        <RadioButton >Supplementary</RadioButton>
+                            <ListBox>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <RadioButton GroupName="PossibleDCourses"></RadioButton>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                        <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center">Apply</Button>
+                    </Grid>
+                </GroupBox>
+            </DockPanel>
+        </Expander>
+    </DockPanel>
+</Window>

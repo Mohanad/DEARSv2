@@ -77,7 +77,7 @@ Public Class TranscriptIssuer
         Next
 
         If LastSemesterEnroll.BatchEnrollment.GPAwRecomm IsNot Nothing AndAlso LastSemesterEnroll.BatchEnrollment.GPAwRecomm.CGPA IsNot Nothing Then
-            ts.SetCtrlValue("CGPA", LastSemesterEnroll.BatchEnrollment.GPAwRecomm.CGPA)
+            ts.SetCtrlValue("CGPA", System.Math.Round(LastSemesterEnroll.BatchEnrollment.GPAwRecomm.CGPA.Value, 2))
             If LastSemesterEnroll.BatchEnrollment.GPAwRecomm.CumulativeRecommendationType IsNot Nothing Then
                 ts.SetCtrlValue("Grade", LastSemesterEnroll.BatchEnrollment.GPAwRecomm.CumulativeRecommendationType.NameEnglish)
             End If

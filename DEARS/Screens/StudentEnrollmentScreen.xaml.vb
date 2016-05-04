@@ -91,6 +91,8 @@ Public Class StudentEnrollmentScreen
         Dim indexList = ExtractedData("Index").ConvertAll(Function(s) Integer.Parse(s))
 
         'TODO: Check indices before modifying entities. This ensures either full import or no import.
+        SharedState.DBContext.Configuration.ValidateOnSaveEnabled = False
+        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
 
         For i As Integer = 0 To indexList.Count - 1
             Dim ind = indexList(i)
@@ -105,9 +107,13 @@ Public Class StudentEnrollmentScreen
                 StudsCollection.Add(stud_searcher)
                 senr = stud_searcher.BatchEnrollment
             End If
-            senr.EnrollmentTypeId = (From et In SharedState.DBContext.EnrollmentTypes.Local
-                                         Where et.NameEnglish = xet Select et.Id).SingleOrDefault()
+            senr.EnrollmentType = (From et In SharedState.DBContext.EnrollmentTypes.Local
+                                         Where et.NameEnglish = xet Select et).SingleOrDefault()
         Next
+
+        SharedState.DBContext.ChangeTracker.DetectChanges()
+        SharedState.DBContext.Configuration.ValidateOnSaveEnabled = True
+        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = True
 
     End Sub
 End Class

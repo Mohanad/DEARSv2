@@ -97,6 +97,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="system.windows.controls.datavisualization.toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Input.Toolkit">
       <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Input.Toolkit.dll</HintPath>
     </Reference>
@@ -201,6 +202,12 @@
     <Compile Include="DataAccess\Student.vb">
       <DependentUpon>AcademicResultsDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataAccess\SubSuppGPAwRecomm.vb">
+      <DependentUpon>AcademicResultsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataAccess\SubSuppMarksExamCW.vb">
+      <DependentUpon>AcademicResultsDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataAccess\Teacher.vb">
       <DependentUpon>AcademicResultsDB.tt</DependentUpon>
     </Compile>
@@ -209,6 +216,9 @@
     </Compile>
     <Compile Include="DataAccess\TuitionType.vb">
       <DependentUpon>AcademicResultsDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Importer\AkodeImporter.xaml.vb">
+      <DependentUpon>AkodeImporter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Importer\ExcelImporterDialog.xaml.vb">
       <DependentUpon>ExcelImporterDialog.xaml</DependentUpon>
@@ -239,8 +249,17 @@
     <Compile Include="Screens\ExamExcuseScreen.xaml.vb">
       <DependentUpon>ExamExcuseScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\FacultyBoardDecisionsScreen.xaml.vb">
+      <DependentUpon>FacultyBoardDecisionsScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\LeaderBoardScreen.xaml.vb">
+      <DependentUpon>LeaderBoardScreen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\ManageDatabase.xaml.vb">
       <DependentUpon>ManageDatabase.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\OfferedCourseStatisticsDialog.xaml.vb">
+      <DependentUpon>OfferedCourseStatisticsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\StudentScreen.xaml.vb">
       <DependentUpon>StudentScreen.xaml</DependentUpon>
@@ -307,6 +326,10 @@
     <Compile Include="SQLConnectWindow.xaml.vb">
       <DependentUpon>SQLConnectWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Importer\AkodeImporter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Importer\ExcelImporterDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -363,7 +386,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Screens\FacultyBoardDecisionsScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\LeaderBoardScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\ManageDatabase.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\OfferedCourseStatisticsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -587,6 +622,9 @@
     <Resource Include="Images\MainLogo.png" />
     <Content Include="Nationalities.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NiceStateDB_Clean.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NiceStateDB.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -77,12 +77,16 @@
                         <RadioButton GroupName="NavigationBarRadios"  PreviewMouseDown="RadioButton_PreviewMouseDown"  Checked="Button_Click" Tag="ExamAttendance">Exam Attendance</RadioButton>
                         <RadioButton GroupName="NavigationBarRadios"  PreviewMouseDown="RadioButton_PreviewMouseDown"  Checked="Button_Click" Tag="ExamExcuse">Exam Excuse</RadioButton>
                         <RadioButton GroupName="NavigationBarRadios"  PreviewMouseDown="RadioButton_PreviewMouseDown"  Checked="Button_Click" Tag="ExamMarks">Exam Marks</RadioButton>
-                        <RadioButton GroupName="NavigationBarRadios"  PreviewMouseDown="RadioButton_PreviewMouseDown"  Checked="Button_Click" Tag="MeetingResults" Margin="0,20,0,0">Meeting Results</RadioButton>
+                    </StackPanel>
+                </Expander>
+                <Expander Header="Results Management" IsExpanded="True">
+                    <StackPanel Margin="15,0,15,0">
+                        <RadioButton GroupName="NavigationBarRadios"  PreviewMouseDown="RadioButton_PreviewMouseDown"  Checked="Button_Click" Tag="LeaderBoard" Margin="0,0,0,0">Leader Board</RadioButton>
+                        <RadioButton GroupName="NavigationBarRadios"  PreviewMouseDown="RadioButton_PreviewMouseDown"  Checked="Button_Click" Tag="MeetingResults" Margin="0,0,0,0">Meeting Results</RadioButton>
                         <RadioButton GroupName="NavigationBarRadios"  PreviewMouseDown="RadioButton_PreviewMouseDown"  Checked="Button_Click" Tag="BoardResults">Board Results</RadioButton>
                         <RadioButton GroupName="NavigationBarRadios"  PreviewMouseDown="RadioButton_PreviewMouseDown"  Checked="Button_Click" Tag="PassedFailedLists">Passed/Failed Lists</RadioButton>
                     </StackPanel>
                 </Expander>
-
                 <RadioButton GroupName="NavigationBarRadios"  PreviewMouseDown="RadioButton_PreviewMouseDown"  Checked="Button_Click" Tag="Transcripts">Transcripts</RadioButton>
 
             </StackPanel>
@@ -110,7 +114,7 @@
         </ToolBarTray>
 
         <ContentControl Name="MainArea" Grid.Column="1">
-            <StackPanel>
+            <StackPanel VerticalAlignment="Center">
             <Image Grid.ColumnSpan="2"  Grid.Row="0" Source="Images/MainLogo.png" Height="300"></Image>
                 <Label FontSize="72" FontStyle="Italic" FontFamily="Times New Roman" HorizontalAlignment="Center" FontWeight="ExtraBold" Foreground="Blue">DEARS</Label>
             </StackPanel>

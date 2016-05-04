@@ -38,12 +38,12 @@ Public Class ManageDatabase
             End If
 
         Catch ex As Exception
-            MsgBox(ex.Message)
+            MsgBox(Application.FlattenOutException(ex))
         End Try
     End Sub
 
     Private Sub BasicDataButton_Click(sender As Object, e As RoutedEventArgs)
-        Dim BasicDataQuery As String = System.IO.File.ReadAllText("NiceStateDB.sql")
+        Dim BasicDataQuery As String = System.IO.File.ReadAllText("NiceStateDB_Clean.sql")
         DBContext.Database.ExecuteSqlCommand(BasicDataQuery)
         DirectCast(My.Application.MainWindow, MainWindow).ReloadData()
     End Sub
@@ -64,6 +64,11 @@ Public Class ManageDatabase
 
     Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
 
+    End Sub
+
+    Private Sub AkodeImporter_Click(sender As Object, e As RoutedEventArgs) Handles AkodeImporter.Click
+        Dim akImporter As New AkodeImporter()
+        akImporter.ShowDialog()
     End Sub
 End Class
 

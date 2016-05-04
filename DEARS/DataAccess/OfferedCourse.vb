@@ -42,5 +42,6 @@ Partial Public Class OfferedCourse
     Public Overridable Property SemesterBatch As SemesterBatch
     Public Overridable Property Semester As Semester
     Public Overridable Property TimeYear As TimeYear
+    Public Overridable Property SubSuppMarksExamCWs As ICollection(Of SubSuppMarksExamCW) = New HashSet(Of SubSuppMarksExamCW)
 
 End Class

@@ -1,0 +1,135 @@
+﻿<UserControl x:Class="LeaderBoardScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="GradesViewSource"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Column="1" Grid.Row="0" Name="QueryParamnsBox">
+            <GroupBox.Header>Query Parameters</GroupBox.Header>
+            <UniformGrid Rows="3" Columns="3">
+                <UniformGrid.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="Margin" Value="0,0,20,0" />
+                        <Setter Property="HorizontalAlignment" Value="Right" />
+                    </Style>
+                </UniformGrid.Resources>
+                <Label>Grade:</Label>
+                <ComboBox ItemsSource="{Binding Source={StaticResource GradesViewSource}}" DisplayMemberPath="NameEnglish" SelectedValuePath="Id" SelectedValue="{Binding GradeID}"></ComboBox>
+                <Label></Label>
+
+                <!--<Label>Discipline:</Label>
+                <ComboBox ItemsSource="{Binding Source={StaticResource DisciplinesViewSource}}" DisplayMemberPath="Discipline.NameEnglishShort"></ComboBox>
+                <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center">ALL</CheckBox>-->
+
+                <!--<Label IsEnabled="False">Course:</Label>
+                <ComboBox IsEnabled="False"></ComboBox>
+                <Label IsEnabled="False"></Label>-->
+            </UniformGrid>
+        </GroupBox>
+
+        <ListBox Name="LeaderBoardListBox" Grid.Row="1"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Button Click="Button_Click">
+                        <Grid Margin="10" Background="Azure">
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="{Binding CourseCode}" Grid.Column="0" Grid.Row="0"></Label>
+                            <Label Content="{Binding CourseTitle}" Grid.Column="1" Grid.Row="0"></Label>
+                            <Label Content="CW" Grid.Column="0" Grid.Row="1"></Label>
+                            <Label Content="EX" Grid.Column="0" Grid.Row="2"></Label>
+                            <Label Content="Teacher" Grid.Column="0" Grid.Row="3"></Label>
+                            <ProgressBar Maximum="{Binding Path=TotalStudents}" Width="200" Height="10" Value="{Binding Path=SubmittedStudentsCW}" Grid.Column="1" Grid.Row="1"></ProgressBar>
+                            <ProgressBar Maximum="{Binding Path=TotalStudents}" Width="200" Height="10" Value="{Binding Path=SubmittedStudentsEX}" Grid.Column="1" Grid.Row="2"></ProgressBar>
+
+                            <Label Content="{Binding TeacherName}" Grid.Column="1" Grid.Row="3"></Label>
+                            <Label Content="#" Grid.Column="2" Grid.Row="3"></Label>
+                            <Label Content="{Binding TeacherPhone}" Grid.Column="3" Grid.Row="3"></Label>
+                            <Label Content="{Binding SubmittedStudentsCW}" Grid.Column="3" Grid.Row="1"></Label>
+                            <Label Content="{Binding TotalStudents}" Grid.Column="4" Grid.Row="1"></Label>
+
+                            <Label Content="{Binding SubmittedStudentsEX}" Grid.Column="3" Grid.Row="2"></Label>
+                            <Label Content="{Binding TotalStudents}" Grid.Column="4" Grid.Row="2"></Label>
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel ></WrapPanel>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+        <GroupBox Grid.Row="2" Header="Summary" MaxHeight="300">
+            <DataGrid Name="SummaryStatisticsFataGrid" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Code" Binding="{Binding CourseCode}" />
+                    <DataGridTextColumn Header="Title" Binding="{Binding TitleEnglish}" />
+                    <DataGridTextColumn Header="Average" Binding="{Binding Average}" />
+                    <DataGridTextColumn Header="Std Dev." Binding="{Binding StandardDeviation}" />
+                    <DataGridTextColumn Header="A+" Binding="{Binding CountAplus}"/>
+                    <DataGridTextColumn Header="A" Binding="{Binding CountA}" />
+                    <DataGridTextColumn Header="A-" Binding="{Binding CountAminus}" />
+                    <DataGridTextColumn Header="B+" Binding="{Binding CountBplus}" />
+                    <DataGridTextColumn Header="B" Binding="{Binding CountB}" />
+                    <DataGridTextColumn Header="C" Binding="{Binding CountC}" />
+                    <DataGridTextColumn Header="D" Binding="{Binding CountD}" />
+                    <DataGridTextColumn Header="F" Binding="{Binding CountF}" />
+                    <DataGridTextColumn Header="D*" Binding="{Binding CountDstar}" />
+                    <DataGridTextColumn Header="F*" Binding="{Binding CountFstar}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+
+        <!--<DataGrid AutoGenerateColumns="False" Grid.Row="1" Name="LeaderBoardDataGrid"
+                  CanUserAddRows="False" CanUserDeleteRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Course Code" Binding="{Binding Path=CourseCode}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Course Title" Binding="{Binding Path=CourseTitle}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Total Students" Binding="{Binding Path=TotalStudents}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Submitted CW" Binding="{Binding Path=SubmittedStudentsCW}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Submitted EX" Binding="{Binding Path=SubmittedStudentsEX}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Teacher" Binding="{Binding Path=TeacherName}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>-->
+
+        <!--<ItemsControl>
+            <ItemsControl.ItemTemplate>
+                
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>-->
+
+        <GroupBox Grid.Column="1" Grid.Row="3" MinHeight="80">
+            <GroupBox.Header>Help/Key</GroupBox.Header>
+            <TextBlock TextWrapping="Wrap">
+                This space shows help or other necessary information that is needed to confuse the user about this screen.
+                <LineBreak />
+                So go ahead and plase be confused!!!
+            </TextBlock>
+        </GroupBox>
+    </Grid>
+</UserControl>

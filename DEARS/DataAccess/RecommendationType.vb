@@ -33,6 +33,8 @@ Partial Public Class RecommendationType
 
     Public Overridable Property GPAwRecomms As ICollection(Of GPAwRecomm) = New HashSet(Of GPAwRecomm)
     Public Overridable Property GPAwRecomms1 As ICollection(Of GPAwRecomm) = New HashSet(Of GPAwRecomm)
+    Public Overridable Property SubSuppGPAwRecomms As ICollection(Of SubSuppGPAwRecomm) = New HashSet(Of SubSuppGPAwRecomm)
+    Public Overridable Property SubSuppGPAwRecomms1 As ICollection(Of SubSuppGPAwRecomm) = New HashSet(Of SubSuppGPAwRecomm)
     Public Overridable Property RecommTranslations As ICollection(Of RecommTranslation) = New HashSet(Of RecommTranslation)
 
 End Class
