@@ -40,6 +40,9 @@
 
         GradeID = SharedState.GetSingleInstance().GradeID
 
+        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
+        SharedState.DBContext.Configuration.ValidateOnSaveEnabled = False
+
         Dim q_discipenr = From denr In DBContext.SemesterBatchEnrollments.Include("Student")
                           Where denr.YearId = YearID And denr.SemesterId = SemesterID And denr.GradeId = GradeID
                           Select denr
@@ -66,6 +69,9 @@
                 DiscpEnrCollection.Add(New SemesterBatchEnrollment() With {.Student = benr.Student, .YearId = YearID, .GradeId = GradeID, .SemesterId = SemesterID})
             End If
         Next
+
+        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = True
+        SharedState.DBContext.Configuration.ValidateOnSaveEnabled = True
 
         DisciplineEnrollmentsViewSource.Source = DiscpEnrCollection
     End Sub

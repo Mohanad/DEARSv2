@@ -41,7 +41,7 @@ Partial Public Class SubSuppMarksExamCW
     Public Overridable Property ExamType As ExamType
     Public Overridable Property Grade As Grade
     Public Overridable Property MarksExamCW As MarksExamCW
-    Public Overridable Property OfferedCourse As OfferedCourse
+    Public Overridable Property OfferedCours As OfferedCourse
     Public Overridable Property Semester As Semester
     Public Overridable Property Student As Student
     Public Overridable Property TimeYear As TimeYear

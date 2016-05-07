@@ -3,9 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DEARS"
+             Loaded="UserControl_Loaded"
+             Unloaded="UserControl_Unloaded"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="200" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:NotBoolConverter x:Key="NotBoolconverter" />
+        <CollectionViewSource x:Key="GradesViewSource" />
+        <CollectionViewSource x:Key="DisciplinesViewSource" Source="{Binding Source={StaticResource GradesViewSource}, Path=OfferedDisciplines}"/>
+        <CollectionViewSource x:Key="GPAViewSource" />
+    </UserControl.Resources>
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Column="1" Grid.Row="0" Name="QueryParamsBox">
+            <GroupBox.Header>Query Parameters</GroupBox.Header>
+            <UniformGrid Rows="3" Columns="3">
+                <UniformGrid.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="Margin" Value="0,0,20,0" />
+                        <Setter Property="HorizontalAlignment" Value="Right" />
+                    </Style>
+                </UniformGrid.Resources>
+                <Label>Grade:</Label>
+                <ComboBox Name="GradeComboBox" ItemsSource="{Binding Source={StaticResource GradesViewSource}}" DisplayMemberPath="Grade.NameEnglish" SelectedValuePath="GradeId" SelectedValue="{Binding GradeID}"></ComboBox>
+                <Label></Label>
+
+                <Label>Discipline:</Label>
+                <ComboBox ItemsSource="{Binding Source={StaticResource DisciplinesViewSource}}" DisplayMemberPath="Discipline.NameEnglishShort" SelectedValuePath="DisciplineId" SelectedValue="{Binding DisciplineID}"
+                          IsEnabled="{Binding ElementName=AllDisciplinescheckBox,Path=IsChecked, Converter={StaticResource NotBoolconverter}}"
+                          Name="DisciplineComboBox"></ComboBox>
+                <CheckBox Name="AllDisciplinescheckBox" IsChecked="{Binding AllDisciplines}"  HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Checked="AllDisciplinescheckBox_Checked" Unchecked="AllDisciplinescheckBox_Unchecked">ALL</CheckBox>
+
+                <!--<Button HorizontalAlignment="Center" Name="ProcessButton" Click="ProcessButton_Click">Process</Button>-->
+                <Label></Label>
+                <Button HorizontalAlignment="Center" Name="GenerateButton" Click="GenerateButton_Click">Generate</Button>
+                <!--<Button HorizontalAlignment="Center" Name="DecisionsButton" Click="DecisionsButton_Click">Decisions</Button>-->
+                <Label></Label>
+            </UniformGrid>
+        </GroupBox>
     </Grid>
 </UserControl>

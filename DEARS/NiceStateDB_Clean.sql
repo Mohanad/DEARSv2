@@ -82,7 +82,8 @@ VALUES
 (13, N'حالة خاصة', N'Special Case', N'Special Case', 0),
 (14, N'تجميد', N'Suspend', N'Suspend', 0),
 (15, N'فصل', N'Dismiss', N'Dismiss', 0),
-(16, N'عام بديل', N'Substitute Year', N'Sub. Year', 0)
+(16, N'عام بديل', N'Substitute Year', N'Sub. Year', 0),
+(18, N'D متعددة', N'Multiple D', N'Multi-D', 0)
 
 
 INSERT [dbo].[RecommTranslations] ([ResText], [RecommendationTypeN])

@@ -33,6 +33,8 @@
         Dim CourseID As Integer = SharedState.GetSingleInstance().CourseID
         Dim DisciplineID As Integer = SharedState.GetSingleInstance().DisciplineID
 
+        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
+        SharedState.DBContext.Configuration.ValidateOnSaveEnabled = False
 
         'We have to load three types of data. 
         'Students already resgistered in the course.
@@ -50,9 +52,6 @@
         Dim q_comp = From denr In DBContext.SemesterBatchEnrollments.Include("Student")
                      Where q_comp_disc.Any(Function(s) s = denr.DisciplineId) And denr.YearId = YearID And denr.GradeId = GradeID And SemesterID = denr.SemesterId And Not denr.CourseEnrollments.Any(Function(s) s.CourseId = CourseID)
                      Select denr
-
-        SharedState.DBContext.Configuration.AutoDetectChangesEnabled = False
-        SharedState.DBContext.Configuration.ValidateOnSaveEnabled = False
 
         Dim StudentsCollection As New ObservableEntityCollection(Of CourseEnrollment)(DBContext, q_cenrstud)
 

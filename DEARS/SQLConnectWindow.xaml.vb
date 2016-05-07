@@ -54,7 +54,7 @@ Public Class SQLConnectWindow
         End If
         Me.CancelButton.IsEnabled = Not State
     End Sub
-    Dim dbName As String = "AcademicResultsDB"
+    Public dbName As String = "AcademicResultsDB"
     Sub TestConnection(Timeout As Integer)
         SetDialogEnabled(False)
 
@@ -141,6 +141,36 @@ Public Class SQLConnectWindow
         My.Settings.ServersCollection.Clear()
         My.Settings.ServersCollection.AddRange(ServersCollection.ToArray())
         My.Settings.Save()
+    End Sub
+
+    Public Sub CreateDB()
+        Dim sqlBuild As New System.Data.SqlClient.SqlConnectionStringBuilder()
+        sqlBuild("Server") = Me.ServerComboBox.Text
+        sqlBuild.InitialCatalog = "master"
+        sqlBuild.IntegratedSecurity = Not SqlServerAuthenticationRadioButton.IsChecked
+        If Not sqlBuild.IntegratedSecurity Then
+            sqlBuild.UserID = UsernameTextbox.Text
+            sqlBuild.Password = PasswordTextbox.Password
+            'sqlBuild.PersistSecurityInfo = True
+        End If
+        sqlBuild.ConnectTimeout = 1000
+
+        Dim CreateDBQuery As String = System.IO.File.ReadAllText("AcademicResultsDB_Create.sql")
+
+        Dim sqlConn As New System.Data.SqlClient.SqlConnection(sqlBuild.ConnectionString)
+        Try
+            sqlConn.Open()
+        Catch ex As Exception
+            MsgBox("Opening of Connection Failed")
+        End Try
+        Try
+            Dim sqlCmd = sqlConn.CreateCommand()
+            sqlCmd.CommandText = CreateDBQuery
+            sqlCmd.ExecuteNonQuery()
+        Catch ex As Exception
+            MsgBox("Creation of Database Failed")
+        End Try
+        
     End Sub
 
 End Class

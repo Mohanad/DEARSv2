@@ -435,16 +435,10 @@ Public Class AkodeImporter
                 sbt2 = New SemesterBatch() With {.YearId = YearID, .GradeId = GradeID, .SemesterId = 2}
                 db.SemesterBatches.Add(sbt2)
             End If
-
-            ' Add Students
-            For Each stud In nmData.IndexList
-                Dim st = (From s In db.Students Where s.Index = stud).SingleOrDefault()
-                If st Is Nothing Then
-                    st = New Student() With {.Index = stud}
-                    db.Students.Add(st)
-                End If
-            Next
             db.SaveChanges()
+
+            db.Configuration.AutoDetectChangesEnabled = False
+            db.Configuration.ValidateOnSaveEnabled = False
 
             ' No disciplines in Akode program.
             ' There should be only one discipline
@@ -463,6 +457,52 @@ Public Class AkodeImporter
                 dsc2 = New OfferedDiscipline() With {.YearId = YearID, .GradeId = GradeID, .SemesterId = 2, .DisciplineId = disc2}
                 db.OfferedDisciplines.Add(dsc2)
             End If
+            db.SaveChanges()
+
+
+            
+            ' Add Students and the Enrollment Data for Batch and Semester Batch
+            db.Students.ToList()
+            db.BatchEnrollments.Where(Function(s) s.YearId = YearID And s.GradeId = GradeID).ToList()
+            db.SemesterBatchEnrollments.Where(Function(s) s.YearId = YearID And s.GradeId = GradeID).ToList()
+            For Each stud In nmData.IndexList
+                Dim ind = stud
+                Dim st = (From s In db.Students.Local Where s.Index = ind).SingleOrDefault()
+                If st Is Nothing Then
+                    st = New Student() With {.Index = stud}
+                    db.Students.Add(st)
+                End If
+                
+            Next
+
+            db.ChangeTracker.DetectChanges()
+            db.SaveChanges()
+
+            For Each stud In nmData.IndexList
+                Dim ind = stud
+                Dim st = (From s In db.Students.Local Where s.Index = ind).SingleOrDefault()
+                Dim sreg = (From s In db.BatchEnrollments.Local Where s.StudentId = st.Id).SingleOrDefault()
+                If sreg Is Nothing Then
+                    sreg = New BatchEnrollment() With {.Student = st, .GradeId = GradeID, .YearId = YearID, .EnrollmentTypeId = 1}
+                    db.BatchEnrollments.Add(sreg)
+                End If
+                Dim bsreg1 = (From bs In db.SemesterBatchEnrollments.Local
+                              Where bs.StudentId = st.Id And bs.SemesterId = 1 And bs.YearId = YearID And bs.GradeId = GradeID).SingleOrDefault()
+                Dim bsreg2 = (From bs In db.SemesterBatchEnrollments.Local
+                              Where bs.StudentId = st.Id And bs.SemesterId = 2 And bs.YearId = YearID And bs.GradeId = GradeID).SingleOrDefault()
+                If bsreg1 Is Nothing Then
+                    bsreg1 = New SemesterBatchEnrollment() _
+                        With {.StudentId = st.Id, .GradeId = GradeID, .YearId = YearID, .SemesterId = 1, .DisciplineId = disc1}
+                    db.SemesterBatchEnrollments.Add(bsreg1)
+                End If
+                If bsreg2 Is Nothing Then
+                    bsreg2 = New SemesterBatchEnrollment() _
+                        With {.StudentId = st.Id, .GradeId = GradeID, .YearId = YearID, .SemesterId = 2, .DisciplineId = disc2}
+                    db.SemesterBatchEnrollments.Add(bsreg2)
+                End If
+            Next
+
+            db.ChangeTracker.DetectChanges()
             db.SaveChanges()
 
             ' Courses
@@ -498,6 +538,8 @@ Public Class AkodeImporter
                 Dim disc As Integer = 0
                 If SemID = 1 Then
                     disc = disc1
+                Else
+                    disc = disc2
                 End If
                 Dim cds = (From cd In db.CourseDisciplines
                        Where cd.YearId = YearID And cd.GradeId = GradeID And cd.SemesterId = SemID And cd.CourseId = cr.Id And disc = cd.DisciplineId).SingleOrDefault()
@@ -513,6 +555,55 @@ Public Class AkodeImporter
             db.SaveChanges()
 
             ' Marks
+            db.CourseEnrollments.Include("MarksExamCW").Where(Function(s) s.YearId = YearID And s.GradeId = GradeID).ToList()
+            For i As Integer = 0 To nmData.IndexListCount - 1
+                ' Get student
+                Dim stind = nmData.IndexList(i)
+                Dim st = (From s In db.Students.Local Where s.Index = stind).Single()
+
+                ' Form course enrollments and marksexamcw for each course
+                For j As Integer = 0 To baseData.CourseCodes.Count - 1
+                    Dim courseCode As String = baseData.CourseCodes(j).Trim()
+                    Dim courseID As Integer = (From cr In db.Courses.Local Where
+                                      cr.CourseCode.Trim() = courseCode Select cr.Id).Single()
+                    Dim cenr = (From cen In db.CourseEnrollments.Local Where
+                               cen.YearId = YearID And cen.StudentId = st.Id And cen.CourseId = courseID And cen.GradeId = GradeID).SingleOrDefault()
+                    Dim mkcw As MarksExamCW = Nothing
+                    If cenr Is Nothing Then
+                        cenr = New CourseEnrollment()
+                        With cenr
+                            .YearId = YearID
+                            .GradeId = GradeID
+                            .SemesterId = 2
+                            .StudentId = st.Id
+                            .CourseId = courseID
+                        End With
+                        db.CourseEnrollments.Add(cenr)
+                    Else
+                        mkcw = cenr.MarksExamCW
+                    End If
+
+                    If mkcw Is Nothing Then
+                        mkcw = New MarksExamCW()
+                        With mkcw
+                            .YearId = YearID
+                            .GradeId = GradeID
+                            .SemesterId = 2
+                            .StudentId = st.Id
+                            .CourseId = courseID
+                        End With
+                        db.MarksExamCWs.Add(mkcw)
+                    End If
+
+                    With mkcw
+                        .ExamMark = ExtractedMarksList(j).ExamMarkList(i)
+                        .CWMark = ExtractedMarksList(j).CWMarkList(i)
+                        .Present = ExtractedMarksList(j).PresentList(i)
+                    End With
+                Next
+            Next
+
+            db.SaveChanges()
 
             ' GPAs and recommendations not needed.
         End Using

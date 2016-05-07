@@ -31,7 +31,7 @@ Partial Public Class CourseEnrollment
     Public Property StudentId As Integer
     Public Property CourseId As Integer
 
-    Public Overridable Property Cours As Course
+    Public Overridable Property Course As Course
     Public Overridable Property Grade As Grade
     Public Overridable Property OfferedCourse As OfferedCourse
     Public Overridable Property SemesterBatchEnrollment As SemesterBatchEnrollment

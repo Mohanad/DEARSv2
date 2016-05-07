@@ -17,8 +17,9 @@ Public Class ManageDatabase
 
     Private Sub RecreateDatabaseButton_Click(sender As Object, e As RoutedEventArgs)
         Try
+            Dim eConn As System.Data.Common.DbConnection = Nothing
             If DBContext.Database.Exists() Then
-                Dim eConn = DirectCast(SharedState.DBContext, IObjectContextAdapter).ObjectContext.Connection
+                eConn = DirectCast(SharedState.DBContext, IObjectContextAdapter).ObjectContext.Connection
                 System.Data.SqlClient.SqlConnection.ClearAllPools()
                 SharedState.DBContext.Database.Connection.Close()
                 DBContext.Database.ExecuteSqlCommand(System.Data.Entity.TransactionalBehavior.DoNotEnsureTransaction, _
@@ -26,16 +27,14 @@ Public Class ManageDatabase
                 DBContext.Database.Delete()
             End If
 
-            DBContext.Database.Create()
             DBContext.Dispose()
             SharedState.DBContext = Nothing
 
             Dim sqlConnDialog As New SQLConnectWindow()
-            If sqlConnDialog.ShowDialog() = True Then
-                DirectCast(My.Application.MainWindow, MainWindow).ReloadData()
-            Else
-                My.Application.MainWindow.Close()
-            End If
+            
+            sqlConnDialog.Show()
+            sqlConnDialog.CreateDB()
+            DirectCast(My.Application.MainWindow, MainWindow).ReloadData()
 
         Catch ex As Exception
             MsgBox(Application.FlattenOutException(ex))

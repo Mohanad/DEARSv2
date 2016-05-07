@@ -30,10 +30,10 @@ Partial Public Class MarksExamCW
     Public Property SemesterId As Integer
     Public Property CourseId As Integer
     Public Property StudentId As Integer
-    Public Property CWMark As Nullable(Of Decimal)
+    Public Property CWMark As Nullable(Of Double)
     Public Property Present As Nullable(Of Boolean)
     Public Property Excuse As Nullable(Of Boolean)
-    Public Property ExamMark As Nullable(Of Decimal)
+    Public Property ExamMark As Nullable(Of Double)
 
     Public Overridable Property CourseEnrollment As CourseEnrollment
     Public Overridable Property Course As Course

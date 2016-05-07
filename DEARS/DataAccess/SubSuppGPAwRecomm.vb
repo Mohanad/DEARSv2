@@ -38,8 +38,8 @@ Partial Public Class SubSuppGPAwRecomm
     Public Overridable Property Batch As Batch
     Public Overridable Property GPAwRecomm As GPAwRecomm
     Public Overridable Property Grade As Grade
-    Public Overridable Property RecommendationType As RecommendationType
-    Public Overridable Property RecommendationType1 As RecommendationType
+    Public Overridable Property CumulativeRecommendationType As RecommendationType
+    Public Overridable Property YearRecommendationType As RecommendationType
     Public Overridable Property Student As Student
     Public Overridable Property TimeYear As TimeYear
 

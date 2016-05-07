@@ -58,7 +58,7 @@
 
     Public Sub SaveDataColumnsToEntities(ExtractedData As Dictionary(Of String, List(Of String))) Implements IBaseScreen.SaveDataColumnsToEntities
         Dim indexList As List(Of String) = ExtractedData("Index")
-        Dim studPrefecth = SharedState.DBContext.Students.Where(Function(s) indexList.Contains(s.Id)).ToList()
+        Dim studPrefecth = SharedState.DBContext.Students.Where(Function(s) indexList.Contains(s.Index)).ToList()
 
 
         Dim obsstud = New ObservableEntityCollection(Of Student)(DBContext)

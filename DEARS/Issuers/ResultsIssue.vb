@@ -254,5 +254,164 @@ Public Class ResultsIssue
         End If
         Return (Integer.Parse(CourseCode.Substring(2)) * 100 + Asc(CourseCode(0)) * 100 + Asc(CourseCode(1)) * 10)
     End Function
+
+    Sub AddDisciplineResultsBoard(ByVal Discipline As Disciplines, Optional ByVal SubResult As Boolean = False)
+
+        Dim ws As CWorksheet = wb.CreateNewWorksheet(Discipline.ToString(), True)
+
+        Dim disc = GradedDisciplines(_Grade, Discipline)
+
+        Dim CoursesInDiscipline_x = (From ofc In SharedState.DBContext.OfferedCourses.Include("CourseDisciplines")
+                                   Where ((ofc.YearId = Me._TYear And ofc.GradeId = Me._Grade And ofc.SemesterId = 1) _
+                                          Or ((Not Me._FirstOnly) And ofc.YearId = Me._TYear And ofc.GradeId = Me._Grade And ofc.SemesterId = 2))).ToList()
+
+        Dim CoursesInDiscipline = (From x In CoursesInDiscipline_x
+                                  Where ((x.SemesterId = 1 And x.CourseDisciplines.Any(Function(s) s.DisciplineId = disc)) _
+                                         Or (x.SemesterId = 2 And x.CourseDisciplines.Any(Function(s) s.DisciplineId = Discipline)))).ToList()
+
+        'Dim CoursesInDiscipline = db.GetDisciplineCoursesList(_TYear, GradedDisciplines(_Grade, Discipline), sem - 1).ToList()
+
+        'CoursesInDiscipline.AddRange(db.GetDisciplineCoursesList(_TYear, Discipline, sem))
+
+
+        Dim orderCourses = CoursesInDiscipline.OrderBy(Of Integer)(Function(s) CourseOrder(s.Course.CourseCode)).ToList()
+        Dim numberOfCourses As Integer = orderCourses.Count()
+
+        Dim TotalCreditHours10 As Integer = CoursesInDiscipline.Sum(Function(ct) ct.CreditHours) * 10
+
+        'Dim StudentsInDiscipline = db.GetDisciplineStudentsList(_TYear, sem, Discipline, True).ToList()
+        Dim StudentsInDiscipline = (From st In db.SemesterBatchEnrollments.Include("CourseEnrollments").Include("CourseEnrollments.MarksExamCW").Include("Student").Include("BatchEnrollment.GPAwRecomm").Include("BatchEnrollment")
+                                   Where (st.YearId = Me._TYear And st.GradeId = Me._Grade) And ((Not Me._FirstOnly And st.DisciplineId = Discipline And st.SemesterId = 2) Or (Me._FirstOnly And st.DisciplineId = disc And st.SemesterId = 1))
+                                   Select st Distinct).ToList()
+
+        Dim col As Integer
+        ws.SetWidths(1, 1, 12)
+        ws.SetWidths(2, 2, 15)
+        ws.SetWidths(3, 3, 25)
+
+        ws.SetWidths(4, 4 + CoursesInDiscipline.Count, 4)
+
+        ws.CreateNewRange(1, 3, "Index", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin)
+        ws.CreateNewRange(2, 3, "Univ No", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin)
+        ws.CreateNewRange(3, 3, "Name", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin)
+        col = 4
+        For Each Course In CoursesInDiscipline.OrderBy(Of Integer)(Function(cr) CourseOrder(cr.Course.CourseCode))
+            ws.CreateNewRange(col, 3, Course.Course.CourseCode, CellValues.SharedString, 1, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+            ws.CreateNewRange(col, 4, Course.CreditHours.ToString, CellValues.Number, 1, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin)
+            'ws.CreateNewRange(col, 5, Course.CourseWorkFraction.ToString, CellValues.Number, 1, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin)
+            'ws.CreateNewRange(col + 1, 5, Course.ExamFraction.ToString, CellValues.Number, 1, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin)
+            col += 1
+        Next
+
+        ws.SetWidths(col, col + 1, 4)
+        ws.SetWidths(col + 2, col + 2, 6)
+        ws.CreateNewRange(col, 3, "ABSENT", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+        ws.CreateNewRange(col + 1, 3, "FAIL", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+        ws.CreateNewRange(col + 2, 3, "GPA", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+        If Not Me._FirstOnly Then
+            ws.CreateNewRange(col + 3, 3, "Recommendation", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+            ws.CreateNewRange(col + 4, 3, "CGPA", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+            ws.CreateNewRange(col + 5, 3, "Cumulatiev Recommendation", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+            ws.CreateNewRange(col + 6, 3, "Comment", CellValues.SharedString, 2, 1, BGColor:="C0C0C0", Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Alignment:=90)
+        End If
+        If Not Me._FirstOnly Then
+            ws.CreateNewRange(1, 1, "TITLE AREA", CellValues.SharedString, 1, col + 6, Font:="Cambria")
+        Else
+            ws.CreateNewRange(1, 1, "TITLE AREA", CellValues.SharedString, 1, col + 2, Font:="Cambria")
+        End If
+
+
+        Dim stR As Integer = 5
+
+        For Each stud In StudentsInDiscipline
+            col = 0
+            ws.CreateNewRange(1, stR, stud.Student.Index, CellValues.Number, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, _
+                              HAlign:=HorizontalAlignmentValues.Center)
+            If stud.Student.UnivNo IsNot Nothing Then
+                ws.CreateNewRange(2, stR, stud.Student.UnivNo, CellValues.InlineString, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin,
+                  HAlign:=HorizontalAlignmentValues.Center)
+            Else
+                ws.CreateNewRange(2, stR, "N/A", CellValues.InlineString, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin,
+               HAlign:=HorizontalAlignmentValues.Center)
+            End If
+            ws.CreateNewRange(3, stR, stud.Student.NameArabic, CellValues.InlineString, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, Font:="Traditional arabic",
+               HAlign:=HorizontalAlignmentValues.Right)
+
+
+            'Dim mks = db.GetMarksForStudent(_TYear, sem - 1, stud.SIndex)
+            'mks.AddRange(db.GetMarksForStudent(_TYear, sem, stud.SIndex))
+
+            Dim mks = (From crs In stud.Student.MarksExamCWs
+                       Where ((crs.YearId = Me._TYear And crs.GradeId = Me._Grade And crs.SemesterId = 1) Or (Not Me._FirstOnly And crs.YearId = Me._TYear And crs.GradeId = Me._Grade And crs.SemesterId = 2))
+                       Select crs).ToList()
+
+            col = 4
+            If mks.Count = numberOfCourses Then
+                For Each mk In mks.OrderBy(Of Integer)(Function(mky) CourseOrder(mky.Course.CourseCode))
+                    'ws.CreateNewRange(col, stR, mk.CWMark.ToString, CellValues.Number, 1, 1, Border:=CBorders.Left Or CBorders.Top, BorderStyle:=BorderStyleValues.Thin)
+                    'ws.CreateNewRange(col + 1, stR, mk.ExamMark.ToString, CellValues.Number, 1, 1, Border:=CBorders.Right Or CBorders.Top, BorderStyle:=BorderStyleValues.Thin)
+
+                    'Dim TotalMarkFormula As String = String.Format("IF({0}="""",""--"",SUM({1},{0}))", GetColumnName(col + 1) & stR, GetColumnName(col) & stR)
+                    'ws.CreateNewFormulaRange(col, stR + 1, TotalMarkFormula, 1, 1, Border:=CBorders.Left Or CBorders.Bottom, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    'ws.CreateNewFormulaRange(col + 1, stR + 1, GenerateGradingFormula(col + 1, stR + 1, mk.CWMark.HasValue), 1, 1, Border:=CBorders.Right Or CBorders.Bottom, BorderStyle:=BorderStyleValues.Thin,
+                    'HAlign:=HorizontalAlignmentValues.Center)
+                    ws.CreateNewRange(col, stR, ResultsProcessingUtilities.AssignGrade(mk).Grade, CellValues.SharedString, 1, 1, _
+                                      HAlign:=HorizontalAlignmentValues.Center, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin)
+                    col += 1
+                Next
+            Else
+                'For Each mk In mks.OrderBy(Of Integer)(Function(mky) CourseOrder(mky.Course.CourseCode))
+                '    ws.CreateNewRange(col, stR, mk.CWMark.ToString, CellValues.Number, 1, 1, Border:=CBorders.Left Or CBorders.Top, BorderStyle:=BorderStyleValues.Thin)
+                '    ws.CreateNewRange(col + 1, stR, mk.ExamMark.ToString, CellValues.Number, 1, 1, Border:=CBorders.Right Or CBorders.Top, BorderStyle:=BorderStyleValues.Thin)
+
+                '    Dim TotalMarkFormula As String = String.Format("IF({0}="""",""--"",SUM({1},{0}))", GetColumnName(col + 1) & stR, GetColumnName(col) & stR)
+                '    ws.CreateNewFormulaRange(col, stR + 1, TotalMarkFormula, 1, 1, Border:=CBorders.Left Or CBorders.Bottom, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                '    ws.CreateNewFormulaRange(col + 1, stR + 1, GenerateGradingFormula(col + 1, stR + 1, mk.CWMark.HasValue), 1, 1, Border:=CBorders.Right Or CBorders.Bottom, BorderStyle:=BorderStyleValues.Thin,
+                '     HAlign:=HorizontalAlignmentValues.Center)
+                '    col += 2
+                'Next
+                'col = 4 + 2 * numberOfCourses
+            End If
+
+
+
+
+            Dim gradesRange As String = "D" & (stR) & ":" & GetColumnName(col - 1) & (stR)
+
+            Dim frmABtemp = "COUNTIF({0},""AB"")"
+            Dim frmTemp = "COUNTIF({0},""F*"")+COUNTIF({0},""D*"")+COUNTIF({0},""AB*"")-COUNTIF({0},""AB"")"
+            Dim frm As String = String.Format(frmTemp, gradesRange)
+            Dim frmAB As String = String.Format(frmABtemp, gradesRange)
+            ws.CreateNewFormulaRange(col, stR, frmAB, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+            ws.CreateNewFormulaRange(col + 1, stR, frm, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+            'ws.CreateNewFormulaRange(col + 2, stR, GenerateGPAFormula(4, stR, TotalCreditHours10, orderCourses), 2, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+
+            If Me._FirstOnly Then
+
+            Else
+                Dim rc = stud.BatchEnrollment.GPAwRecomm
+                If rc IsNot Nothing Then
+                    ws.CreateNewRange(col + 2, stR, rc.GPA, CellValues.Number, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    ws.CreateNewRange(col + 3, stR, rc.YearRecommendationType.ShortNameEnglish, CellValues.InlineString, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    If rc.CGPA.HasValue Then
+                        ws.CreateNewRange(col + 4, stR, rc.CGPA, CellValues.Number, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    Else
+                        ws.CreateNewRange(col + 4, stR, "--", CellValues.SharedString, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    End If
+                    If rc.CumulativeRecommendationType IsNot Nothing Then
+                        ws.CreateNewRange(col + 5, stR, rc.CumulativeRecommendationType.ShortNameEnglish, CellValues.SharedString, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    Else
+                        ws.CreateNewRange(col + 5, stR, "--", CellValues.SharedString, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                    End If
+                    ws.CreateNewRange(col + 6, stR, rc.Comment, CellValues.InlineString, 1, 1, Border:=CBorders.All, BorderStyle:=BorderStyleValues.Thin, HAlign:=HorizontalAlignmentValues.Center)
+                End If
+            End If
+
+            stR += 1
+        Next
+
+
+
+    End Sub
 End Class
 

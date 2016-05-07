@@ -36,6 +36,16 @@ Public Class TimelineManagementScreen
     End Sub
 
     Private Sub FullControl_Loaded(sender As Object, e As RoutedEventArgs)
+        If SharedState.DBContext.TimeYears.Count = 0 Then
+            If MessageBox.Show("No Academic Years in Database. Start a record for the current year?", "", MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
+                Dim YearID As Integer = Now.Year
+                Dim ty As New TimeYear() With {.Id = YearID, .NameArabic = (YearID) & "/" & (YearID + 1), .NameEnglish = (YearID) & "/" & (YearID + 1)}
+                SharedState.DBContext.TimeYears.Add(ty)
+                SharedState.DBContext.SaveChanges()
+            Else
+                MessageBox.Show("Using the application without at least one time record will cause wierd exceptions!!!!")
+            End If
+        End If
         Dim x As New TimelineSnapshotViewModel()
         Me.DataContext = x
         AddHandler SharedState.GetSingleInstance.PropertyChanged, AddressOf x.NotifyChanges

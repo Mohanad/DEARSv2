@@ -103,7 +103,7 @@
         End If
 
         Dim Comment As String = ""
-        If studEnr.Student.Index = 104030 Then
+        If studEnr.Student.Index = 103129 Then
             Comment = ""
         End If
 
@@ -163,16 +163,16 @@
         ElseIf GPA >= 4.5 And CountFs = 0 And CountDs = 1 Then
             'Return // 8.3 Already Applied
             gpw.Comment = "(FG 8.3)"
-        ElseIf GPA >= 4.3 And (CountFs + CountDs) < Math.Ceiling(CountSubjects / 3) Then
+        ElseIf GPA >= 4.3 And (CountFs + CountDs) <= Math.Ceiling(CountSubjects / 3) Then
             'Recomms.YearRecomm.Append( Supp ( CountFs + CountDs ) ) // Applies 9.1
             gpw.YearRecommId = RecommTypeEnum.Supp
             gpw.CumulativeRecommId = RecommTypeEnum.Supp
             gpw.Comment = String.Format("Supp ({0})", CountFs + CountDs)
-        ElseIf GPA >= 4.5 And (CountDs + CountFs) < Math.Ceiling(CountSubjects / 3) + 1 And (CountDs >= 1) Then
+        ElseIf GPA >= 4.5 And (CountDs + CountFs) <= Math.Ceiling(CountSubjects / 3) + 1 And (CountDs >= 1) Then
             'Recomms.YearRecomm .Append(‘Special Case (FG 9.2) ⇒ Supp ( CountFs + CountDs - 1))’)
             gpw.YearRecommId = RecommTypeEnum.MultiD
             gpw.CumulativeRecommId = RecommTypeEnum.MultiD
-            gpw.Comment = String.Format("Multiplie-Ds (FG 9.2) ⇒ Supp ({0})", CountFs + CountDs)
+            gpw.Comment = String.Format("Multiplie-Ds (FG 9.2) ⇒ Supp ({0})", CountFs + CountDs - 1)
             '// Applies 9.2
             '// Skip 9.3 applies to Supp
         ElseIf 3.5 <= GPA And GPA < 4.3 And CountFs = 0 And CountDs = 0 Then
@@ -325,7 +325,7 @@
     End Function
 
     Private Function GetProjectCourseID() As Integer
-        Return (From cr In SharedState.DBContext.Courses Where cr.CourseCode = "PR5202" Select cr.Id).Single()
+        Return (From cr In SharedState.DBContext.Courses Where cr.CourseCode = "CE520" Select cr.Id).Single()
     End Function
 
     Private Function NiceRecomm(GPA As Double, ByRef Comment As String) As RecommTypeEnum

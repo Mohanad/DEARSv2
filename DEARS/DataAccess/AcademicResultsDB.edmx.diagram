@@ -4,32 +4,32 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="449a0bd8bb57488382c0e10bedeba9a2" Name="Diagram1" ZoomLevel="60">
+      <Diagram DiagramId="449a0bd8bb57488382c0e10bedeba9a2" Name="Diagram1" ZoomLevel="72">
         <EntityTypeShape EntityType="AcademicResultsDBModel.BatchEnrollment" Width="1.5" PointX="3" PointY="11.75" />
         <EntityTypeShape EntityType="AcademicResultsDBModel.Batch" Width="1.5" PointX="6" PointY="12" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.CourseDiscipline" Width="1.5" PointX="18.75" PointY="9.125" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.CourseEnrollment" Width="1.5" PointX="10.5" PointY="6.625" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.Course" Width="1.5" PointX="8.25" PointY="3" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.CourseTeacher" Width="1.5" PointX="18.75" PointY="14.5" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.Discipline" Width="1.5" PointX="6" PointY="8.125" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.CourseDiscipline" Width="1.5" PointX="18.75" PointY="11.625" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.CourseEnrollment" Width="1.5" PointX="7.5" PointY="6.125" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.Course" Width="1.5" PointX="5.25" PointY="2.5" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.CourseTeacher" Width="1.5" PointX="21.75" PointY="11.625" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.Discipline" Width="1.5" PointX="3" PointY="5.125" />
         <EntityTypeShape EntityType="AcademicResultsDBModel.EnrollmentType" Width="1.5" PointX="0.75" PointY="8.125" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.ExamType" Width="1.5" PointX="21.75" PointY="6.125" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.GPAwRecomm" Width="1.5" PointX="11.25" PointY="11.375" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.Grade" Width="1.5" PointX="3.75" PointY="6.375" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.MarksExamCW" Width="1.5" PointX="21.75" PointY="8.875" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.OfferedCourse" Width="1.5" PointX="16.5" PointY="9" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.OfferedDiscipline" Width="1.5" PointX="13.5" PointY="6.625" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.RecommendationType" Width="1.5" PointX="9" PointY="17" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.RecommTranslation" Width="1.5" PointX="11.25" PointY="17.625" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.SemesterBatchEnrollment" Width="1.5" PointX="8.25" PointY="11.625" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.SemesterBatch" Width="1.5" PointX="8.25" PointY="6.875" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.Semester" Width="1.5" PointX="6" PointY="3.75" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.ExamType" Width="1.5" PointX="18.75" PointY="2.75" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.GPAwRecomm" Width="1.5" PointX="8.25" PointY="11.375" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.Grade" Width="1.5" PointX="3.75" PointY="16.375" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.MarksExamCW" Width="1.5" PointX="18.75" PointY="5.75" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.OfferedCourse" Width="1.5" PointX="16.5" PointY="11.25" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.OfferedDiscipline" Width="1.5" PointX="13.5" PointY="6.875" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.RecommendationType" Width="1.5" PointX="6" PointY="16" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.RecommTranslation" Width="1.5" PointX="8.25" PointY="21.625" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.SemesterBatchEnrollment" Width="1.5" PointX="5.25" PointY="6.625" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.SemesterBatch" Width="1.5" PointX="11.25" PointY="11.875" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.Semester" Width="1.5" PointX="9" PointY="16.75" />
         <EntityTypeShape EntityType="AcademicResultsDBModel.Student" Width="1.5" PointX="0.75" PointY="16.625" />
         <EntityTypeShape EntityType="AcademicResultsDBModel.SubSuppGPAwRecomm" Width="1.5" PointX="13.5" PointY="11.375" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.SubSuppMarksExamCW" Width="1.5" PointX="24" PointY="8.625" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.Teacher" Width="1.5" PointX="16.5" PointY="14.125" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.SubSuppMarksExamCW" Width="1.5" PointX="21" PointY="5.25" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.Teacher" Width="1.5" PointX="19.5" PointY="16.25" />
         <EntityTypeShape EntityType="AcademicResultsDBModel.TimeYear" Width="1.5" PointX="0.75" PointY="11.375" />
-        <EntityTypeShape EntityType="AcademicResultsDBModel.TuitionType" Width="1.5" PointX="16.5" PointY="16.625" />
+        <EntityTypeShape EntityType="AcademicResultsDBModel.TuitionType" Width="1.5" PointX="19.5" PointY="18.75" />
         <AssociationConnector Association="AcademicResultsDBModel.FK_BatchEnrollments_Batch" />
         <AssociationConnector Association="AcademicResultsDBModel.FK_BatchEnrollments_EnrollmentType" />
         <AssociationConnector Association="AcademicResultsDBModel.FK_BatchEnrollments_Grades" />
@@ -90,7 +90,7 @@
         <AssociationConnector Association="AcademicResultsDBModel.FK_MarksExamCW_Semesters" />
         <AssociationConnector Association="AcademicResultsDBModel.FK_MarksExamCW_Students" />
         <AssociationConnector Association="AcademicResultsDBModel.FK_MarksExamCW_TimeYears" />
-        <AssociationConnector Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExa" />
+        <AssociationConnector Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExamCW" />
         <AssociationConnector Association="AcademicResultsDBModel.FK_OfferedCourses_SemesterBatch" />
         <AssociationConnector Association="AcademicResultsDBModel.FK_OfferedCourses_Semesters" />
         <AssociationConnector Association="AcademicResultsDBModel.FK_OfferedCourses_TimeYears" />

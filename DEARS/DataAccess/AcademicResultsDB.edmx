@@ -142,10 +142,10 @@
           <Property Name="SemesterId" Type="int" Nullable="false" />
           <Property Name="CourseId" Type="int" Nullable="false" />
           <Property Name="StudentId" Type="int" Nullable="false" />
-          <Property Name="CWMark" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="CWMark" Type="float" />
           <Property Name="Present" Type="bit" />
           <Property Name="Excuse" Type="bit" />
-          <Property Name="ExamMark" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="ExamMark" Type="float" />
         </EntityType>
         <EntityType Name="OfferedCourses">
           <Key>
@@ -2027,7 +2027,7 @@
             <End Role="TimeYear" EntitySet="TimeYears" />
             <End Role="MarksExamCW" EntitySet="MarksExamCWs" />
           </AssociationSet>
-          <AssociationSet Name="FK_SubSuppMarksExamCW_MarksExamCW" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExa">
+          <AssociationSet Name="FK_SubSuppMarksExamCW_MarksExamCW" Association="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExamCW">
             <End Role="MarksExamCW" EntitySet="MarksExamCWs" />
             <End Role="SubSuppMarksExamCW" EntitySet="SubSuppMarksExamCWs" />
           </AssociationSet>
@@ -2191,7 +2191,7 @@
           <Property Name="SemesterId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
           <Property Name="CourseId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Cours" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Courses" FromRole="CourseEnrollment" ToRole="Cours" />
+          <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Courses" FromRole="CourseEnrollment" ToRole="Cours" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_Grades" FromRole="CourseEnrollment" ToRole="Grade" />
           <NavigationProperty Name="OfferedCourse" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_OfferedCourses" FromRole="CourseEnrollment" ToRole="OfferedCours" />
           <NavigationProperty Name="SemesterBatchEnrollment" Relationship="AcademicResultsDBModel.FK_CourseEnrollments_SemesterBatchEnrollments" FromRole="CourseEnrollment" ToRole="SemesterBatchEnrollment" />
@@ -2231,7 +2231,7 @@
           <Property Name="CourseId" Type="Int32" Nullable="false" />
           <Property Name="TeacherId" Type="Int32" Nullable="false" />
           <Property Name="TuitionTypeId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_CourseTeachers_Disciplines" FromRole="CourseTeacher" ToRole="Cours" />
+          <NavigationProperty Name="Cours" Relationship="AcademicResultsDBModel.FK_CourseTeachers_Disciplines" FromRole="CourseTeacher" ToRole="Cours" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_CourseTeachers_Grades" FromRole="CourseTeacher" ToRole="Grade" />
           <NavigationProperty Name="OfferedCours" Relationship="AcademicResultsDBModel.FK_CourseTeachers_OfferedCourses" FromRole="CourseTeacher" ToRole="OfferedCours" />
           <NavigationProperty Name="Semester" Relationship="AcademicResultsDBModel.FK_CourseTeachers_Semesters" FromRole="CourseTeacher" ToRole="Semester" />
@@ -2327,10 +2327,10 @@
           <Property Name="SemesterId" Type="Int32" Nullable="false" />
           <Property Name="CourseId" Type="Int32" Nullable="false" />
           <Property Name="StudentId" Type="Int32" Nullable="false" />
-          <Property Name="CWMark" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="CWMark" Type="Double" />
           <Property Name="Present" Type="Boolean" />
           <Property Name="Excuse" Type="Boolean" />
-          <Property Name="ExamMark" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="ExamMark" Type="Double" />
           <NavigationProperty Name="CourseEnrollment" Relationship="AcademicResultsDBModel.FK_MarksExamCW_CourseEnrollment" FromRole="MarksExamCW" ToRole="CourseEnrollment" />
           <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Courses" FromRole="MarksExamCW" ToRole="Cours" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Grades" FromRole="MarksExamCW" ToRole="Grade" />
@@ -2338,7 +2338,7 @@
           <NavigationProperty Name="Semester" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Semesters" FromRole="MarksExamCW" ToRole="Semester" />
           <NavigationProperty Name="Student" Relationship="AcademicResultsDBModel.FK_MarksExamCW_Students" FromRole="MarksExamCW" ToRole="Student" />
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_MarksExamCW_TimeYears" FromRole="MarksExamCW" ToRole="TimeYear" />
-          <NavigationProperty Name="SubSuppMarksExamCW" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExa" FromRole="MarksExamCW" ToRole="SubSuppMarksExamCW" />
+          <NavigationProperty Name="SubSuppMarksExamCW" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExamCW" FromRole="MarksExamCW" ToRole="SubSuppMarksExamCW" />
         </EntityType>
         <EntityType Name="OfferedCourse">
           <Key>
@@ -2499,8 +2499,8 @@
           <NavigationProperty Name="Batch" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Batch" FromRole="SubSuppGPAwRecomm" ToRole="Batch" />
           <NavigationProperty Name="GPAwRecomm" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_GPAwRecomm" FromRole="SubSuppGPAwRecomm" ToRole="GPAwRecomm" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Grades" FromRole="SubSuppGPAwRecomm" ToRole="Grade" />
-          <NavigationProperty Name="RecommendationType" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_CumulativeRecommendations" FromRole="SubSuppGPAwRecomm" ToRole="RecommendationType" />
-          <NavigationProperty Name="RecommendationType1" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_YearRecommendations" FromRole="SubSuppGPAwRecomm" ToRole="RecommendationType" />
+          <NavigationProperty Name="CumulativeRecommendationType" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_CumulativeRecommendations" FromRole="SubSuppGPAwRecomm" ToRole="RecommendationType" />
+          <NavigationProperty Name="YearRecommendationType" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_YearRecommendations" FromRole="SubSuppGPAwRecomm" ToRole="RecommendationType" />
           <NavigationProperty Name="Student" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_Students" FromRole="SubSuppGPAwRecomm" ToRole="Student" />
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_SubSuppGPAwRecomm_TimeYears" FromRole="SubSuppGPAwRecomm" ToRole="TimeYear" />
         </EntityType>
@@ -2526,8 +2526,8 @@
           <NavigationProperty Name="Course" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Courses" FromRole="SubSuppMarksExamCW" ToRole="Cours" />
           <NavigationProperty Name="ExamType" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_ExamType" FromRole="SubSuppMarksExamCW" ToRole="ExamType" />
           <NavigationProperty Name="Grade" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Grades" FromRole="SubSuppMarksExamCW" ToRole="Grade" />
-          <NavigationProperty Name="MarksExamCW" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExa" FromRole="SubSuppMarksExamCW" ToRole="MarksExamCW" />
-          <NavigationProperty Name="OfferedCourse" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_OfferedCourse" FromRole="SubSuppMarksExamCW" ToRole="OfferedCours" />
+          <NavigationProperty Name="MarksExamCW" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_MarksExamCW" FromRole="SubSuppMarksExamCW" ToRole="MarksExamCW" />
+          <NavigationProperty Name="OfferedCours" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_OfferedCourse" FromRole="SubSuppMarksExamCW" ToRole="OfferedCours" />
           <NavigationProperty Name="Semester" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Semesters" FromRole="SubSuppMarksExamCW" ToRole="Semester" />
           <NavigationProperty Name="Student" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_Students" FromRole="SubSuppMarksExamCW" ToRole="Student" />
           <NavigationProperty Name="TimeYear" Relationship="AcademicResultsDBModel.FK_SubSuppMarksExamCW_TimeYears" FromRole="SubSuppMarksExamCW" ToRole="TimeYear" />
@@ -3371,7 +3371,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SubSuppMarksExamCW_MarksExa">
+        <Association Name="FK_SubSuppMarksExamCW_MarksExamCW">
           <End Type="AcademicResultsDBModel.MarksExamCW" Role="MarksExamCW" Multiplicity="1" />
           <End Type="AcademicResultsDBModel.SubSuppMarksExamCW" Role="SubSuppMarksExamCW" Multiplicity="0..1" />
           <ReferentialConstraint>
